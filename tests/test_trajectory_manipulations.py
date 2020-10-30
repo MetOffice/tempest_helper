@@ -7,12 +7,13 @@ from iris.tests.stock import realistic_3d
 
 from tempest_helper.trajectory_manipulations import (
     convert_date_to_step,
-    fill_trajectory_gaps
+    fill_trajectory_gaps,
 )
 
 
 class TestConvertDateToStep(unittest.TestCase):
     """Test tempest_helper.trajectory_manipulations.convert_date_to_step"""
+
     def test_conversion(self):
         """Test standard conversion"""
         cube = realistic_3d()
@@ -24,10 +25,11 @@ class TestConvertDateToStep(unittest.TestCase):
     def test_different_calendar(self):
         """Test a different calendar"""
         cube = realistic_3d()
-        cal_360day = cf_units.Unit('hours since 1970-01-01 00:00:00',
-                                   calendar=cf_units.CALENDAR_360_DAY)
+        cal_360day = cf_units.Unit(
+            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY
+        )
         # realistic_3d() in 360_day starts at 2015-08-16 00:00:00
-        cube.coord('time').units = cal_360day
+        cube.coord("time").units = cal_360day
         actual = convert_date_to_step(cube, 2015, 8, 16, 6)
         expected = 2
         self.assertEqual(expected, actual)
@@ -43,79 +45,80 @@ class TestConvertDateToStep(unittest.TestCase):
 
 class TestFillTrajectoryGaps(unittest.TestCase):
     """Test tempest_helper.trajectory_manipulations.fill_trajectory_gaps()"""
+
     def test_fill_traj_gap_increasing(self):
         """Test increasing latitude and longitude"""
         storm = {
-            'length': 3,
-            'step': [1, 2],
-            'lat': ['0.0', '1.0'],
-            'lon': ['0.0', '1.0'],
-            'year': ['2000', '2000'],
-            'month': ['1', '1'],
-            'day': ['1', '1'],
-            'hour': ['0', '6']
+            "length": 3,
+            "step": [1, 2],
+            "lat": ["0.0", "1.0"],
+            "lon": ["0.0", "1.0"],
+            "year": ["2000", "2000"],
+            "month": ["1", "1"],
+            "day": ["1", "1"],
+            "hour": ["0", "6"],
         }
         expected = {
-            'length': 3,
-            'step': [1, 2, 3, 4, 5],
-            'lat': ['0.0', '1.0', '2.0', '3.0', '4.0'],
-            'lon': ['0.0', '1.0', '2.0', '3.0', '4.0'],
-            'year': ['2000', '2000', '2000', '2000', '2000'],
-            'month': ['1', '1', '1', '1', '1'],
-            'day': ['1', '1', '1', '1', '1'],
-            'hour': ['0', '6', '18', '18', '18']
+            "length": 3,
+            "step": [1, 2, 3, 4, 5],
+            "lat": ["0.0", "1.0", "2.0", "3.0", "4.0"],
+            "lon": ["0.0", "1.0", "2.0", "3.0", "4.0"],
+            "year": ["2000", "2000", "2000", "2000", "2000"],
+            "month": ["1", "1", "1", "1", "1"],
+            "day": ["1", "1", "1", "1", "1"],
+            "hour": ["0", "6", "18", "18", "18"],
         }
-        fill_trajectory_gaps(storm, 6, '5.0', '5.0', '2000', '1', '1', '18')
+        fill_trajectory_gaps(storm, 6, "5.0", "5.0", "2000", "1", "1", "18")
         self.assertEqual(expected, storm)
 
     def test_fill_traj_gap_decreasing(self):
         """Test decreasing latitude and longitude"""
         storm = {
-            'length': 3,
-            'step': [1, 2],
-            'lat': ['1.0', '0.0'],
-            'lon': ['1.0', '0.0'],
-            'year': ['2000', '2000'],
-            'month': ['1', '1'],
-            'day': ['1', '1'],
-            'hour': ['0', '6']
+            "length": 3,
+            "step": [1, 2],
+            "lat": ["1.0", "0.0"],
+            "lon": ["1.0", "0.0"],
+            "year": ["2000", "2000"],
+            "month": ["1", "1"],
+            "day": ["1", "1"],
+            "hour": ["0", "6"],
         }
         expected = {
-            'length': 3,
-            'step': [1, 2, 3, 4, 5],
-            'lat': ['1.0', '0.0', '-1.0', '-2.0', '-3.0'],
-            'lon': ['1.0', '0.0', '359.0', '358.0', '357.0'],
-            'year': ['2000', '2000', '2000', '2000', '2000'],
-            'month': ['1', '1', '1', '1', '1'],
-            'day': ['1', '1', '1', '1', '1'],
-            'hour': ['0', '6', '18', '18', '18']
+            "length": 3,
+            "step": [1, 2, 3, 4, 5],
+            "lat": ["1.0", "0.0", "-1.0", "-2.0", "-3.0"],
+            "lon": ["1.0", "0.0", "359.0", "358.0", "357.0"],
+            "year": ["2000", "2000", "2000", "2000", "2000"],
+            "month": ["1", "1", "1", "1", "1"],
+            "day": ["1", "1", "1", "1", "1"],
+            "hour": ["0", "6", "18", "18", "18"],
         }
-        fill_trajectory_gaps(storm, 6, '356.0', '-4.0', '2000', '1', '1', '18')
+        fill_trajectory_gaps(storm, 6, "356.0", "-4.0", "2000", "1", "1", "18")
         self.assertEqual(expected, storm)
 
     def test_fill_traj_gap_different_directions(self):
         """Test increasing latitude and decreasing longitude"""
         storm = {
-            'length': 3,
-            'step': [1, 2],
-            'lat': ['0.0', '1.0'],
-            'lon': ['1.0', '0.0'],
-            'year': ['2000', '2000'],
-            'month': ['1', '1'],
-            'day': ['1', '1'],
-            'hour': ['0', '6']
+            "length": 3,
+            "step": [1, 2],
+            "lat": ["0.0", "1.0"],
+            "lon": ["1.0", "0.0"],
+            "year": ["2000", "2000"],
+            "month": ["1", "1"],
+            "day": ["1", "1"],
+            "hour": ["0", "6"],
         }
         expected = {
-            'length': 3,
-            'step': [1, 2, 3, 4, 5],
-            'lat': ['0.0', '1.0', '2.0', '3.0', '4.0'],
-            'lon': ['1.0', '0.0', '359.0', '358.0', '357.0'],
-            'year': ['2000', '2000', '2000', '2000', '2000'],
-            'month': ['1', '1', '1', '1', '1'],
-            'day': ['1', '1', '1', '1', '1'],
-            'hour': ['0', '6', '18', '18', '18']
+            "length": 3,
+            "step": [1, 2, 3, 4, 5],
+            "lat": ["0.0", "1.0", "2.0", "3.0", "4.0"],
+            "lon": ["1.0", "0.0", "359.0", "358.0", "357.0"],
+            "year": ["2000", "2000", "2000", "2000", "2000"],
+            "month": ["1", "1", "1", "1", "1"],
+            "day": ["1", "1", "1", "1", "1"],
+            "hour": ["0", "6", "18", "18", "18"],
         }
-        fill_trajectory_gaps(storm, 6, '356.0', '5.0', '2000', '1', '1', '18')
+        fill_trajectory_gaps(storm, 6, "356.0", "5.0", "2000", "1", "1", "18")
         self.assertEqual(expected, storm)
 
     def test_fill_traj_gap_non_integer(self):
@@ -124,24 +127,24 @@ class TestFillTrajectoryGaps(unittest.TestCase):
         delta.
         """
         storm = {
-            'length': 3,
-            'step': [1, 2],
-            'lat': ['0.0', '1.5'],
-            'lon': ['1.0', '359.5'],
-            'year': ['2000', '2000'],
-            'month': ['1', '1'],
-            'day': ['1', '1'],
-            'hour': ['0', '6']
+            "length": 3,
+            "step": [1, 2],
+            "lat": ["0.0", "1.5"],
+            "lon": ["1.0", "359.5"],
+            "year": ["2000", "2000"],
+            "month": ["1", "1"],
+            "day": ["1", "1"],
+            "hour": ["0", "6"],
         }
         expected = {
-            'length': 3,
-            'step': [1, 2, 3, 4, 5],
-            'lat': ['0.0', '1.5', '3.0', '4.5', '6.0'],
-            'lon': ['1.0', '359.5', '358.0', '356.5', '355.0'],
-            'year': ['2000', '2000', '2000', '2000', '2000'],
-            'month': ['1', '1', '1', '1', '1'],
-            'day': ['1', '1', '1', '1', '1'],
-            'hour': ['0', '6', '18', '18', '18']
+            "length": 3,
+            "step": [1, 2, 3, 4, 5],
+            "lat": ["0.0", "1.5", "3.0", "4.5", "6.0"],
+            "lon": ["1.0", "359.5", "358.0", "356.5", "355.0"],
+            "year": ["2000", "2000", "2000", "2000", "2000"],
+            "month": ["1", "1", "1", "1", "1"],
+            "day": ["1", "1", "1", "1", "1"],
+            "hour": ["0", "6", "18", "18", "18"],
         }
-        fill_trajectory_gaps(storm, 6, '353.5', '7.5', '2000', '1', '1', '18')
+        fill_trajectory_gaps(storm, 6, "353.5", "7.5", "2000", "1", "1", "18")
         self.assertEqual(expected, storm)

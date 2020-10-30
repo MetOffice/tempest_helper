@@ -19,29 +19,26 @@ def convert_date_to_step(cube, year, month, day, hour, time_period=6):
     :returns: The time index at the specified time point.
     :rtype: int
     """
-    calendar = cube.coord('time').units.calendar
+    calendar = cube.coord("time").units.calendar
 
     # cftime v1.0.0 doesn't allow a keyword to the datetime method to specify,
     # but this introduced in v1.2.0 and so will have to use the code below to
     # specify the type of datetime object to create
     datetime_types = {
-        'noleap': cftime.DatetimeNoLeap,
-        'all_leap': cftime.DatetimeAllLeap,
-        '360_day': cftime.Datetime360Day,
-        'julian': cftime.DatetimeJulian,
-        'gregorian': cftime.DatetimeGregorian,
-        'standard': cftime.DatetimeGregorian,
-        'proleptic_gregorian': cftime.DatetimeProlepticGregorian
+        "noleap": cftime.DatetimeNoLeap,
+        "all_leap": cftime.DatetimeAllLeap,
+        "360_day": cftime.Datetime360Day,
+        "julian": cftime.DatetimeJulian,
+        "gregorian": cftime.DatetimeGregorian,
+        "standard": cftime.DatetimeGregorian,
+        "proleptic_gregorian": cftime.DatetimeProlepticGregorian,
     }
 
     current_datetime = datetime_types[calendar](year, month, day, hour)
-    first_point = cube.coord('time').units.num2date(
-        cube.coord('time').points[0]
-    )
+    first_point = cube.coord("time").units.num2date(cube.coord("time").points[0])
     time_delta = current_datetime - first_point
-    seconds_in_hour = 60**2
-    return round(time_delta.total_seconds() /
-                 (time_period * seconds_in_hour)) + 1
+    seconds_in_hour = 60 ** 2
+    return round(time_delta.total_seconds() / (time_period * seconds_in_hour)) + 1
 
 
 def fill_trajectory_gaps(storm, step, lon, lat, year, month, day, hour):
@@ -65,19 +62,18 @@ def fill_trajectory_gaps(storm, step, lon, lat, year, month, day, hour):
     :param str day: Day of the current time point.
     :param str hour: Hour of the current time point.
     """
-    gap_length = step - storm['step'][-1]
+    gap_length = step - storm["step"][-1]
     # Using technique at https://stackoverflow.com/a/14498790 to handle
     # longitudes wrapping around 0/360
-    dlon = ((((float(lon) - float(storm['lon'][-1])) + 180) % 360 - 180) /
-            gap_length)
-    dlat = (float(lat) - float(storm['lat'][-1])) / gap_length
+    dlon = (((float(lon) - float(storm["lon"][-1])) + 180) % 360 - 180) / gap_length
+    dlat = (float(lat) - float(storm["lat"][-1])) / gap_length
     for gap_index in range(1, gap_length):
-        lon1 = (float(storm['lon'][-1]) + dlon) % 360
-        lat1 = float(storm['lat'][-1]) + dlat
-        storm['lon'].append(str(lon1))
-        storm['lat'].append(str(lat1))
-        storm['step'].append(storm['step'][-1] + 1)
-        storm['year'].append(year)
-        storm['month'].append(month)
-        storm['day'].append(day)
-        storm['hour'].append(hour)
+        lon1 = (float(storm["lon"][-1]) + dlon) % 360
+        lat1 = float(storm["lat"][-1]) + dlat
+        storm["lon"].append(str(lon1))
+        storm["lat"].append(str(lat1))
+        storm["step"].append(storm["step"][-1] + 1)
+        storm["year"].append(year)
+        storm["month"].append(month)
+        storm["day"].append(day)
+        storm["hour"].append(hour)
