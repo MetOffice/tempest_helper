@@ -62,6 +62,7 @@ def fill_trajectory_gaps(storm, step, lon, lat, year, month, day, hour):
     :param str day: Day of the current time point.
     :param str hour: Hour of the current time point.
     """
+    #TODO consider interpolating time too
     gap_length = step - storm["step"][-1]
     # Using technique at https://stackoverflow.com/a/14498790 to handle
     # longitudes wrapping around 0/360

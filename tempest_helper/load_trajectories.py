@@ -11,16 +11,13 @@ logger = logging.getLogger(__name__)
 
 def get_trajectories(tracked_file, num_vars_stitch, nc_file):
     """
-    Get the trajectories from the tracked output.
+    Load the trajectories from the file output by TempestExtremes.
 
     :param str tracked_file: The path to the file produced by TempestExtremes.
     :param num_vars_stitch: The number of variables in the output file.
     :param nc_file: The path to a netCDF file that the tracking was run on.
-    :returns: The total number of trajectories, the number of trajectories that
-        started in the southern hemisphere, the number of trajectories that
-        started at the equator or the northern hemisphere and the loaded
-        trajectories in a list.
-    :rtype: tuple
+    :returns: The loaded trajectories.
+    :rtype: list
     """
     logger.debug(f'Running getTrajectories on {tracked_file}')
 
@@ -65,7 +62,6 @@ def get_trajectories(tracked_file, num_vars_stitch, nc_file):
                     month = line_array[coords['month']]
                     day = line_array[coords['day']]
                     hour = line_array[coords['hour']]
-                    # TODO pass period through to here
                     step = convert_date_to_step(
                         cube,
                         int(year),
@@ -84,28 +80,5 @@ def get_trajectories(tracked_file, num_vars_stitch, nc_file):
                     storm['step'].append(step)
                 line_of_traj += 1  # increment line
 
-    # Find total number of trajectories and maximum length of trajectories
-    trajectories_found = len(storms)
-    logger.debug(f'Found {trajectories_found} trajectories')
-
-    trajectories_found_northern_hemisphere = 0
-    trajectories_found_southern_hemisphere = 0
-    for storm in storms:
-        lat = float(storm['lat'][0])
-        if lat < 0.0:
-            trajectories_found_southern_hemisphere += 1
-        else:
-            trajectories_found_northern_hemisphere += 1
-
-    logger.debug(f'trajectories_found tota, nh, sh '
-                 f'{trajectories_found} '
-                 f'{trajectories_found_northern_hemisphere} '
-                 f'{trajectories_found_southern_hemisphere}')
-
     #TODO document in data_format.rst the structure of storms
-    return (
-        trajectories_found,
-        trajectories_found_northern_hemisphere,
-        trajectories_found_southern_hemisphere,
-        storms
-    )
+    return storms

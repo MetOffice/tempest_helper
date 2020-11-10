@@ -12,7 +12,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 def plot_trajectories_cartopy(storms, filename, title=''):
     """
-    Use Cartopy to plot the loaded trajectories.
+    Use Cartopy to plot the loaded trajectories and save them in the specified
+    file.
 
     :param list storms: The loaded trajectories.
     :param str filename: The full path to save the plot as.
