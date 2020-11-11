@@ -34,5 +34,3 @@ def count_trajectories(storms):
     :rtype: int
     """
     return len(storms)
-
-

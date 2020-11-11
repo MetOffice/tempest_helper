@@ -1,6 +1,5 @@
 # (C) British Crown Copyright 2020, Met Office.
 # Please see LICENSE for license details.
-import logging
 import os
 
 import cartopy.crs as ccrs
@@ -19,7 +18,7 @@ def plot_trajectories_cartopy(storms, filename, title=''):
     :param str filename: The full path to save the plot as.
     :param str title: An optional title to include on the plot.
     """
-    fig = plt.figure(figsize=(9,6), dpi=100)
+    fig = plt.figure(figsize=(9, 6), dpi=100)
     ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=-160))
     ax.set_global()
 

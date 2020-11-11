@@ -4,6 +4,19 @@ import datetime
 
 import cftime
 
+# cftime v1.0.0 doesn't allow a keyword to the datetime method to specify,
+# but this introduced in v1.2.0 and so will have to use the code below to
+# specify the type of datetime object to create
+DATETIME_TYPES = {
+    "noleap": cftime.DatetimeNoLeap,
+    "all_leap": cftime.DatetimeAllLeap,
+    "360_day": cftime.Datetime360Day,
+    "julian": cftime.DatetimeJulian,
+    "gregorian": cftime.DatetimeGregorian,
+    "standard": cftime.DatetimeGregorian,
+    "proleptic_gregorian": cftime.DatetimeProlepticGregorian,
+}
+
 
 def convert_date_to_step(cube, year, month, day, hour, time_period):
     """
@@ -23,20 +36,7 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     """
     calendar = cube.coord("time").units.calendar
 
-    # cftime v1.0.0 doesn't allow a keyword to the datetime method to specify,
-    # but this introduced in v1.2.0 and so will have to use the code below to
-    # specify the type of datetime object to create
-    datetime_types = {
-        "noleap": cftime.DatetimeNoLeap,
-        "all_leap": cftime.DatetimeAllLeap,
-        "360_day": cftime.Datetime360Day,
-        "julian": cftime.DatetimeJulian,
-        "gregorian": cftime.DatetimeGregorian,
-        "standard": cftime.DatetimeGregorian,
-        "proleptic_gregorian": cftime.DatetimeProlepticGregorian,
-    }
-
-    current_datetime = datetime_types[calendar](year, month, day, hour)
+    current_datetime = DATETIME_TYPES[calendar](year, month, day, hour)
     first_point = cube.coord("time").units.num2date(cube.coord("time").points[0])
     time_delta = current_datetime - first_point
     seconds_in_hour = 60 ** 2
@@ -108,20 +108,7 @@ def _calculate_gap_time(cube, year, month, day, hour, time_period):
     """
     calendar = cube.coord("time").units.calendar
 
-    # cftime v1.0.0 doesn't allow a keyword to the datetime method to specify,
-    # but this introduced in v1.2.0 and so will have to use the code below to
-    # specify the type of datetime object to create
-    datetime_types = {
-        "noleap": cftime.DatetimeNoLeap,
-        "all_leap": cftime.DatetimeAllLeap,
-        "360_day": cftime.Datetime360Day,
-        "julian": cftime.DatetimeJulian,
-        "gregorian": cftime.DatetimeGregorian,
-        "standard": cftime.DatetimeGregorian,
-        "proleptic_gregorian": cftime.DatetimeProlepticGregorian,
-    }
-
-    last_datetime = datetime_types[calendar](year, month, day, hour)
+    last_datetime = DATETIME_TYPES[calendar](year, month, day, hour)
     time_delta = datetime.timedelta(hours=time_period)
     this_datetime= last_datetime + time_delta
     this_datetime_tuple = (
