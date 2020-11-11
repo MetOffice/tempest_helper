@@ -64,7 +64,12 @@ def get_trajectories(tracked_file, nc_file, time_period):
                     day = line_array[coords["day"]]
                     hour = line_array[coords["hour"]]
                     step = convert_date_to_step(
-                        cube, int(year), int(month), int(day), int(hour), time_period,
+                        cube,
+                        int(year),
+                        int(month),
+                        int(day),
+                        int(hour),
+                        time_period,
                     )
                     # now check if there is a gap in the traj, if so fill it in
                     if line_of_traj > 0:

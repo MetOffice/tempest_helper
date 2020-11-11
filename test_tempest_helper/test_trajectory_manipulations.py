@@ -27,7 +27,8 @@ class TestConvertDateToStep(unittest.TestCase):
         """Test a different calendar"""
         cube = realistic_3d()
         cal_360day = cf_units.Unit(
-            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY,
+            "hours since 1970-01-01 00:00:00",
+            calendar=cf_units.CALENDAR_360_DAY,
         )
         # realistic_3d() in 360_day starts at 2015-08-16 00:00:00
         cube.coord("time").units = cal_360day
@@ -176,7 +177,8 @@ class TestCalculateGapTime(unittest.TestCase):
         """Test a different calendar"""
         cube = realistic_3d()
         cal_360day = cf_units.Unit(
-            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY,
+            "hours since 1970-01-01 00:00:00",
+            calendar=cf_units.CALENDAR_360_DAY,
         )
         cube.coord("time").units = cal_360day
         actual = _calculate_gap_time(cube, 1978, 2, 29, 21, 12)
