@@ -14,9 +14,9 @@ A Python module for the easier manipulation of
    :caption: Contents:
 
    Installing
-   License
    Data format <data_format>
    tempest_helper documentation <tempest_helper>
+   License
 
 Indices and tables
 ==================

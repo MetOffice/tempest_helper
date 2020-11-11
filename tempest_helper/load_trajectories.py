@@ -9,12 +9,11 @@ from .trajectory_manipulations import convert_date_to_step, fill_trajectory_gaps
 logger = logging.getLogger(__name__)
 
 
-def get_trajectories(tracked_file, num_vars_stitch, nc_file):
+def get_trajectories(tracked_file, nc_file):
     """
     Load the trajectories from the file output by TempestExtremes.
 
     :param str tracked_file: The path to the file produced by TempestExtremes.
-    :param num_vars_stitch: The number of variables in the output file.
     :param nc_file: The path to a netCDF file that the tracking was run on.
     :returns: The loaded trajectories.
     :rtype: list
@@ -24,16 +23,13 @@ def get_trajectories(tracked_file, num_vars_stitch, nc_file):
     # The text at the start of a header element in the TempestExtremes output
     header_delim = 'start'
 
-    # TODO why - 2 + 1?
-    num_vars_offset = num_vars_stitch - 2 + 1
-
     coords = {
         'lon': 2,
         'lat': 3,
-        'year': 3 + num_vars_offset,
-        'month': 3 + num_vars_offset + 1,
-        'day': 3 + num_vars_offset + 2,
-        'hour': 3 + num_vars_offset + 3
+        'year': -4,
+        'month': -3,
+        'day': -2,
+        'hour': -1
     }
 
     # Initialize storms and line counter
@@ -80,5 +76,4 @@ def get_trajectories(tracked_file, num_vars_stitch, nc_file):
                     storm['step'].append(step)
                 line_of_traj += 1  # increment line
 
-    #TODO document in data_format.rst the structure of storms
     return storms
