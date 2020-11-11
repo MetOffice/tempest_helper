@@ -9,12 +9,14 @@ from .trajectory_manipulations import convert_date_to_step, fill_trajectory_gaps
 logger = logging.getLogger(__name__)
 
 
-def get_trajectories(tracked_file, nc_file):
+def get_trajectories(tracked_file, nc_file, time_period):
     """
     Load the trajectories from the file output by TempestExtremes.
 
     :param str tracked_file: The path to the file produced by TempestExtremes.
     :param nc_file: The path to a netCDF file that the tracking was run on.
+    :param int time_period: The time period in hours between time points in the
+        data.
     :returns: The loaded trajectories.
     :rtype: list
     """
@@ -63,14 +65,15 @@ def get_trajectories(tracked_file, nc_file):
                         int(year),
                         int(month),
                         int(day),
-                        int(hour)
+                        int(hour),
+                        time_period
                     )
                     # now check if there is a gap in the traj, if so fill it in
                     if line_of_traj > 0:
                         if (step - storm['step'][-1]) > 1:
                             # add extra points before the next one
-                            fill_trajectory_gaps(storm, step, lon, lat,
-                                                 year, month, day, hour)
+                            fill_trajectory_gaps(storm, step, lon, lat, cube,
+                                                 time_period)
                     for coord in coords:
                         storm[coord].append(line_array[coords[coord]])
                     storm['step'].append(step)

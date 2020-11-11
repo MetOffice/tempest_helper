@@ -39,7 +39,7 @@ def make_loaded_trajectories():
     storm['year'] = ['2014', '2014', '2014']
     storm['month'] = ['12', '12', '12']
     storm['day'] = ['21', '21', '21']
-    storm['hour'] = ['0', '12', '12']
+    storm['hour'] = ['0', '6', '12']
     storm['step'] = [1, 2, 3]
     storms.append(storm)
     return storms

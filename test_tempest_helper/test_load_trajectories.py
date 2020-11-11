@@ -47,5 +47,5 @@ start   2  2014    12   21   0
 
     def test_get_trajectories(self):
         expected = make_loaded_trajectories()
-        actual = get_trajectories(self.track_file, self.netcdf_file)
+        actual = get_trajectories(self.track_file, self.netcdf_file, 6)
         self.assertEqual(expected, actual)

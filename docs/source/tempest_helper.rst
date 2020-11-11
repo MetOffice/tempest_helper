@@ -21,5 +21,9 @@ Analysing data
 
 Utilities
 *********
+
+These functions are used by other functions, but have been exposed here in case
+they are useful to users.
+
 .. automodule:: tempest_helper
    :members: convert_date_to_step, fill_trajectory_gaps
