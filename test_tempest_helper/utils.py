@@ -1,5 +1,7 @@
 # (C) British Crown Copyright 2020, Met Office.
 # Please see LICENSE for license details.
+
+
 def make_loaded_trajectories():
     """
     Make sn example structure of trajectories as returned by
