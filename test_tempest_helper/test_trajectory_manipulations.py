@@ -27,7 +27,7 @@ class TestConvertDateToStep(unittest.TestCase):
         """Test a different calendar"""
         cube = realistic_3d()
         cal_360day = cf_units.Unit(
-            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY
+            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY,
         )
         # realistic_3d() in 360_day starts at 2015-08-16 00:00:00
         cube.coord("time").units = cal_360day
@@ -162,23 +162,23 @@ class TestCalculateGapTime(unittest.TestCase):
         """Basic test"""
         cube = realistic_3d()
         actual = _calculate_gap_time(cube, 1978, 7, 19, 6, 6)
-        expected = ('1978', '7', '19', '12')
+        expected = ("1978", "7", "19", "12")
         self.assertEqual(expected, actual)
 
     def test_gregorian_over_leap_year(self):
         """Basic test"""
         cube = realistic_3d()
         actual = _calculate_gap_time(cube, 1978, 12, 31, 21, 4)
-        expected = ('1979', '1', '1', '1')
+        expected = ("1979", "1", "1", "1")
         self.assertEqual(expected, actual)
 
     def test_360day_calendar(self):
         """Test a different calendar"""
         cube = realistic_3d()
         cal_360day = cf_units.Unit(
-            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY
+            "hours since 1970-01-01 00:00:00", calendar=cf_units.CALENDAR_360_DAY,
         )
         cube.coord("time").units = cal_360day
         actual = _calculate_gap_time(cube, 1978, 2, 29, 21, 12)
-        expected = ('1978', '2', '30', '9')
+        expected = ("1978", "2", "30", "9")
         self.assertEqual(expected, actual)

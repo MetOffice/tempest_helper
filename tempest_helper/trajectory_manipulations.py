@@ -82,7 +82,7 @@ def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period):
             int(storm["month"][-1]),
             int(storm["day"][-1]),
             int(storm["hour"][-1]),
-            time_period
+            time_period,
         )
         storm["year"].append(step_time_components[0])
         storm["month"].append(step_time_components[1])
@@ -110,11 +110,11 @@ def _calculate_gap_time(cube, year, month, day, hour, time_period):
 
     last_datetime = DATETIME_TYPES[calendar](year, month, day, hour)
     time_delta = datetime.timedelta(hours=time_period)
-    this_datetime= last_datetime + time_delta
+    this_datetime = last_datetime + time_delta
     this_datetime_tuple = (
         str(this_datetime.year),
         str(this_datetime.month),
         str(this_datetime.day),
-        str(this_datetime.hour)
+        str(this_datetime.hour),
     )
     return this_datetime_tuple

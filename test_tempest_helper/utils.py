@@ -13,35 +13,35 @@ def make_loaded_trajectories():
     storms = []
     # Northern hemisphere
     storm = {}
-    storm['length'] = 2  # 2 time points
-    storm['lon'] = ['1.0', '2.0']
-    storm['lat'] = ['10.0', '11.0']
-    storm['year'] = ['2014', '2014']
-    storm['month'] = ['12', '12']
-    storm['day'] = ['21', '21']
-    storm['hour'] = ['0', '6']
-    storm['step'] = [1, 2]
+    storm["length"] = 2  # 2 time points
+    storm["lon"] = ["1.0", "2.0"]
+    storm["lat"] = ["10.0", "11.0"]
+    storm["year"] = ["2014", "2014"]
+    storm["month"] = ["12", "12"]
+    storm["day"] = ["21", "21"]
+    storm["hour"] = ["0", "6"]
+    storm["step"] = [1, 2]
     storms.append(storm)
     # Southern hemisphere
     storm = {}
-    storm['length'] = 2  # 2 time points
-    storm['lon'] = ['1.0', '2.0']
-    storm['lat'] = ['-1.0', '0.0']
-    storm['year'] = ['2014', '2014']
-    storm['month'] = ['12', '12']
-    storm['day'] = ['21', '21']
-    storm['hour'] = ['0', '6']
-    storm['step'] = [1, 2]
+    storm["length"] = 2  # 2 time points
+    storm["lon"] = ["1.0", "2.0"]
+    storm["lat"] = ["-1.0", "0.0"]
+    storm["year"] = ["2014", "2014"]
+    storm["month"] = ["12", "12"]
+    storm["day"] = ["21", "21"]
+    storm["hour"] = ["0", "6"]
+    storm["step"] = [1, 2]
     storms.append(storm)
     # Northern hemisphere
     storm = {}
-    storm['length'] = 2  # 2 time points in file
-    storm['lon'] = ['1.0', '1.5', '2.0']
-    storm['lat'] = ['0.0', '0.5', '1.0']
-    storm['year'] = ['2014', '2014', '2014']
-    storm['month'] = ['12', '12', '12']
-    storm['day'] = ['21', '21', '21']
-    storm['hour'] = ['0', '6', '12']
-    storm['step'] = [1, 2, 3]
+    storm["length"] = 2  # 2 time points in file
+    storm["lon"] = ["1.0", "1.5", "2.0"]
+    storm["lat"] = ["0.0", "0.5", "1.0"]
+    storm["year"] = ["2014", "2014", "2014"]
+    storm["month"] = ["12", "12", "12"]
+    storm["day"] = ["21", "21", "21"]
+    storm["hour"] = ["0", "6", "12"]
+    storm["step"] = [1, 2, 3]
     storms.append(storm)
     return storms

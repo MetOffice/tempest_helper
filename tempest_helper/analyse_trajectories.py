@@ -16,7 +16,7 @@ def count_hemispheric_trajectories(storms):
     northern_found = 0
     southern_found = 0
     for storm in storms:
-        lat = float(storm['lat'][0])
+        lat = float(storm["lat"][0])
         if lat < 0.0:
             southern_found += 1
         else:

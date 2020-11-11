@@ -4,12 +4,13 @@ import os
 
 import cartopy.crs as ccrs
 import matplotlib
-if not os.getenv('DISPLAY'):
-    matplotlib.use('Agg')
+
+if not os.getenv("DISPLAY"):
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 
-def plot_trajectories_cartopy(storms, filename, title=''):
+def plot_trajectories_cartopy(storms, filename, title=""):
     """
     Use Cartopy to plot the loaded trajectories and save them in the specified
     file.
@@ -23,8 +24,8 @@ def plot_trajectories_cartopy(storms, filename, title=''):
     ax.set_global()
 
     for storm in storms:
-        lon = [float(index) for index in storm['lon']]
-        lat = [float(index) for index in storm['lat']]
+        lon = [float(index) for index in storm["lon"]]
+        lat = [float(index) for index in storm["lat"]]
         ax.plot(lon, lat, linewidth=1.2, transform=ccrs.Geodetic())
 
     fig.gca().coastlines()

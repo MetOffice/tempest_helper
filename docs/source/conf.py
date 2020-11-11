@@ -15,7 +15,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import tempest_helper                        # noqa: E402
+import tempest_helper  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 
@@ -24,7 +24,7 @@ copyright = "2020, Met Office"
 author = "Met Office"
 
 # The short X.Y version
-version = '.'.join(tempest_helper.__version__.split('.')[:2])
+version = ".".join(tempest_helper.__version__.split(".")[:2])
 # The full version, including alpha/beta/rc tags
 release = tempest_helper.__version__
 
