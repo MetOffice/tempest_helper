@@ -23,7 +23,7 @@ def get_trajectories(tracked_file, nc_file, time_period):
     :returns: The loaded trajectories.
     :rtype: list
     """
-    logger.debug(f"Running getTrajectories on {tracked_file}")
+    logger.debug(f"Running get_trajectories on {tracked_file}")
 
     # The text at the start of a header element in the TempestExtremes output
     header_delim = "start"
@@ -57,18 +57,18 @@ def get_trajectories(tracked_file, nc_file, time_period):
                 storm["step"] = []
             else:
                 if line_of_traj <= track_length:
-                    lon = line_array[coords["lon"]]
-                    lat = line_array[coords["lat"]]
-                    year = line_array[coords["year"]]
-                    month = line_array[coords["month"]]
-                    day = line_array[coords["day"]]
-                    hour = line_array[coords["hour"]]
+                    lon = float(line_array[coords["lon"]])
+                    lat = float(line_array[coords["lat"]])
+                    year = int(line_array[coords["year"]])
+                    month = int(line_array[coords["month"]])
+                    day = int(line_array[coords["day"]])
+                    hour = int(line_array[coords["hour"]])
                     step = convert_date_to_step(
                         cube,
-                        int(year),
-                        int(month),
-                        int(day),
-                        int(hour),
+                        year,
+                        month,
+                        day,
+                        hour,
                         time_period,
                     )
                     # now check if there is a gap in the traj, if so fill it in
@@ -79,7 +79,7 @@ def get_trajectories(tracked_file, nc_file, time_period):
                                 storm, step, lon, lat, cube, time_period
                             )
                     for coord in coords:
-                        storm[coord].append(line_array[coords[coord]])
+                        storm[coord].append(eval(coord))
                     storm["step"].append(step)
                 line_of_traj += 1  # increment line
 

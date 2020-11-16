@@ -53,25 +53,25 @@ class TestFillTrajectoryGaps(unittest.TestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "lat": ["0.0", "1.0"],
-            "lon": ["0.0", "1.0"],
-            "year": ["2000", "2000"],
-            "month": ["1", "1"],
-            "day": ["1", "1"],
-            "hour": ["0", "6"],
+            "lat": [0.0, 1.0],
+            "lon": [0.0, 1.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
         }
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "lat": ["0.0", "1.0", "2.0", "3.0", "4.0"],
-            "lon": ["0.0", "1.0", "2.0", "3.0", "4.0"],
-            "year": ["2000", "2000", "2000", "2000", "2000"],
-            "month": ["1", "1", "1", "1", "1"],
-            "day": ["1", "1", "1", "1", "2"],
-            "hour": ["0", "6", "12", "18", "0"],
+            "lat": [0.0, 1.0, 2.0, 3.0, 4.0],
+            "lon": [0.0, 1.0, 2.0, 3.0, 4.0],
+            "year": [2000, 2000, 2000, 2000, 2000],
+            "month": [1, 1, 1, 1, 1],
+            "day": [1, 1, 1, 1, 2],
+            "hour": [0, 6, 12, 18, 0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, "5.0", "5.0", cube, 6)
+        fill_trajectory_gaps(storm, 6, 5.0, 5.0, cube, 6)
         self.assertEqual(expected, storm)
 
     def test_fill_traj_gap_decreasing(self):
@@ -79,25 +79,25 @@ class TestFillTrajectoryGaps(unittest.TestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "lat": ["1.0", "0.0"],
-            "lon": ["1.0", "0.0"],
-            "year": ["2000", "2000"],
-            "month": ["1", "1"],
-            "day": ["1", "1"],
-            "hour": ["0", "6"],
+            "lat": [1.0, 0.0],
+            "lon": [1.0, 0.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
         }
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "lat": ["1.0", "0.0", "-1.0", "-2.0", "-3.0"],
-            "lon": ["1.0", "0.0", "359.0", "358.0", "357.0"],
-            "year": ["2000", "2000", "2000", "2000", "2000"],
-            "month": ["1", "1", "1", "1", "1"],
-            "day": ["1", "1", "1", "1", "2"],
-            "hour": ["0", "6", "12", "18", "0"],
+            "lat": [1.0, 0.0, -1.0, -2.0, -3.0],
+            "lon": [1.0, 0.0, 359.0, 358.0, 357.0],
+            "year": [2000, 2000, 2000, 2000, 2000],
+            "month": [1, 1, 1, 1, 1],
+            "day": [1, 1, 1, 1, 2],
+            "hour": [0, 6, 12, 18, 0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, "356.0", "-4.0", cube, 6)
+        fill_trajectory_gaps(storm, 6, 356.0, -4.0, cube, 6)
         self.assertEqual(expected, storm)
 
     def test_fill_traj_gap_different_directions(self):
@@ -105,25 +105,25 @@ class TestFillTrajectoryGaps(unittest.TestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "lat": ["0.0", "1.0"],
-            "lon": ["1.0", "0.0"],
-            "year": ["2000", "2000"],
-            "month": ["1", "1"],
-            "day": ["1", "1"],
-            "hour": ["0", "6"],
+            "lat": [0.0, 1.0],
+            "lon": [1.0, 0.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
         }
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "lat": ["0.0", "1.0", "2.0", "3.0", "4.0"],
-            "lon": ["1.0", "0.0", "359.0", "358.0", "357.0"],
-            "year": ["2000", "2000", "2000", "2000", "2000"],
-            "month": ["1", "1", "1", "1", "1"],
-            "day": ["1", "1", "1", "1", "2"],
-            "hour": ["0", "6", "12", "18", "0"],
+            "lat": [0.0, 1.0, 2.0, 3.0, 4.0],
+            "lon": [1.0, 0.0, 359.0, 358.0, 357.0],
+            "year": [2000, 2000, 2000, 2000, 2000],
+            "month": [1, 1, 1, 1, 1],
+            "day": [1, 1, 1, 1, 2],
+            "hour": [0, 6, 12, 18, 0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, "356.0", "5.0", cube, 6)
+        fill_trajectory_gaps(storm, 6, 356.0, 5.0, cube, 6)
         self.assertEqual(expected, storm)
 
     def test_fill_traj_gap_non_integer(self):
@@ -134,25 +134,25 @@ class TestFillTrajectoryGaps(unittest.TestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "lat": ["0.0", "1.5"],
-            "lon": ["1.0", "359.5"],
-            "year": ["2000", "2000"],
-            "month": ["1", "1"],
-            "day": ["1", "1"],
-            "hour": ["0", "6"],
+            "lat": [0.0, 1.5],
+            "lon": [1.0, 359.5],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
         }
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "lat": ["0.0", "1.5", "3.0", "4.5", "6.0"],
-            "lon": ["1.0", "359.5", "358.0", "356.5", "355.0"],
-            "year": ["2000", "2000", "2000", "2000", "2000"],
-            "month": ["1", "1", "1", "1", "1"],
-            "day": ["1", "1", "1", "1", "2"],
-            "hour": ["0", "6", "12", "18", "0"],
+            "lat": [0.0, 1.5, 3.0, 4.5, 6.0],
+            "lon": [1.0, 359.5, 358.0, 356.5, 355.0],
+            "year": [2000, 2000, 2000, 2000, 2000],
+            "month": [1, 1, 1, 1, 1],
+            "day": [1, 1, 1, 1, 2],
+            "hour": [0, 6, 12, 18, 0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, "353.5", "7.5", cube, 6)
+        fill_trajectory_gaps(storm, 6, 353.5, 7.5, cube, 6)
         self.assertEqual(expected, storm)
 
 
@@ -163,14 +163,14 @@ class TestCalculateGapTime(unittest.TestCase):
         """Basic test"""
         cube = realistic_3d()
         actual = _calculate_gap_time(cube, 1978, 7, 19, 6, 6)
-        expected = ("1978", "7", "19", "12")
+        expected = (1978, 7, 19, 12)
         self.assertEqual(expected, actual)
 
     def test_gregorian_over_leap_year(self):
         """Basic test"""
         cube = realistic_3d()
         actual = _calculate_gap_time(cube, 1978, 12, 31, 21, 4)
-        expected = ("1979", "1", "1", "1")
+        expected = (1979, 1, 1, 1)
         self.assertEqual(expected, actual)
 
     def test_360day_calendar(self):
@@ -182,5 +182,5 @@ class TestCalculateGapTime(unittest.TestCase):
         )
         cube.coord("time").units = cal_360day
         actual = _calculate_gap_time(cube, 1978, 2, 29, 21, 12)
-        expected = ("1978", "2", "30", "9")
+        expected = (1978, 2, 30, 9)
         self.assertEqual(expected, actual)
