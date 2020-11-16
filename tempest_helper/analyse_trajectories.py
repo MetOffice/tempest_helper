@@ -16,7 +16,7 @@ def count_hemispheric_trajectories(storms):
     northern_found = 0
     southern_found = 0
     for storm in storms:
-        lat = float(storm["lat"][0])
+        lat = storm["lat"][0]
         if lat < 0.0:
             southern_found += 1
         else:
@@ -30,7 +30,7 @@ def count_trajectories(storms):
     From a loaded trajectory count the number of storms.
 
     :param list storms: The storm trajectories loaded from TempestExtremes.
-    :returns: The number of the trajectories.
+    :returns: The number of trajectories.
     :rtype: int
     """
     return len(storms)

@@ -24,9 +24,7 @@ def plot_trajectories_cartopy(storms, filename, title=""):
     ax.set_global()
 
     for storm in storms:
-        lon = [float(index) for index in storm["lon"]]
-        lat = [float(index) for index in storm["lat"]]
-        ax.plot(lon, lat, linewidth=1.2, transform=ccrs.Geodetic())
+        ax.plot(storm["lon"], storm["lat"], linewidth=1.2, transform=ccrs.Geodetic())
 
     fig.gca().coastlines()
 
