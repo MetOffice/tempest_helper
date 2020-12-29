@@ -1,6 +1,6 @@
 # (C) British Crown Copyright 2020, Met Office.
 # Please see LICENSE for license details.
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from tempest_helper.analyse_trajectories import (
     count_hemispheric_trajectories,
