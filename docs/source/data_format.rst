@@ -2,7 +2,7 @@ Data Format
 ===========
 
 Data is loaded from the TempestExtremes track files by the
-`tempest_helper.get_trajectories()` function and is returned as a list of dictionaries.
+``tempest_helper.get_trajectories()`` function and is returned as a list of dictionaries.
 Each dictionary represents an individual trajectory and contains the key-value
 pairs shown below; most values are lists of consecutive points in the trajectory.
 
@@ -25,5 +25,5 @@ pairs shown below; most values are lists of consecutive points in the trajectory
 +-------------+------------+-------------------------------------------------------------------------------------------+
 
 [1] Any gaps in the trajectory are interpolated over and so there may be more
-points in the trajectory than are listed in the `length` value. The actual
-number of points can be found with `len(storm['step'])`.
+points in the trajectory than are listed in the ``length`` value. The actual
+number of points can be found with ``len(storm['step'])``.

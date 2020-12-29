@@ -16,6 +16,8 @@ A Python module for the easier manipulation of
    Installing
    Data format <data_format>
    tempest_helper documentation <tempest_helper>
+   Developing
+   Contributing
    License
 
 Indices and tables

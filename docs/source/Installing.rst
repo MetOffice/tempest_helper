@@ -12,4 +12,4 @@ many scientific Python installations:
 * Matplotlib
 
 Once the prerequisites are available then checkout the code and add it to your
-`PYTHONPATH` environment variable.
+``PYTHONPATH`` environment variable.
