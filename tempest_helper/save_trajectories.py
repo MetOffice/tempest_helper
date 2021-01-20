@@ -80,9 +80,9 @@ def guess_variable_units(output_vars):
 
 
 def save_trajectories_netcdf(directory, savefname, storms, calendar,
-                             time_units, variable_units, frequency, 
-                             um_suiteid, resolution_code, cmd_detect, 
-                             cmd_stitch, output_vars_default, 
+                             time_units, variable_units, frequency,
+                             um_suiteid, resolution_code, cmd_detect,
+                             cmd_stitch, output_vars_default,
                              output_vars_extra=None,
                              startperiod=None, endperiod=None):
     """
@@ -121,7 +121,7 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
     nc.end_date = endperiod
     nc.institution_id = 'MOHC'
     nc.algorithm = 'TempestExtremes_v2'
-    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; '+\
+    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; ' + \
                        'Ullrich et al. 2020'
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
@@ -222,7 +222,9 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
         for ipt in range(storm['length']):
             tunit = utime(time_units, calendar=calendar)
             t1 = tunit.date2num(datetime(storm['year'][ipt],
-                    storm['month'][ipt], storm['day'][ipt], storm['hour'][ipt]))
+                                         storm['month'][ipt],
+                                         storm['day'][ipt],
+                                         storm['hour'][ipt]))
             time.append(t1)
             index.append(ipt)
             lon.append(storm['lon'][ipt])
