@@ -16,7 +16,8 @@ def define_netcdf_metadata(var, variable_units):
 
     :param str var: Variable name for which metadata is required
     :param variable_units: The units of the variables
-    :return: strings for netcdf metadata for standard_name, long_name, description, units
+    :return: strings for netcdf metadata for standard_name, 
+        long_name, description, units
     :rtype: Four strings
      """
     long_name = 'unknown'
@@ -52,6 +53,7 @@ def define_netcdf_metadata(var, variable_units):
 
     return standard_name, long_name, description, units
 
+
 def guess_variable_units(output_vars):
     '''
     In the case that variable_units are not passed into save_trajectories, 
@@ -76,13 +78,18 @@ def guess_variable_units(output_vars):
         variable_units[var] = units[var]
     return variable_units
 
-def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units, variable_units, frequency, um_suiteid, resolution_code, cmd_detect, cmd_stitch, output_vars_default, output_vars_extra=None, startperiod=None, endperiod=None):
+
+def save_trajectories_netcdf(directory, savefname, storms, calendar, 
+        time_units, variable_units, frequency, um_suiteid, resolution_code, 
+        cmd_detect, cmd_stitch, output_vars_default, output_vars_extra=None, 
+        startperiod=None, endperiod=None):
     """
     Create netcdf file for the tracks. 
 
     :param str directory: Output directory
     :param str savefname: Output filename
-    :param list storms: The loaded trajectories, each list component is a dictionary.
+    :param list storms: The loaded trajectories, each list component is a 
+        dictionary.
     :param str calendar: The calendar used by the model (360_day, gregorian etc)
     :param str time_units: The units for the calendar 
     :param dict variable_units: The units of the variables as a dictionary
@@ -91,8 +98,10 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units,
     :param str resolution_code: The UM resolution string (e.g. N216)
     :param str cmd_detect: The command string used in the detection
     :param str cmd_stitch: The command string used in the stitching
-    :param list output_vars_default: The default output variables required in the netcdf file
-    :param list output_vars_extra: The additional output variables required in the netcdf file
+    :param list output_vars_default: The default output variables required in 
+        the netcdf file
+    :param list output_vars_extra: The additional output variables required in 
+        the netcdf file
     :param str startperiod: The start of the time period for this file
     :param str endperiod: The end of the time period for this file
     """
@@ -103,7 +112,6 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units,
     nc.title = 'Tempest TC tracks'
     nc.directory = directory
     nc.tracked_data_frequency = frequency
-    #nc.TRACK_DURATION_MIN = np.float64(self.TRACK_DURATION_MIN)
 
     nc.mo_runid = um_suiteid
     nc.grid = resolution_code
@@ -115,7 +123,8 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units,
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
 
-    record_length = 0; tracks = 0
+    record_length = 0
+    tracks = 0
     for storm in storms:
         tracks += 1
         storm_length = storm['length']
@@ -132,7 +141,7 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units,
     nc.createVariable('lon', 'f4', ('record'))
     nc.createVariable('lat', 'f4', ('record'))
 
-    if output_vars_extra != None:
+    if output_vars_extra is not None:
         output_vars_all = output_vars_default.copy()
         output_vars_all.extend(output_vars_extra)
 
@@ -170,7 +179,7 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units,
     nc.variables['time'].standard_name = 'time'
     nc.variables['time'].long_name = 'time'
 
-    if variable_units == None:
+    if variable_units is None:
         variable_units = guess_variable_units(output_vars_all)
 
     for var in output_vars_all:
@@ -184,8 +193,13 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar, time_units,
     # read the storms and write the values to the file
     # track: first_pt, num_pts, track_id
     # record: lat, lon, time, slp, index(0:tracklen-1)
-    first_pt = []; num_pts = []; track_id = []
-    lon = []; lat = []; time = []; index = []
+    first_pt = []
+    num_pts = []
+    track_id = []
+    lon = []
+    lat = []
+    time = []
+    index = []
 
     variables_to_write = {}
     for var in output_vars_all:

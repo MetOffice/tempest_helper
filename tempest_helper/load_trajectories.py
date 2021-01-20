@@ -12,7 +12,7 @@ from .trajectory_manipulations import (
 logger = logging.getLogger(__name__)
 
 
-def get_trajectories(tracked_file, nc_file, time_period, coords_new = {}):
+def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
     """
     Load the trajectories from the file output by TempestExtremes.
 
@@ -38,7 +38,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new = {}):
             "hour": -1,
     }
     if not any(coords_new):
-        #default values in the tracked_file lines
+        # default values in the tracked_file lines
         coords_variable = {
             "slp": 4,
             "sfcWind": 5,
@@ -53,7 +53,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new = {}):
         coords_all = coords_position.copy()
         coords_new = coords_all.update(coords_variable)
 
-    print ('coords ',coords_all)
+    print('coords ',coords_all)
     # Initialize storms and line counter
     storms = []
     new_var = {}
