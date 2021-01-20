@@ -23,6 +23,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new = {}):
     :returns: The loaded trajectories.
     :rtype: list
     """
+
     logger.debug(f"Running get_trajectories on {tracked_file}")
 
     # The text at the start of a header element in the TempestExtremes output
