@@ -16,7 +16,7 @@ def define_netcdf_metadata(var, variable_units):
 
     :param str var: Variable name for which metadata is required
     :param variable_units: The units of the variables
-    :return: strings for netcdf metadata for standard_name, 
+    :return: strings for netcdf metadata for standard_name,
         long_name, description, units
     :rtype: Four strings
      """
@@ -56,7 +56,7 @@ def define_netcdf_metadata(var, variable_units):
 
 def guess_variable_units(output_vars):
     '''
-    In the case that variable_units are not passed into save_trajectories, 
+    In the case that variable_units are not passed into save_trajectories,
     we attempt to guess them here
     :param list output_vars: The output variable names for which units are required
     :return: A dictionary of variable units
@@ -79,34 +79,34 @@ def guess_variable_units(output_vars):
     return variable_units
 
 
-def save_trajectories_netcdf(directory, savefname, storms, calendar, 
-        time_units, variable_units, frequency, um_suiteid, resolution_code, 
-        cmd_detect, cmd_stitch, output_vars_default, output_vars_extra=None, 
+def save_trajectories_netcdf(directory, savefname, storms, calendar,
+        time_units, variable_units, frequency, um_suiteid, resolution_code,
+        cmd_detect, cmd_stitch, output_vars_default, output_vars_extra=None,
         startperiod=None, endperiod=None):
     """
-    Create netcdf file for the tracks. 
+    Create netcdf file for the tracks.
 
     :param str directory: Output directory
     :param str savefname: Output filename
-    :param list storms: The loaded trajectories, each list component is a 
+    :param list storms: The loaded trajectories, each list component is a
         dictionary.
     :param str calendar: The calendar used by the model (360_day, gregorian etc)
-    :param str time_units: The units for the calendar 
+    :param str time_units: The units for the calendar
     :param dict variable_units: The units of the variables as a dictionary
     :param str frequency: The frequency of the data for netcdf metadata
     :param str um_suiteid: The UM model suiteid for netcdf metadata
     :param str resolution_code: The UM resolution string (e.g. N216)
     :param str cmd_detect: The command string used in the detection
     :param str cmd_stitch: The command string used in the stitching
-    :param list output_vars_default: The default output variables required in 
+    :param list output_vars_default: The default output variables required in
         the netcdf file
-    :param list output_vars_extra: The additional output variables required in 
+    :param list output_vars_extra: The additional output variables required in
         the netcdf file
     :param str startperiod: The start of the time period for this file
     :param str endperiod: The end of the time period for this file
     """
     logger.debug('making netCDF of outputs')
-        
+
     savefname = savefname
     nc = Dataset(savefname, 'w', format='NETCDF4')
     nc.title = 'Tempest TC tracks'
@@ -119,7 +119,8 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
     nc.end_date = endperiod
     nc.institution_id = 'MOHC'
     nc.algorithm = 'TempestExtremes_v2'
-    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; Ullrich et al. 2020'
+    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; '+
+                       'Ullrich et al. 2020'
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
 
@@ -130,8 +131,8 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
         storm_length = storm['length']
         record_length += storm_length
 
-    nc.createDimension('tracks', size = tracks) # unlimited
-    nc.createDimension('record', size = record_length)
+    nc.createDimension('tracks', size=tracks) # unlimited
+    nc.createDimension('record', size=record_length)
 
     nc.createVariable('FIRST_PT', np.int32, ('tracks'))
     nc.createVariable('NUM_PTS', np.int32, ('tracks'))
@@ -162,17 +163,19 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
 
     nc.variables['index'].units = 'ordinal'
     nc.variables['index'].long_name = 'track_id'
-    nc.variables['index'].description = 'Track sequence number (0 - length of track - 1)'
+    nc.variables['index'].description = 'Track sequence number (0-length of track-1)'
 
     nc.variables['lat'].units = 'degrees_north'
     nc.variables['lat'].standard_name = 'latitude'
     nc.variables['lat'].long_name = 'latitude'
-    nc.variables['lat'].description = 'Latitude (degrees north) associated with tracked variable'
+    nc.variables['lat'].description = 'Latitude (degrees north) associated '+
+                                      'with tracked variable'
 
     nc.variables['lon'].units = 'degrees_east'
     nc.variables['lon'].standard_name = 'longitude'
     nc.variables['lon'].long_name = 'longitude'
-    nc.variables['lon'].description = 'Longitude (degrees east) associated with tracked variable'
+    nc.variables['lon'].description = 'Longitude (degrees east) associated '+
+                                      'with tracked variable'
 
     nc.variables['time'].units = time_units
     nc.variables['time'].calendar = calendar
@@ -183,7 +186,8 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
         variable_units = guess_variable_units(output_vars_all)
 
     for var in output_vars_all:
-        standard_name, long_name, description, v_units = define_netcdf_metadata(var, variable_units)
+        standard_name, long_name, description, v_units = 
+                                 define_netcdf_metadata(var, variable_units)
         logger.debug(f"var, units {var} {v_units} ")
         nc.variables[var].standard_name = standard_name
         nc.variables[var].long_name = long_name
@@ -213,8 +217,9 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
         first_pt_index += storm['length']
 
         for ipt in range(storm['length']):
-            tunit = utime(time_units, calendar = calendar)
-            t1 = tunit.date2num(datetime(storm['year'][ipt], storm['month'][ipt], storm['day'][ipt], storm['hour'][ipt]))
+            tunit = utime(time_units, calendar=calendar)
+            t1 = tunit.date2num(datetime(storm['year'][ipt], 
+                storm['month'][ipt], storm['day'][ipt], storm['hour'][ipt]))
             time.append(t1)
             index.append(ipt)
             lon.append(storm['lon'][ipt])

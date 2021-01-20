@@ -47,10 +47,10 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
 def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period, new_var):
     """
     Fill the gap by linearly interpolating the last latitude, longitude,
-    time and other values from the last of these values up to step. The 
-    trajectory is passed in to the `storm` attribute and is a standard 
-    `tempest_helper` dictionary. Longitudes and their interpolation may wrap 
-    around the 0/360 degree numerical discontinuity. The longitudes output 
+    time and other values from the last of these values up to step. The
+    trajectory is passed in to the `storm` attribute and is a standard
+    `tempest_helper` dictionary. Longitudes and their interpolation may wrap
+    around the 0/360 degree numerical discontinuity. The longitudes output
     are between 0 and 359 degrees.
 
     :param dict storm: Details of the current storm.

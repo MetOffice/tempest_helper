@@ -53,7 +53,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
         coords_all = coords_position.copy()
         coords_new = coords_all.update(coords_variable)
 
-    print('coords ',coords_all)
+    print('coords ', coords_all)
     # Initialize storms and line counter
     storms = []
     new_var = {}
