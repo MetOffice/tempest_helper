@@ -188,8 +188,8 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
         variable_units = guess_variable_units(output_vars_all)
 
     for var in output_vars_all:
-        standard_name, long_name, description, v_units =
-        define_netcdf_metadata(var, variable_units)
+        standard_name, long_name, description, v_units = \
+                                    define_netcdf_metadata(var, variable_units)
 
         logger.debug(f"var, units {var} {v_units} ")
         nc.variables[var].standard_name = standard_name
