@@ -121,8 +121,8 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
     nc.end_date = endperiod
     nc.institution_id = 'MOHC'
     nc.algorithm = 'TempestExtremes_v2'
-    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; '+
-    'Ullrich et al. 2020'
+    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; '+\
+                       'Ullrich et al. 2020'
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
 
