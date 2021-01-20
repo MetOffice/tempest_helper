@@ -170,14 +170,14 @@ def save_trajectories_netcdf(directory, savefname, storms, calendar,
     nc.variables['lat'].units = 'degrees_north'
     nc.variables['lat'].standard_name = 'latitude'
     nc.variables['lat'].long_name = 'latitude'
-    nc.variables['lat'].description = 'Latitude (degrees north) associated '+
-    'with tracked variable'
+    nc.variables['lat'].description = 'Latitude (degrees north) associated ' + \
+                                      'with tracked variable'
 
     nc.variables['lon'].units = 'degrees_east'
     nc.variables['lon'].standard_name = 'longitude'
     nc.variables['lon'].long_name = 'longitude'
-    nc.variables['lon'].description = 'Longitude (degrees east) associated '+
-    'with tracked variable'
+    nc.variables['lon'].description = 'Longitude (degrees east) associated ' + \
+                                      'with tracked variable'
 
     nc.variables['time'].units = time_units
     nc.variables['time'].calendar = calendar
