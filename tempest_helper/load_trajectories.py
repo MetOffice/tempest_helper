@@ -17,9 +17,11 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
     Load the trajectories from the file output by TempestExtremes.
 
     :param str tracked_file: The path to the file produced by TempestExtremes.
-    :param nc_file: The path to a netCDF file that the tracking was run on.
+    :param str nc_file: The path to a netCDF file that the tracking was run on.
     :param int time_period: The time period in hours between time points in the
         data.
+    :param dict coords_new: The additional entry names (if applicable) as
+        columns in the storm text file
     :returns: The loaded trajectories.
     :rtype: list
     """
