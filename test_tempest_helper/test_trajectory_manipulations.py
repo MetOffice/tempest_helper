@@ -28,7 +28,7 @@ def are_almost_equal(o1, o2, rel_tol=1e-9, abs_tol=0.0):
                     if not test:
                         return test
                 elif isinstance(o1[key], list):
-                    for a,b in zip(o1[key], o2[key]):
+                    for a, b in zip(o1[key], o2[key]):
                         test = math.isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
                         if not test:
                             return test
@@ -104,9 +104,9 @@ class TestFillTrajectoryGaps(unittest.TestCase):
         cube = realistic_3d()
         new_var = {'slp': 99995.0, 'sfcWind': 6.5, 'zg': 5095., 'orog': 0.0}
         fill_trajectory_gaps(storm, 6, 5.0, 5.0, cube, 6, new_var)
-        print('storm ',storm)
-        print('expected ',expected)
-        print('are_almost_equal ',are_almost_equal(expected, storm))
+        print('storm ', storm)
+        print('expected ', expected)
+        print('are_almost_equal ', are_almost_equal(expected, storm))
         self.assertTrue(are_almost_equal(expected, storm))
 
     def test_fill_traj_gap_decreasing(self):
