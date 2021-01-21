@@ -4,12 +4,35 @@ import unittest
 
 import cf_units
 from iris.tests.stock import realistic_3d
+import math
 
 from tempest_helper.trajectory_manipulations import (
     _calculate_gap_time,
     convert_date_to_step,
     fill_trajectory_gaps,
 )
+
+
+def are_almost_equal(o1, o2, rel_tol=1e-9, abs_tol=0.0):
+    '''
+    Test if each element of dictionary o1, o2 are almost the same
+    '''
+    print('instance ', isinstance(o1, dict))
+    if isinstance(o1, dict):
+        if len(o1) != len(o2):
+            return False
+        else:
+            for key in sorted(o1.keys()):
+                if isinstance(o1[key], float):
+                    test = math.isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
+                    if not test:
+                        return test
+                elif isinstance(o1[key], list):
+                    for a,b in zip(o1[key], o2[key]):
+                        test = math.isclose(a, b, rel_tol=rel_tol, abs_tol=abs_tol)
+                        if not test:
+                            return test
+    return True
 
 
 class TestConvertDateToStep(unittest.TestCase):
@@ -79,9 +102,12 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
+        new_var = {'slp': 99995.0, 'sfcWind': 6.5, 'zg': 5095., 'orog': 0.0}
         fill_trajectory_gaps(storm, 6, 5.0, 5.0, cube, 6, new_var)
-        self.assertEqual(expected, storm)
+        print('storm ',storm)
+        print('expected ',expected)
+        print('are_almost_equal ',are_almost_equal(expected, storm))
+        self.assertTrue(are_almost_equal(expected, storm))
 
     def test_fill_traj_gap_decreasing(self):
         """Test decreasing latitude and longitude"""
@@ -114,9 +140,9 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
+        new_var = {'slp': 99995.0, 'sfcWind': 6.5, 'zg': 5095., 'orog': 0.0}
         fill_trajectory_gaps(storm, 6, 356.0, -4.0, cube, 6, new_var)
-        self.assertEqual(expected, storm)
+        self.assertTrue(are_almost_equal(expected, storm))
 
     def test_fill_traj_gap_different_directions(self):
         """Test increasing latitude and decreasing longitude"""
@@ -149,9 +175,9 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
+        new_var = {'slp': 99995.0, 'sfcWind': 6.5, 'zg': 5095., 'orog': 0.0}
         fill_trajectory_gaps(storm, 6, 356.0, 5.0, cube, 6, new_var)
-        self.assertEqual(expected, storm)
+        self.assertTrue(are_almost_equal(expected, storm))
 
     def test_fill_traj_gap_non_integer(self):
         """
@@ -187,9 +213,9 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
+        new_var = {'slp': 99995.0, 'sfcWind': 6.5, 'zg': 5095., 'orog': 0.0}
         fill_trajectory_gaps(storm, 6, 353.5, 7.5, cube, 6, new_var)
-        self.assertEqual(expected, storm)
+        self.assertTrue(are_almost_equal(expected, storm))
 
 
 class TestCalculateGapTime(unittest.TestCase):
