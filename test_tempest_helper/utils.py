@@ -53,7 +53,7 @@ def make_loaded_trajectories():
     storm["step"] = [1, 2, 3]
     storm["slp"] = [9.997331e+04, 9.9879215e+04, 9.978512e+04]
     storm["sfcWind"] = [1.206617e+01, 1.1432575e+01, 1.079898e+01]
-    storm["zg"] = [5.092293e+03, 5.1024054e+3, 5.112520e+03]
+    storm["zg"] = [5.092293e+03, 5.1024065e+3, 5.112520e+03]
     storm["orog"] = [0.000000e+00, 0.000000e+00, 0.000000e+00]
     storms.append(storm)
     return storms

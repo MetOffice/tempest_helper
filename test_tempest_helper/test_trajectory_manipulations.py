@@ -79,7 +79,7 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': [99996.0], 'sfcWind': [6.3], 'zg': [5094.], 'orog': [2.0]}
+        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
         fill_trajectory_gaps(storm, 6, 5.0, 5.0, cube, 6, new_var)
         self.assertEqual(expected, storm)
 
@@ -114,7 +114,7 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': [99996.0], 'sfcWind': [6.3], 'zg': [5094.], 'orog': [2.0]}
+        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
         fill_trajectory_gaps(storm, 6, 356.0, -4.0, cube, 6, new_var)
         self.assertEqual(expected, storm)
 
@@ -149,7 +149,7 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': [99996.0], 'sfcWind': [6.3], 'zg': [5094.], 'orog': [2.0]}
+        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
         fill_trajectory_gaps(storm, 6, 356.0, 5.0, cube, 6, new_var)
         self.assertEqual(expected, storm)
 
@@ -187,7 +187,7 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "orog": [10.0, 8.0, 6.0, 4.0, 2.0]
         }
         cube = realistic_3d()
-        new_var = {'slp': [99996.0], 'sfcWind': [6.3], 'zg': [5094.], 'orog': [2.0]}
+        new_var = {'slp': 99996.0, 'sfcWind': 6.3, 'zg': 5094., 'orog': 2.0}
         fill_trajectory_gaps(storm, 6, 353.5, 7.5, cube, 6, new_var)
         self.assertEqual(expected, storm)
 
