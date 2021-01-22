@@ -21,10 +21,10 @@ def make_loaded_trajectories():
     storm["day"] = [21, 21]
     storm["hour"] = [0, 6]
     storm["step"] = [1, 2]
-    storm["slp"] = [9.997331e+04, 9.978512e+04]
-    storm["sfcWind"] = [1.206617e+01, 1.079898e+01]
-    storm["zg"] = [5.092293e+03, 5.112520e+03]
-    storm["orog"] = [0.000000e+00, 0.000000e+00]
+    storm["slp"] = [9.997331e04, 9.978512e04]
+    storm["sfcWind"] = [1.206617e01, 1.079898e01]
+    storm["zg"] = [5.092293e03, 5.112520e03]
+    storm["orog"] = [0.000000e00, 0.000000e00]
     storms.append(storm)
     # Southern hemisphere
     storm = {}
@@ -36,10 +36,10 @@ def make_loaded_trajectories():
     storm["day"] = [21, 21]
     storm["hour"] = [0, 6]
     storm["step"] = [1, 2]
-    storm["slp"] = [9.997331e+04, 9.978512e+04]
-    storm["sfcWind"] = [1.206617e+01, 1.079898e+01]
-    storm["zg"] = [5.092293e+03, 5.112520e+03]
-    storm["orog"] = [0.000000e+00, 0.000000e+00]
+    storm["slp"] = [9.997331e04, 9.978512e04]
+    storm["sfcWind"] = [1.206617e01, 1.079898e01]
+    storm["zg"] = [5.092293e03, 5.112520e03]
+    storm["orog"] = [0.000000e00, 0.000000e00]
     storms.append(storm)
     # Northern hemisphere
     storm = {}
@@ -51,9 +51,9 @@ def make_loaded_trajectories():
     storm["day"] = [21, 21, 21]
     storm["hour"] = [0, 6, 12]
     storm["step"] = [1, 2, 3]
-    storm["slp"] = [9.997331e+04, 9.9879215e+04, 9.978512e+04]
-    storm["sfcWind"] = [1.206617e+01, 1.1432575e+01, 1.079898e+01]
-    storm["zg"] = [5.092293e+03, 5.1024065e+3, 5.112520e+03]
-    storm["orog"] = [0.000000e+00, 0.000000e+00, 0.000000e+00]
+    storm["slp"] = [9.997331e04, 9.9879215e04, 9.978512e04]
+    storm["sfcWind"] = [1.206617e01, 1.1432575e01, 1.079898e01]
+    storm["zg"] = [5.092293e03, 5.1024065e3, 5.112520e03]
+    storm["orog"] = [0.000000e00, 0.000000e00, 0.000000e00]
     storms.append(storm)
     return storms

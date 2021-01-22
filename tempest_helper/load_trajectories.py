@@ -32,12 +32,12 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
     header_delim = "start"
 
     coords_position = {
-            "lon": 2,
-            "lat": 3,
-            "year": -4,
-            "month": -3,
-            "day": -2,
-            "hour": -1,
+        "lon": 2,
+        "lat": 3,
+        "year": -4,
+        "month": -3,
+        "day": -2,
+        "hour": -1,
     }
     if not any(coords_new):
         # default values in the tracked_file lines
@@ -55,7 +55,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
         coords_all = coords_position.copy()
         coords_new = coords_all.update(coords_variable)
 
-    print('coords ', coords_all)
+    print("coords ", coords_all)
     # Initialize storms and line counter
     storms = []
     new_var = {}
