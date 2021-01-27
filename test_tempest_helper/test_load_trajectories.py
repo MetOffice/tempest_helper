@@ -46,7 +46,7 @@ start   2  2014    12   21   0
 
     def test_get_trajectories(self):
         for expected, actual in zip(
-                make_loaded_trajectories(),
-                get_trajectories(self.track_file, self.netcdf_file, 6)
+            make_loaded_trajectories(),
+            get_trajectories(self.track_file, self.netcdf_file, 6),
         ):
             self.assertTempestDictEqual(expected, actual)

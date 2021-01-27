@@ -21,8 +21,9 @@ class TempestHelperTestCase(TestCase):
         cls.rel_tol = 1e-9
         cls.abs_tol = 0.0
 
-    def assertTempestDictEqual(self, expected: Dict[Any, Any],
-                               actual: Dict[Any, Any]) -> None:
+    def assertTempestDictEqual(
+        self, expected: Dict[Any, Any], actual: Dict[Any, Any]
+    ) -> None:
         expected_keys = sorted(list(expected.keys()))
         actual_keys = sorted(list(actual.keys()))
         if expected_keys != actual_keys:
@@ -31,21 +32,28 @@ class TempestHelperTestCase(TestCase):
             if not isinstance(expected[key], type(actual[key])):
                 self.fail(
                     f"Key {key} type {type(expected[key]).__name__} != "
-                    f"{type(actual[key]).__name__}")
+                    f"{type(actual[key]).__name__}"
+                )
             elif isinstance(expected[key], int):
                 if not expected[key] == actual[key]:
-                    self.fail(
-                        f"{key} {expected[key]} != {actual[key]}")
+                    self.fail(f"{key} {expected[key]} != {actual[key]}")
             elif isinstance(expected[key], float):
-                if not isclose(expected[key], actual[key], rel_tol=self.rel_tol,
-                               abs_tol=self.abs_tol):
+                if not isclose(
+                    expected[key],
+                    actual[key],
+                    rel_tol=self.rel_tol,
+                    abs_tol=self.abs_tol,
+                ):
                     self.fail(
                         f"{key} is not close {expected[key]}, {actual[key]} "
-                        f"with rel_tol={self.rel_tol} abs_tol={self.abs_tol}")
+                        f"with rel_tol={self.rel_tol} abs_tol={self.abs_tol}"
+                    )
             elif isinstance(expected[key], list):
                 if len(expected[key]) != len(actual[key]):
-                    self.fail(f"Key {key} length {len(expected[key])} != "
-                              f"{len(actual[key])}")
+                    self.fail(
+                        f"Key {key} length {len(expected[key])} != "
+                        f"{len(actual[key])}"
+                    )
                 for a, b in zip(expected[key], actual[key]):
                     if type(a) != type(b):
                         self.fail(f"Key {key} value type {a} != {b}")
@@ -53,17 +61,21 @@ class TempestHelperTestCase(TestCase):
                         if not a == b:
                             self.fail(f"Key {key} value {a} != {b}")
                     elif isinstance(b, float):
-                        if not isclose(a, b, rel_tol=self.rel_tol,
-                                       abs_tol=self.abs_tol):
-                            self.fail(f"Key {key} value is not close {a} {b} "
-                                      f"with rel_tol={self.rel_tol} "
-                                      f"abs_tol={self.abs_tol}")
+                        if not isclose(
+                            a, b, rel_tol=self.rel_tol, abs_tol=self.abs_tol
+                        ):
+                            self.fail(
+                                f"Key {key} value is not close {a} {b} "
+                                f"with rel_tol={self.rel_tol} "
+                                f"abs_tol={self.abs_tol}"
+                            )
                     else:
-                        self.fail(f"Key {key} no test for value {a} type "
-                                  f"{type(a).__name__}")
+                        self.fail(
+                            f"Key {key} no test for value {a} type "
+                            f"{type(a).__name__}"
+                        )
             else:
-                self.fail(
-                    f"Key {key} no test for type {type(expected[key]).__name__}")
+                self.fail(f"Key {key} no test for type {type(expected[key]).__name__}")
 
 
 def make_loaded_trajectories():
