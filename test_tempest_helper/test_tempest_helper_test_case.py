@@ -37,7 +37,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": {"c": 3}}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b type list != dict",
+            "b type list != dict",
             self.assertTempestDictEqual,
             self.expected,
             actual,
@@ -47,7 +47,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1.0, "b": [1, 2]}
         self.assertRaisesRegex(
             AssertionError,
-            "Key a type int != float",
+            "a type int != float",
             self.assertTempestDictEqual,
             self.expected,
             actual,
@@ -68,7 +68,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 2.0, "b": [1, 2]}
         self.assertRaisesRegex(
             AssertionError,
-            "a is not close 1.0, 2.0 with " "rel_tol=1e-09 abs_tol=0.0",
+            "a is not close 1.0, 2.0 with rel_tol=1e-09 abs_tol=0.0",
             self.assertTempestDictEqual,
             expected,
             actual,
@@ -102,7 +102,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         self.abs_tol = 0.5
         self.assertRaisesRegex(
             AssertionError,
-            "a is not close 1.0, 2.0 with " "rel_tol=1e-09 abs_tol=0.5",
+            "a is not close 1.0, 2.0 with rel_tol=1e-09 abs_tol=0.5",
             self.assertTempestDictEqual,
             expected,
             actual,
@@ -120,7 +120,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         self.rel_tol = 0.05
         self.assertRaisesRegex(
             AssertionError,
-            "a is not close 1.0, 1.06 with " "rel_tol=0.05 abs_tol=0.0",
+            "a is not close 1.0, 1.06 with rel_tol=0.05 abs_tol=0.0",
             self.assertTempestDictEqual,
             expected,
             actual,
@@ -130,7 +130,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": [1, 2, 3]}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b length 2 != 3",
+            "b length 2 != 3",
             self.assertTempestDictEqual,
             self.expected,
             actual,
@@ -140,7 +140,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": [1.0, 2]}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b value type 1 != 1.0",
+            "b value type 1 != 1.0",
             self.assertTempestDictEqual,
             self.expected,
             actual,
@@ -156,7 +156,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": [2, 2]}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b value 1 != 2",
+            "b value 1 != 2",
             self.assertTempestDictEqual,
             expected,
             actual,
@@ -172,7 +172,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": [2.0, 2]}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b value is not close 1.0 2.0 with rel_tol=1e-09 abs_tol=0.0",
+            "b value is not close 1.0 2.0 with rel_tol=1e-09 abs_tol=0.0",
             self.assertTempestDictEqual,
             expected,
             actual,
@@ -183,7 +183,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": ["1", 2]}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b no test for value 1 type str",
+            "b no test for value 1 type str",
             self.assertTempestDictEqual,
             expected,
             actual,
@@ -193,7 +193,7 @@ class TestTempestHelperTestCase(TempestHelperTestCase):
         actual = {"a": 1, "b": {"c": 3}}
         self.assertRaisesRegex(
             AssertionError,
-            "Key b no test for type dict",
+            "b no test for type dict",
             self.assertTempestDictEqual,
             actual,
             actual,

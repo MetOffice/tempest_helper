@@ -31,7 +31,7 @@ class TempestHelperTestCase(TestCase):
         for key in expected_keys:
             if not isinstance(expected[key], type(actual[key])):
                 self.fail(
-                    f"Key {key} type {type(expected[key]).__name__} != "
+                    f"{key} type {type(expected[key]).__name__} != "
                     f"{type(actual[key]).__name__}"
                 )
             elif isinstance(expected[key], int):
@@ -51,31 +51,29 @@ class TempestHelperTestCase(TestCase):
             elif isinstance(expected[key], list):
                 if len(expected[key]) != len(actual[key]):
                     self.fail(
-                        f"Key {key} length {len(expected[key])} != "
-                        f"{len(actual[key])}"
+                        f"{key} length {len(expected[key])} != " f"{len(actual[key])}"
                     )
                 for a, b in zip(expected[key], actual[key]):
                     if type(a) != type(b):
-                        self.fail(f"Key {key} value type {a} != {b}")
+                        self.fail(f"{key} value type {a} != {b}")
                     elif isinstance(a, int):
                         if not a == b:
-                            self.fail(f"Key {key} value {a} != {b}")
+                            self.fail(f"{key} value {a} != {b}")
                     elif isinstance(b, float):
                         if not isclose(
                             a, b, rel_tol=self.rel_tol, abs_tol=self.abs_tol
                         ):
                             self.fail(
-                                f"Key {key} value is not close {a} {b} "
+                                f"{key} value is not close {a} {b} "
                                 f"with rel_tol={self.rel_tol} "
                                 f"abs_tol={self.abs_tol}"
                             )
                     else:
                         self.fail(
-                            f"Key {key} no test for value {a} type "
-                            f"{type(a).__name__}"
+                            f"{key} no test for value {a} type " f"{type(a).__name__}"
                         )
             else:
-                self.fail(f"Key {key} no test for type {type(expected[key]).__name__}")
+                self.fail(f"{key} no test for type {type(expected[key]).__name__}")
 
 
 def make_loaded_trajectories():
