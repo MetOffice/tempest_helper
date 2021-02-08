@@ -3,16 +3,15 @@
 import os
 import shutil
 import tempfile
-import unittest
 
 import iris
 from iris.tests.stock import realistic_3d
 
 from tempest_helper.load_trajectories import get_trajectories
-from .utils import make_loaded_trajectories
+from .utils import TempestHelperTestCase, make_loaded_trajectories
 
 
-class TestGetTrajectories(unittest.TestCase):
+class TestGetTrajectories(TempestHelperTestCase):
     """Test tempest_helper.load_trajectories.get_trajectories"""
 
     def setUp(self):
@@ -46,6 +45,8 @@ start   2  2014    12   21   0
             shutil.rmtree(self.runtime_dir, ignore_errors=True)
 
     def test_get_trajectories(self):
-        expected = make_loaded_trajectories()
-        actual = get_trajectories(self.track_file, self.netcdf_file, 6)
-        self.assertEqual(expected, actual)
+        for expected, actual in zip(
+            make_loaded_trajectories(),
+            get_trajectories(self.track_file, self.netcdf_file, 6),
+        ):
+            self.assertTempestDictEqual(expected, actual)
