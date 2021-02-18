@@ -12,7 +12,10 @@ from .trajectory_manipulations import (
 logger = logging.getLogger(__name__)
 
 
-def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
+def get_trajectories(tracked_file, nc_file, time_period, extra_coords={"slp": 4,
+            "sfcWind": 5,
+            "zg": 6,
+            "orog": 7}):
     """
     Load the trajectories from the file output by TempestExtremes.
 
@@ -20,8 +23,8 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
     :param str nc_file: The path to a netCDF file that the tracking was run on.
     :param int time_period: The time period in hours between time points in the
         data.
-    :param dict coords_new: The additional entry names (if applicable) as
-        columns in the storm text file
+    :param dict extra_coords: The additional entry names (if applicable) as
+        columns in the storm text file.
     :returns: The loaded trajectories.
     :rtype: list
     """
@@ -31,7 +34,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
     # The text at the start of a header element in the TempestExtremes output
     header_delim = "start"
 
-    coords_position = {
+    standard_coords = {
         "lon": 2,
         "lat": 3,
         "year": -4,
@@ -39,26 +42,11 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
         "day": -2,
         "hour": -1,
     }
-    if not any(coords_new):
-        # default values in the tracked_file lines
-        coords_variable = {
-            "slp": 4,
-            "sfcWind": 5,
-            "zg": 6,
-            "orog": 7,
-        }
-        # dict merge updates the coords dictionary
-        coords_all = coords_position.copy()
-        coords_new = coords_all.update(coords_variable)
-    else:
-        coords_variable = coords_new.copy()
-        coords_all = coords_position.copy()
-        coords_new = coords_all.update(coords_variable)
+    coords_all = standard_coords.copy()
+    coords_all.update(extra_coords)
 
-    print("coords ", coords_all)
     # Initialize storms and line counter
     storms = []
-    new_var = {}
     line_of_traj = None
 
     cube = iris.load_cube(nc_file)
@@ -70,6 +58,7 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
                 line_of_traj = 0  # reset trajectory line to zero
                 track_length = int(line_array[1])
                 storm = {}
+                extra_vars = {}
                 storms.append(storm)
                 storm["length"] = track_length
                 for coord in coords_all:
@@ -91,19 +80,19 @@ def get_trajectories(tracked_file, nc_file, time_period, coords_new={}):
                         hour,
                         time_period,
                     )
-                    for var in coords_variable:
-                        new_var[var] = float(line_array[coords_all[var]])
+                    for var in extra_coords:
+                        extra_vars[var] = float(line_array[coords_all[var]])
                     # now check if there is a gap in the traj, if so fill it in
                     if line_of_traj > 0:
                         if (step - storm["step"][-1]) > 1:
                             # add extra points before the next one
                             fill_trajectory_gaps(
-                                storm, step, lon, lat, cube, time_period, new_var
+                                storm, step, lon, lat, cube, time_period, extra_vars
                             )
-                    for coord in coords_position:
+                    for coord in standard_coords:
                         storm[coord].append(eval(coord))
-                    for coord in coords_variable:
-                        storm[coord].append(new_var[coord])
+                    for coord in extra_coords:
+                        storm[coord].append(extra_vars[coord])
                     storm["step"].append(step)
                 line_of_traj += 1  # increment line
 
