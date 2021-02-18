@@ -12,10 +12,12 @@ from .trajectory_manipulations import (
 logger = logging.getLogger(__name__)
 
 
-def get_trajectories(tracked_file, nc_file, time_period, extra_coords={"slp": 4,
-            "sfcWind": 5,
-            "zg": 6,
-            "orog": 7}):
+def get_trajectories(
+    tracked_file,
+    nc_file,
+    time_period,
+    extra_coords={"slp": 4, "sfcWind": 5, "zg": 6, "orog": 7},
+):
     """
     Load the trajectories from the file output by TempestExtremes.
 
