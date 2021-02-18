@@ -7,6 +7,12 @@ Loading data
 .. automodule:: tempest_helper
    :members: get_trajectories
 
+Saving data
+************
+
+.. automodule:: tempest_helper
+   :members: save_trajectories_netcdf
+
 Plotting data
 *************
 
