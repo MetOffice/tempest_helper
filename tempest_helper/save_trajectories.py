@@ -99,13 +99,13 @@ def save_trajectories_netcdf(
     :param str calendar: The calendar used by the model (360_day, gregorian etc)
     :param str time_units: The units for the calendar
     :param dict variable_units: The units of the variables as a dictionary
-    :param str frequency: The frequency of the data for netcdf metadata
-    :param str um_suiteid: The UM model suiteid for netcdf metadata
-    :param str resolution_code: The UM resolution string (e.g. N216)
+    :param str frequency: The frequency of the data for netCDF metadata
+    :param str um_suiteid: The model suiteid for netCDF metadata
+    :param str resolution_code: The resolution string (e.g. N216)
     :param str cmd_detect: The command string used in the detection
     :param str cmd_stitch: The command string used in the stitching
-    :param list output_vars: The default output variables required in
-        the netcdf file
+    :param list output_vars: The variables required in the netCDF file (lat and
+        lon are always included and do not need to be specified here)
     :param str startperiod: The start of the time period for this file to include
         as a global attribute (format is user defined)
     :param str endperiod: The end of the time period for this file to include
