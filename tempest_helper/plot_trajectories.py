@@ -5,8 +5,7 @@ import os
 import cartopy.crs as ccrs
 import matplotlib
 
-if not os.getenv("DISPLAY"):
-    matplotlib.use("Agg")
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 
@@ -31,4 +30,5 @@ def plot_trajectories_cartopy(storms, filename, title=""):
     if title:
         plt.title(title)
     plt.savefig(filename)
-    plt.show()
+    # plt.show()
+    fig.close()

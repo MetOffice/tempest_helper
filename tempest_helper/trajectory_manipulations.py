@@ -1,4 +1,4 @@
-# (C) British Crown Copyright 2020, Met Office.
+# (C) British Crown Copyright 2021, Met Office.
 # Please see LICENSE for license details.
 import datetime
 
@@ -34,6 +34,7 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     :returns: The time index at the specified time point.
     :rtype: int
     """
+
     calendar = cube.coord("time").units.calendar
 
     current_datetime = DATETIME_TYPES[calendar](year, month, day, hour)
@@ -43,14 +44,14 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     return round(time_delta.total_seconds() / (time_period * seconds_in_hour)) + 1
 
 
-def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period):
+def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period, new_var):
     """
-    Fill the gap by linearly interpolating the last latitude, longitude and
-    time from the last of these values up to step. The trajectory is
-    passed in to the `storm` attribute and is a standard `tempest_helper`
-    dictionary. Longitudes and their interpolation may wrap around the 0/360
-    degree numerical discontinuity. The longitudes output are between 0 and 359
-    degrees.
+    Fill the gap by linearly interpolating the last latitude, longitude,
+    time and other values from the last of these values up to step. The
+    trajectory is passed in to the `storm` attribute and is a standard
+    `tempest_helper` dictionary. Longitudes and their interpolation may wrap
+    around the 0/360 degree numerical discontinuity. The longitudes output
+    are between 0 and 359 degrees.
 
     :param dict storm: Details of the current storm.
     :param int step: The integer number of time points of the current
@@ -59,11 +60,15 @@ def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period):
         degrees.
     :param float lat: The latitude of the current point in the storm in
         degrees.
+    :param dict new_var: The other variables contained in the storm at the
+        current point.
     :param iris.cube.Cube cube: A cube loaded from a data file from the
         current period.
     :param int time_period: The time period in hours between time points in the
         data.
+
     """
+
     gap_length = step - storm["step"][-1]
     # Using technique at https://stackoverflow.com/a/14498790 to handle
     # longitudes wrapping around 0/360
@@ -89,6 +94,12 @@ def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period):
         storm["day"].append(step_time_components[2])
         storm["hour"].append(step_time_components[3])
 
+    for var in new_var:
+        dvar = (new_var[var] - storm[var][-1]) / gap_length
+        for gap_index in range(1, gap_length):
+            var1 = storm[var][-1] + dvar
+            storm[var].append(var1)
+
 
 def _calculate_gap_time(cube, year, month, day, hour, time_period):
     """
@@ -105,6 +116,7 @@ def _calculate_gap_time(cube, year, month, day, hour, time_period):
     :returns: The year, month, day and hour of the interpolated time point.
     :rtype: tuple
     """
+
     calendar = cube.coord("time").units.calendar
 
     last_datetime = DATETIME_TYPES[calendar](year, month, day, hour)

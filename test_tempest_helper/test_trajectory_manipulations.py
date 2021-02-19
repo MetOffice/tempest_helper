@@ -1,10 +1,10 @@
 # (C) British Crown Copyright 2020, Met Office.
 # Please see LICENSE for license details.
-import unittest
-
 import cf_units
 from iris.tests.stock import realistic_3d
 
+
+from .utils import TempestHelperTestCase
 from tempest_helper.trajectory_manipulations import (
     _calculate_gap_time,
     convert_date_to_step,
@@ -12,7 +12,7 @@ from tempest_helper.trajectory_manipulations import (
 )
 
 
-class TestConvertDateToStep(unittest.TestCase):
+class TestConvertDateToStep(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations.convert_date_to_step"""
 
     def test_conversion(self):
@@ -45,7 +45,7 @@ class TestConvertDateToStep(unittest.TestCase):
         self.assertEqual(expected, actual)
 
 
-class TestFillTrajectoryGaps(unittest.TestCase):
+class TestFillTrajectoryGaps(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations.fill_trajectory_gaps()"""
 
     def test_fill_traj_gap_increasing(self):
@@ -59,6 +59,10 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1],
             "day": [1, 1],
             "hour": [0, 6],
+            "slp": [100000.0, 99999.0],
+            "sfcWind": [5.5, 5.7],
+            "zg": [5090.0, 5091.0],
+            "orog": [10.0, 8.0],
         }
         expected = {
             "length": 3,
@@ -69,10 +73,15 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1, 1, 1, 1],
             "day": [1, 1, 1, 1, 2],
             "hour": [0, 6, 12, 18, 0],
+            "slp": [100000.0, 99999.0, 99998.0, 99997.0, 99996.0],
+            "sfcWind": [5.5, 5.7, 5.9, 6.1, 6.3],
+            "zg": [5090.0, 5091.0, 5092.0, 5093.0, 5094.0],
+            "orog": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, 5.0, 5.0, cube, 6)
-        self.assertEqual(expected, storm)
+        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        fill_trajectory_gaps(storm, 6, 5.0, 5.0, cube, 6, new_var)
+        self.assertTempestDictEqual(expected, storm)
 
     def test_fill_traj_gap_decreasing(self):
         """Test decreasing latitude and longitude"""
@@ -85,6 +94,10 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1],
             "day": [1, 1],
             "hour": [0, 6],
+            "slp": [100000.0, 99999.0],
+            "sfcWind": [5.5, 5.7],
+            "zg": [5090.0, 5091.0],
+            "orog": [10.0, 8.0],
         }
         expected = {
             "length": 3,
@@ -95,10 +108,15 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1, 1, 1, 1],
             "day": [1, 1, 1, 1, 2],
             "hour": [0, 6, 12, 18, 0],
+            "slp": [100000.0, 99999.0, 99998.0, 99997.0, 99996.0],
+            "sfcWind": [5.5, 5.7, 5.9, 6.1, 6.3],
+            "zg": [5090.0, 5091.0, 5092.0, 5093.0, 5094.0],
+            "orog": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, 356.0, -4.0, cube, 6)
-        self.assertEqual(expected, storm)
+        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        fill_trajectory_gaps(storm, 6, 356.0, -4.0, cube, 6, new_var)
+        self.assertTempestDictEqual(expected, storm)
 
     def test_fill_traj_gap_different_directions(self):
         """Test increasing latitude and decreasing longitude"""
@@ -111,6 +129,10 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1],
             "day": [1, 1],
             "hour": [0, 6],
+            "slp": [100000.0, 99999.0],
+            "sfcWind": [5.5, 5.7],
+            "zg": [5090.0, 5091.0],
+            "orog": [10.0, 8.0],
         }
         expected = {
             "length": 3,
@@ -121,10 +143,15 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1, 1, 1, 1],
             "day": [1, 1, 1, 1, 2],
             "hour": [0, 6, 12, 18, 0],
+            "slp": [100000.0, 99999.0, 99998.0, 99997.0, 99996.0],
+            "sfcWind": [5.5, 5.7, 5.9, 6.1, 6.3],
+            "zg": [5090.0, 5091.0, 5092.0, 5093.0, 5094.0],
+            "orog": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, 356.0, 5.0, cube, 6)
-        self.assertEqual(expected, storm)
+        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        fill_trajectory_gaps(storm, 6, 356.0, 5.0, cube, 6, new_var)
+        self.assertTempestDictEqual(expected, storm)
 
     def test_fill_traj_gap_non_integer(self):
         """
@@ -140,6 +167,10 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1],
             "day": [1, 1],
             "hour": [0, 6],
+            "slp": [100000.0, 99999.0],
+            "sfcWind": [5.5, 5.7],
+            "zg": [5090.0, 5091.0],
+            "orog": [10.0, 8.0],
         }
         expected = {
             "length": 3,
@@ -150,13 +181,18 @@ class TestFillTrajectoryGaps(unittest.TestCase):
             "month": [1, 1, 1, 1, 1],
             "day": [1, 1, 1, 1, 2],
             "hour": [0, 6, 12, 18, 0],
+            "slp": [100000.0, 99999.0, 99998.0, 99997.0, 99996.0],
+            "sfcWind": [5.5, 5.7, 5.9, 6.1, 6.3],
+            "zg": [5090.0, 5091.0, 5092.0, 5093.0, 5094.0],
+            "orog": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        fill_trajectory_gaps(storm, 6, 353.5, 7.5, cube, 6)
-        self.assertEqual(expected, storm)
+        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        fill_trajectory_gaps(storm, 6, 353.5, 7.5, cube, 6, new_var)
+        self.assertTempestDictEqual(expected, storm)
 
 
-class TestCalculateGapTime(unittest.TestCase):
+class TestCalculateGapTime(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations._calculate_gap_time()"""
 
     def test_simple(self):
