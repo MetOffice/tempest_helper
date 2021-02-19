@@ -85,8 +85,9 @@ def save_trajectories_netcdf(
     title="Tempest TC tracks",
     institution_id="MOHC",
     algorithm="TempestExtremes_v2",
-    algorithm_ref=("Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; "
-                   "Ullrich et al. 2020")
+    algorithm_ref=(
+        "Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; " "Ullrich et al. 2020"
+    ),
 ):
     """
     Create netCDF file for the tracks.
