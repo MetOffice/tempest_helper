@@ -1,4 +1,4 @@
-# (C) British Crown Copyright 2020, Met Office.
+# (C) British Crown Copyright 2021, Met Office.
 # Please see LICENSE for license details.
 import datetime
 
@@ -60,7 +60,7 @@ def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period, new_var):
         degrees.
     :param float lat: The latitude of the current point in the storm in
         degrees.
-    :param dict new_var: The other variables contained in the storm at the current point
+    :param dict new_var: The other variables contained in the storm at the current point.
     :param iris.cube.Cube cube: A cube loaded from a data file from the
         current period.
     :param int time_period: The time period in hours between time points in the
