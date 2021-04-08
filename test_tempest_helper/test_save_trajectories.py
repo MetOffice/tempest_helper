@@ -54,7 +54,7 @@ root group (NETCDF4 data model, file format HDF5):
     dimensions(sizes): tracks(3), record(6)
     variables(dimensions): int32 \x1b[4mFIRST_PT\x1b[0m(tracks), int32 \x1b[4mNUM_PTS\x1b[0m(tracks), int32 \x1b[4mTRACK_ID\x1b[0m(tracks), int32 \x1b[4mindex\x1b[0m(record), float64 \x1b[4mtime\x1b[0m(record), float32 \x1b[4mlon\x1b[0m(record), float32 \x1b[4mlat\x1b[0m(record), float64 \x1b[4mslp\x1b[0m(record)
     groups: 
-"""
+"""  # noqa
         expected_var_metedata = """OrderedDict([('FIRST_PT', <class 'netCDF4._netCDF4.Variable'>
 int32 FIRST_PT(tracks)
     units: ordinal
@@ -123,7 +123,7 @@ float64 slp(record)
 unlimited dimensions: 
 current shape = (6,)
 filling on, default _FillValue of 9.969209968386869e+36 used
-)])"""
+)])"""  # noqa
         expected_var_values = [
             np.array([0, 2, 4]),
             np.array([2, 2, 2]),
