@@ -129,16 +129,24 @@ filling on, default _FillValue of 9.969209968386869e+36 used
             np.array([2, 2, 2]),
             np.array([0, 1, 2]),
             np.array([0, 1, 0, 1, 0, 1]),
-            np.array([52550., 52550.25, 52550., 52550.25, 52550., 52550.25]),
-            np.array([1., 2., 1., 2., 1., 1.5]),
-            np.array([10., 11., -1., 0., 0., 0.5]),
-            np.array([9.997331e04, 9.978512e04, 9.997331e04, 9.978512e04,
-                      9.997331e04, 9.9879215e04])
+            np.array([52550.0, 52550.25, 52550.0, 52550.25, 52550.0, 52550.25]),
+            np.array([1.0, 2.0, 1.0, 2.0, 1.0, 1.5]),
+            np.array([10.0, 11.0, -1.0, 0.0, 0.0, 0.5]),
+            np.array(
+                [
+                    9.997331e04,
+                    9.978512e04,
+                    9.997331e04,
+                    9.978512e04,
+                    9.997331e04,
+                    9.9879215e04,
+                ]
+            ),
         ]
 
         self.assertNetcdfEqual(
             self.track_file,
             expected_globals,
             expected_var_metedata,
-            expected_var_values
+            expected_var_values,
         )

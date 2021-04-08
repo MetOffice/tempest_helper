@@ -192,6 +192,5 @@ autodoc_typehints = "description"
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "iris": ("https://scitools-iris.readthedocs.io/en/stable/", None)
+    "iris": ("https://scitools-iris.readthedocs.io/en/stable/", None),
 }
-

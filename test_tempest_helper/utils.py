@@ -16,16 +16,17 @@ class TempestHelperTestCase(TestCase):
     :cvar float rel_tol: relative tolerance for comparisons (default 1e-9)
     :cvar float abs_tol: absolute tolerance for comparisons (default 0.0)
     """
+
     rel_tol: ClassVar[float] = 1e-9
     abs_tol: ClassVar[float] = 0.0
 
     def assertNetcdfEqual(
-            self,
-            actual_path: str,
-            expected_global: str,
-            expected_variables_metadata: str,
-            expected_variables_values: list,
-            globals_ignore: Optional[List[str]] = ['directory']
+        self,
+        actual_path: str,
+        expected_global: str,
+        expected_variables_metadata: str,
+        expected_variables_values: list,
+        globals_ignore: Optional[List[str]] = ["directory"],
     ) -> None:
         """
         Load the netCDF file specified by `actual_path` and compare it against the
@@ -47,8 +48,9 @@ class TempestHelperTestCase(TestCase):
         """
         with Dataset(actual_path) as rootgroup:
             # Check globals
-            for expected, actual in zip(expected_global.splitlines(),
-                                        str(rootgroup).splitlines()):
+            for expected, actual in zip(
+                expected_global.splitlines(), str(rootgroup).splitlines()
+            ):
                 ignore_line = False
                 for ignore in globals_ignore:
                     if actual.lstrip().startswith(f"{ignore}:"):
@@ -59,15 +61,16 @@ class TempestHelperTestCase(TestCase):
             # Check variable metadata
             self.assertEqual(expected_variables_metadata, str(rootgroup.variables))
             # Check variable values
-            var_values = [
-                rootgroup[var_name][:] for var_name in rootgroup.variables
-            ]
+            var_values = [rootgroup[var_name][:] for var_name in rootgroup.variables]
             if len(expected_variables_values) != len(var_values):
-                self.fail("Length of expected_variables_values does not match "
-                          "actual length")
+                self.fail(
+                    "Length of expected_variables_values does not match "
+                    "actual length"
+                )
             for expected, actual in zip(expected_variables_values, var_values):
-                np.testing.assert_allclose(expected, actual,
-                                           rtol=self.rel_tol, atol=self.abs_tol)
+                np.testing.assert_allclose(
+                    expected, actual, rtol=self.rel_tol, atol=self.abs_tol
+                )
 
     def assertTempestDictEqual(
         self, expected: Dict[Any, Any], actual: Dict[Any, Any]
