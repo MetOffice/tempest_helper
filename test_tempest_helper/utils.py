@@ -1,29 +1,89 @@
-# (C) British Crown Copyright 2020, Met Office.
+# (C) British Crown Copyright 2021, Met Office.
 # Please see LICENSE for license details.
 from math import isclose
-from typing import Any, Dict
+from typing import Any, ClassVar, Dict, List, Optional
 from unittest import TestCase
+
+from netCDF4 import Dataset
+import numpy as np
 
 
 class TempestHelperTestCase(TestCase):
     """
-    Add an assertTempestDictEqual method to TestCase to compare the
-    dictionaries used in tempest_helper. Values can be ints, floats or lists
-    of these two types; other types of value will fail.
+    A subclass of :py:obj:`unittest.TestCase` that contains additional assertion
+    methods to test complex data types.
 
-    Instance attributes `self.rel_tol` and `self.abs_tol` can be set in child
-    instances to set the relative and absolute tolerance passed to
-    `math.isclose()` to test all floats with.
+    :cvar float rel_tol: relative tolerance for comparisons (default 1e-9)
+    :cvar float abs_tol: absolute tolerance for comparisons (default 0.0)
     """
+    rel_tol: ClassVar[float] = 1e-9
+    abs_tol: ClassVar[float] = 0.0
 
-    @classmethod
-    def setUpClass(cls):
-        cls.rel_tol = 1e-9
-        cls.abs_tol = 0.0
+    def assertNetcdfEqual(
+            self,
+            actual_path: str,
+            expected_global: str,
+            expected_variables_metadata: str,
+            expected_variables_values: list,
+            globals_ignore: Optional[List[str]] = ['directory']
+    ) -> None:
+        """
+        Load the netCDF file specified by `actual_path` and compare it against the
+        attributes and values specified.
+
+        The directory attribute in the netCDF file's global attributes is
+        ignored by default but this can be changed by setting the `globals_ignore`
+        attribute appropriately.
+
+        :param str actual_path: The path of the netCDF file to test.
+        :param str expected_global: The expected global attribute values as displayed
+            by ``str(netCDF4.Dataset)`` except for any attributes that are specified
+            in the `globals_ignore` parameter.
+        :param str expected_variables_metadata: The expected variable attribute
+            values as displayed by ``str(netCDF4.Dataset.variables)``.
+        :param list expected_variables_values: List of :py:obj:`numpy.array` objects
+            containing the data for each variable in the file.
+        :param list globals_ignore: Global attributes to ignore.
+        """
+        with Dataset(actual_path) as rootgroup:
+            # Check globals
+            for expected, actual in zip(expected_global.splitlines(),
+                                        str(rootgroup).splitlines()):
+                ignore_line = False
+                for ignore in globals_ignore:
+                    if actual.lstrip().startswith(f"{ignore}:"):
+                        ignore_line = True
+                        continue
+                if not ignore_line:
+                    self.assertEqual(expected, actual, msg="Mismatch in globals")
+            # Check variable metadata
+            self.assertEqual(expected_variables_metadata, str(rootgroup.variables))
+            # Check variable values
+            var_values = [
+                rootgroup[var_name][:] for var_name in rootgroup.variables
+            ]
+            if len(expected_variables_values) != len(var_values):
+                self.fail("Length of expected_variables_values does not match "
+                          "actual length")
+            for expected, actual in zip(expected_variables_values, var_values):
+                np.testing.assert_allclose(expected, actual,
+                                           rtol=self.rel_tol, atol=self.abs_tol)
 
     def assertTempestDictEqual(
         self, expected: Dict[Any, Any], actual: Dict[Any, Any]
     ) -> None:
+        """
+        Compare the dictionaries used in tempest_helper. Values can be ints,
+        floats or lists of these two types; other types of value will fail.
+
+        Class `TempestHelperTestCase` instance attributes
+        `self.rel_tol` and `self.abs_tol` can be set in child
+        instances to set the relative and absolute tolerance passed to
+        `math.isclose()` to test all floats with.
+
+        :param dict expected: The expected Tempest dictionary.
+        :param dict actual: The actual Tempest dictionary.
+        """
         expected_keys = sorted(list(expected.keys()))
         actual_keys = sorted(list(actual.keys()))
         if expected_keys != actual_keys:

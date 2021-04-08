@@ -20,7 +20,7 @@ import tempest_helper  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = "tempest_helper"
-copyright = "2020, Met Office"
+copyright = "2021, Met Office"
 author = "Met Office"
 
 # The short X.Y version
@@ -183,7 +183,15 @@ epub_exclude_files = ["search.html"]
 
 # -- Extension configuration -------------------------------------------------
 
+# In autodoc ignore type hints (requires Sphinx >= v3.0)
+autodoc_typehints = "description"
+
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"https://docs.python.org/": None}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "iris": ("https://scitools-iris.readthedocs.io/en/stable/", None)
+}
+
