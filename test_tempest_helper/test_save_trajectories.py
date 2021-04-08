@@ -40,7 +40,7 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
         expected_globals = """<class 'netCDF4._netCDF4.Dataset'>
 root group (NETCDF4 data model, file format HDF5):
     title: Tempest TC tracks
-    directory: /var/temp
+    directory: /var/tmp
     tracked_data_frequency: 6hr
     mo_runid: u-ax358
     grid: N96
@@ -52,7 +52,7 @@ root group (NETCDF4 data model, file format HDF5):
     detect_cmd: wibble
     stitch_cmd: wobble
     dimensions(sizes): tracks(3), record(6)
-    variables(dimensions): int32 \x1b[4mFIRST_PT\x1b[0m(tracks), int32 \x1b[4mNUM_PTS\x1b[0m(tracks), int32 \x1b[4mTRACK_ID\x1b[0m(tracks), int32 \x1b[4mindex\x1b[0m(record), float64 \x1b[4mtime\x1b[0m(record), float32 \x1b[4mlon\x1b[0m(record), float32 \x1b[4mlat\x1b[0m(record), float64 \x1b[4mslp\x1b[0m(record)
+    variables(dimensions): int32 FIRST_PT(tracks), int32 NUM_PTS(tracks), int32 TRACK_ID(tracks), int32 index(record), float64 time(record), float32 lon(record), float32 lat(record), float64 slp(record)
     groups: 
 """  # noqa
         expected_var_metedata = """OrderedDict([('FIRST_PT', <class 'netCDF4._netCDF4.Variable'>

@@ -46,10 +46,19 @@ class TempestHelperTestCase(TestCase):
             containing the data for each variable in the file.
         :param list globals_ignore: Global attributes to ignore.
         """
+        # In netCDF4 prior to v1.5.2 variable names were underlined and the
+        # control characters to do this must be removed before comparison.
+        underline_code_1 = "\x1b[4m"
+        underline_code_2 = "\x1b[0m"
+
         with Dataset(actual_path) as rootgroup:
             # Check globals
             for expected, actual in zip(
-                expected_global.splitlines(), str(rootgroup).splitlines()
+                expected_global.splitlines(),
+                str(rootgroup)
+                .replace(underline_code_1, "")
+                .replace(underline_code_2, "")
+                .splitlines(),
             ):
                 ignore_line = False
                 for ignore in globals_ignore:
