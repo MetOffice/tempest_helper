@@ -25,7 +25,7 @@ jobs:
         conda config --add channels conda-forge
         conda config --set channel_priority strict
         conda update -q conda
-        conda create -q -n test_environment python=${{ matrix.python-version }} iris cftime=1.0.4 pytest filelock requests
+        conda create -q -n test_environment python=${{ matrix.python-version }} iris cftime=1.0.4 netcdf4=1.4.2 pytest filelock requests
         source activate test_environment
         export PYTHONPATH=.
         pytest -vv

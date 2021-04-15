@@ -23,8 +23,8 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     Calculate the step number, with the first time in a file have a step number
     of one. All calendars are handled.
 
-    :param iris.Cube.cube cube: A cube loaded from a data file from the
-        current period.
+    :param cube: A cube loaded from a data file from the current period.
+    :type cube: :py:obj:`iris.cube.Cube`
     :param int year: The current year.
     :param int month: The current month.
     :param int day: The current day of month.
@@ -62,8 +62,8 @@ def fill_trajectory_gaps(storm, step, lon, lat, cube, time_period, new_var):
         degrees.
     :param dict new_var: The other variables contained in the storm at the
         current point.
-    :param iris.cube.Cube cube: A cube loaded from a data file from the
-        current period.
+    :param cube: A cube loaded from a data file from the current period.
+    :type cube: :py:obj:`iris.cube.Cube`
     :param int time_period: The time period in hours between time points in the
         data.
 
