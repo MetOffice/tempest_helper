@@ -31,4 +31,4 @@ def plot_trajectories_cartopy(storms, filename, title=""):
         plt.title(title)
     plt.savefig(filename)
     # plt.show()
-    fig.close()
+    plt.close(fig)
