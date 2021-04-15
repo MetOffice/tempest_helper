@@ -1,71 +1,118 @@
-# (C) British Crown Copyright 2021, Met Office.
+# (C) British Crown Copyright 2020, Met Office.
 # Please see LICENSE for license details.
 import os
-import logging
-
-from cftime import utime, datetime
-from netCDF4 import Dataset
 import numpy as np
+import logging
+from cftime import utime, datetime
+import iris
+from netCDF4 import Dataset
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_VARIABLE_UNITS = {
-    "slp": "Pa",
-    "sfcWind": "m s-1",
-    "zg": "m",
-    "orog": "m",
-    "wind925": "m s-1",
-    "wind850": "m s-1",
-    "rvT63": "s-1",
-    "rvT63_1": "m s-1",
-    "zg_1": "m",
-}
 
-
-def _define_netcdf_metadata(var, variable_units):
+def define_netcdf_metadata(var_cmpt, variable_units):
     """
     Define potential metadata for the netcdf variables
-
-    :param str var: Variable name for which metadata is required
-    :param variable_units: The units of the variables
-    :return: strings for netcdf metadata for standard_name,
-        long_name, description, units
-    :rtype: Four strings
     """
-    standard_name = "unknown"
-    long_name = "unknown"
-    description = "unknown"
-    units = "1"
+    long_name = 'unknown'
+    description = 'unknown'
+    units = '1'
 
-    if "slp" in var:
-        standard_name = "air_pressure_at_mean_sea_level"
-        long_name = "Sea Level Pressure"
-        description = "Sea level pressure for tracked variable"
-        units = variable_units["slp"]
-    elif "sfcWind" in var:
-        standard_name = "wind_speed"
-        long_name = "Near-surface Wind Speed"
-        description = "near-surface (usually 10 metres) wind speed"
-        units = variable_units["sfcWind"]
-    elif "orog" in var:
-        standard_name = "surface_altitude"
-        long_name = "Surface Altitude"
-        description = "Surface altitude (height above sea level)"
-        units = variable_units["orog"]
-    elif "wind" in var:
-        standard_name = "wind_speed"
-        units = variable_units["sfcWind"]
-    elif "rv" in var:
-        standard_name = "relative_vorticity"
-        units = "s-1"
-    elif "zg" in var:
-        standard_name = "geopotential_height"
-        long_name = "Geopotential Height"
-        description = "Geopotential height difference"
-        units = "m"
+    var_components = var_cmpt.split('_')
+    var_proc = ''
+    var_level = ''
+    var = var_components[0]
+    if len(var_components) >= 2:
+        var_proc = var_cmpt.split('_')[1]
+    if len(var_components) >= 3:
+        var_level = var_cmpt.split('_')[2]
+    
+    if 'slp' in var or 'psl' in var:
+        standard_name = 'air_pressure_at_mean_sea_level'
+        long_name = 'Sea Level Pressure'
+        description = 'Sea level pressure for tracked variable '
+        units = variable_units['slp']
+    elif 'sfcWind' in var:
+        standard_name = 'wind_speed'
+        long_name = 'Near-surface Wind Speed'
+        description = 'near-surface (usually 10 metres) wind speed'
+        units = variable_units['sfcWind']
+    elif 'orog' in var:
+        standard_name = 'surface_altitude'
+        long_name = 'Surface Altitude'
+        description = 'Surface altitude (height above sea level)'
+        units = variable_units['orog']
+    elif 'wind' in var:
+        standard_name = 'wind_speed'
+        units = variable_units['wind']
+    elif 'rv' in var:
+        standard_name = 'relative_vorticity'
+        units = 's-1'
+    elif 'rh' in var:
+        standard_name = 'relative_humidity'
+        units = '%'
+    elif 'zg' in var:
+        standard_name = 'geopotential_height'
+        long_name = 'Geopotential Height'
+        description = 'Geopotential height difference'
+        units = 'm'
+    elif 'rsize' in var or 'radius' in var:
+        standard_name = 'radius'
+        long_name = 'storm radius'
+        description = 'radius of the storm'
+        units = 'degrees'
+    elif 'ace' in var:
+        standard_name = 'ace'
+        long_name = 'Accumulated Cyclone Energy'
+        description = 'Instantaneous ACE of storm'
+        units = '1'
+    elif 'ike' in var:
+        standard_name = 'ike'
+        long_name = 'Integrated Kinetic Energy'
+        description = 'Instantaneous IKE of storm'
+        units = '1'
+    elif 'pdi' in var:
+        standard_name = 'pdi'
+        long_name = 'Potential Dissipation Index'
+        description = 'Instantaneous PDI of storm'
+        units = '1'
+    elif 'rprof' in var in var:
+        standard_name = 'radial_profile'
+        long_name = 'storm radial profile'
+        description = 'radial profile of the storm'
+        units = 'degrees'
+    comment = 'Processing: '+var_proc+'; level '+var_level
 
     return standard_name, long_name, description, units
 
+def guess_variable_units(output_vars):
+    '''
+    in the case that variable_units are not passed into save_trajectories, we will guess them here
+    :return:
+    '''
+    units = {}
+    units['slp'] = 'Pa'
+    units['sfcWind'] = 'm s-1'
+    units['zg'] = 'm'
+    units['orog'] = 'm'
+    units['wind'] = 'm s-1'
+    units['rvT63'] = 's-1'
+    units['rvT42'] = 's-1'
+    units['rv'] = 's-1'
+    units['rh'] = '%'
+    units['rsize'] = 'degrees'
+    units['radius'] = 'degrees'
+    units['ace'] = '1'
+    units['acepsl'] = '1'
+    units['ike'] = '1'
+    units['pdi'] = '1'
+    units['rprof'] = 'degrees'
+
+    variable_units = {}
+    for var in output_vars:
+        varname = var.split('_')[0]
+        variable_units[varname] = units[varname]
+    return variable_units
 
 def save_trajectories_netcdf(
     directory,
@@ -79,125 +126,104 @@ def save_trajectories_netcdf(
     resolution_code,
     cmd_detect,
     cmd_stitch,
-    output_vars,
-    startperiod="",
-    endperiod="",
-    title="Tempest TC tracks",
-    institution_id="MOHC",
-    algorithm="TempestExtremes_v2",
-    algorithm_ref=(
-        "Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; " "Ullrich et al. 2020"
-    ),
-):
+    column_names,
+    startperiod=None,
+    endperiod=None
+    ):
     """
-    Create netCDF file for the tracks.
-
-    :param str directory: Output directory
-    :param str savefname: Output filename
-    :param list storms: The loaded trajectories, each list component is a
-        dictionary.
-    :param str calendar: The calendar used by the model (360_day, gregorian etc)
-    :param str time_units: The units for the calendar
-    :param dict variable_units: The units of the variables as a dictionary
-    :param str frequency: The frequency of the data for netCDF metadata
-    :param str um_suiteid: The model suiteid for netCDF metadata
-    :param str resolution_code: The resolution string (e.g. N216)
-    :param str cmd_detect: The command string used in the detection
-    :param str cmd_stitch: The command string used in the stitching
-    :param list output_vars: The variables required in the netCDF file (lat and
-        lon are always included and do not need to be specified here)
-    :param str startperiod: The start of the time period for this file to include
-        as a global attribute (format is user defined)
-    :param str endperiod: The end of the time period for this file to include
-        as a global attribute (format is user defined)
-    :param str title: The title global attribute to include in the file
-    :param str institution_id: The institution_id global attribute  to include
-        in the file
-    :param str algorithm: The algorithm global attribute to include in the file
-    :param str algorithm_ref: The algorithm_ref global attribute to include
-        in the file
+    Create netcdf file for the tracks. 
+    May need metadata from a model nc file, so may need to create at a time when these are available
+    :param list storms: The loaded trajectories.
+    :param str filename: The full path to save the plot as.
+    :param str title: An optional title to include on the plot.
     """
-    logger.debug("making netCDF of outputs")
-
-    nc = Dataset(os.path.join(directory, savefname), "w", format="NETCDF4")
-    nc.title = title
+    logger.debug('making netCDF of outputs')
+        
+    savefname = savefname
+    nc = Dataset(savefname, 'w', format='NETCDF4')
+    nc.title = 'Tempest TC tracks'
     nc.directory = directory
     nc.tracked_data_frequency = frequency
+    #nc.TRACK_DURATION_MIN = np.float64(self.TRACK_DURATION_MIN)
 
     nc.mo_runid = um_suiteid
     nc.grid = resolution_code
     nc.start_date = startperiod
     nc.end_date = endperiod
-    nc.institution_id = institution_id
-    nc.algorithm = algorithm
-    nc.algorithm_ref = algorithm_ref
+    nc.institution_id = 'MOHC'
+    nc.algorithm = 'TempestExtremes_v2'
+    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; Ullrich et al. 2020'
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
 
-    record_length = 0
-    tracks = 0
+    record_length = 0; tracks = 0
     for storm in storms:
         tracks += 1
-        storm_length = storm["length"]
+        storm_length = storm['length']
         record_length += storm_length
 
-    nc.createDimension("tracks", size=tracks)  # unlimited dimension
-    nc.createDimension("record", size=record_length)
+    nc.createDimension('tracks', size = tracks) # unlimited
+    nc.createDimension('record', size = record_length)
 
-    nc.createVariable("FIRST_PT", np.int32, ("tracks",))
-    nc.createVariable("NUM_PTS", np.int32, ("tracks",))
-    nc.createVariable("TRACK_ID", np.int32, ("tracks",))
-    nc.createVariable("index", np.int32, ("record",))
-    nc.createVariable("time", "f8", ("record",))
-    nc.createVariable("lon", "f4", ("record",))
-    nc.createVariable("lat", "f4", ("record",))
+    nc.createVariable('FIRST_PT', np.int32, ('tracks'))
+    nc.createVariable('NUM_PTS', np.int32, ('tracks'))
+    nc.createVariable('TRACK_ID', np.int32, ('tracks'))
+    nc.createVariable('index', np.int32, ('record'))
+    nc.createVariable('time', 'f8', ('record'))
+    nc.createVariable('lon', 'f4', ('record'))
+    nc.createVariable('lat', 'f4', ('record'))
 
-    for var in output_vars:
-        nc.createVariable(var, "f8", ("record",))
+    output_vars_all = column_names.copy()
+    for pos in ["grid_x", "grid_y", "lon", "lat", "year", "month", "day", "hour"]:
+        output_vars_all.pop(pos, None)
 
-    nc.variables["FIRST_PT"].units = "ordinal"
-    nc.variables["FIRST_PT"].long_name = "first_pt"
-    nc.variables["FIRST_PT"].description = "Index to first point of this track number"
+    list_dim_created = False
+    for var in output_vars_all:
+        if 'list' in str(type(storm[var][0])):
+            list_size = len(storm[var][0])
+            if not list_dim_created:
+                nc.createDimension('record_profile', size = record_length*list_size)
+                list_dim_created = True
+            nc.createVariable(var, 'f8', ('record_profile'))
+        else:
+            nc.createVariable(var, 'f8', ('record'))
 
-    nc.variables["NUM_PTS"].units = "ordinal"
-    nc.variables["NUM_PTS"].long_name = "num_pts"
-    nc.variables["NUM_PTS"].description = "Number of points for this track"
+    nc.variables['FIRST_PT'].units = 'ordinal'
+    nc.variables['FIRST_PT'].long_name = 'first_pt'
+    nc.variables['FIRST_PT'].description = 'Index to first point of this track number'
 
-    nc.variables["TRACK_ID"].units = "ordinal"
-    nc.variables["TRACK_ID"].long_name = "track_id"
-    nc.variables["TRACK_ID"].description = "Tropical cyclone track number"
+    nc.variables['NUM_PTS'].units = 'ordinal'
+    nc.variables['NUM_PTS'].long_name = 'num_pts'
+    nc.variables['NUM_PTS'].description = 'Number of points for this track'
 
-    nc.variables["index"].units = "ordinal"
-    nc.variables["index"].long_name = "track_id"
-    nc.variables["index"].description = "Track sequence number (0-length of track-1)"
+    nc.variables['TRACK_ID'].units = 'ordinal'
+    nc.variables['TRACK_ID'].long_name = 'track_id'
+    nc.variables['TRACK_ID'].description = 'Tropical cyclone track number'
 
-    nc.variables["lat"].units = "degrees_north"
-    nc.variables["lat"].standard_name = "latitude"
-    nc.variables["lat"].long_name = "latitude"
-    nc.variables["lat"].description = (
-        "Latitude (degrees north) associated " + "with tracked variable"
-    )
+    nc.variables['index'].units = 'ordinal'
+    nc.variables['index'].long_name = 'track_id'
+    nc.variables['index'].description = 'Track sequence number (0 - length of track - 1)'
 
-    nc.variables["lon"].units = "degrees_east"
-    nc.variables["lon"].standard_name = "longitude"
-    nc.variables["lon"].long_name = "longitude"
-    nc.variables["lon"].description = (
-        "Longitude (degrees east) associated " + "with tracked variable"
-    )
+    nc.variables['lat'].units = 'degrees_north'
+    nc.variables['lat'].standard_name = 'latitude'
+    nc.variables['lat'].long_name = 'latitude'
+    nc.variables['lat'].description = 'Latitude (degrees north) associated with tracked variable'
 
-    nc.variables["time"].units = time_units
-    nc.variables["time"].calendar = calendar
-    nc.variables["time"].standard_name = "time"
-    nc.variables["time"].long_name = "time"
+    nc.variables['lon'].units = 'degrees_east'
+    nc.variables['lon'].standard_name = 'longitude'
+    nc.variables['lon'].long_name = 'longitude'
+    nc.variables['lon'].description = 'Longitude (degrees east) associated with tracked variable'
 
-    if not variable_units:
-        variable_units = DEFAULT_VARIABLE_UNITS
+    nc.variables['time'].units = time_units
+    nc.variables['time'].calendar = calendar
+    nc.variables['time'].standard_name = 'time'
+    nc.variables['time'].long_name = 'time'
 
-    for var in output_vars:
-        standard_name, long_name, description, v_units = _define_netcdf_metadata(
-            var, variable_units
-        )
+    #if variable_units == None:
+    variable_units = guess_variable_units(output_vars_all)
 
+    for var in output_vars_all:
+        standard_name, long_name, description, v_units = define_netcdf_metadata(var, variable_units)
         logger.debug(f"var, units {var} {v_units} ")
         nc.variables[var].standard_name = standard_name
         nc.variables[var].long_name = long_name
@@ -207,55 +233,48 @@ def save_trajectories_netcdf(
     # read the storms and write the values to the file
     # track: first_pt, num_pts, track_id
     # record: lat, lon, time, slp, index(0:tracklen-1)
-    first_pt = []
-    num_pts = []
-    track_id = []
-    lon = []
-    lat = []
-    time = []
-    index = []
+    first_pt = []; num_pts = []; track_id = []
+    lon = []; lat = []; time = []; index = []
 
     variables_to_write = {}
-    for var in output_vars:
+    for var in output_vars_all:
         variables_to_write[var] = []
 
     first_pt_index = 0
     for ist, storm in enumerate(storms):
         first_pt.append(first_pt_index)
-        num_pts.append(storm["length"])
+        num_pts.append(storm['length'])
         track_id.append(ist)
-        first_pt_index += storm["length"]
+        first_pt_index += storm['length']
 
-        for ipt in range(storm["length"]):
-            tunit = utime(time_units, calendar=calendar)
-            t1 = tunit.date2num(
-                datetime(
-                    storm["year"][ipt],
-                    storm["month"][ipt],
-                    storm["day"][ipt],
-                    storm["hour"][ipt],
-                )
-            )
+        for ipt in range(storm['length']):
+            tunit = utime(time_units, calendar = calendar)
+            t1 = tunit.date2num(datetime(storm['year'][ipt], storm['month'][ipt], storm['day'][ipt], storm['hour'][ipt]))
             time.append(t1)
             index.append(ipt)
-            lon.append(storm["lon"][ipt])
-            lat.append(storm["lat"][ipt])
-            for var in output_vars:
-                variables_to_write[var].append(storm[var][ipt])
+            lon.append(storm['lon'][ipt])
+            lat.append(storm['lat'][ipt])
+            for var in output_vars_all:
+                if 'rprof' in var:
+                    variables_to_write[var].append(storm[var][ipt][:])
+                else:
+                    variables_to_write[var].append(storm[var][ipt])
 
     logger.debug(f"first_pt {first_pt} ")
     logger.debug(f"tracks, record_length {tracks} {record_length} ")
     logger.debug(f"len(first_pt) {len(first_pt)} ")
     logger.debug(f"len(lon) {len(lon)} ")
+    #logger.debug(f"len(variables_to_write(slp)) {len(variables_to_write['slp'])} ")
+    #logger.debug(f"variables_to_write[slp] {variables_to_write['slp']} ")
     # now write variables to netcdf
-    nc.variables["FIRST_PT"][:] = first_pt
-    nc.variables["NUM_PTS"][:] = num_pts
-    nc.variables["TRACK_ID"][:] = track_id
-    nc.variables["index"][:] = index
-    nc.variables["lon"][:] = lon
-    nc.variables["lat"][:] = lat
-    nc.variables["time"][:] = time
-    for var in output_vars:
+    nc.variables['FIRST_PT'][:] = first_pt
+    nc.variables['NUM_PTS'][:] = num_pts
+    nc.variables['TRACK_ID'][:] = track_id
+    nc.variables['index'][:] = index
+    nc.variables['lon'][:] = lon
+    nc.variables['lat'][:] = lat
+    nc.variables['time'][:] = time
+    for var in output_vars_all:
         logger.debug(f"var {var} ")
         nc.variables[var][:] = variables_to_write[var]
 
