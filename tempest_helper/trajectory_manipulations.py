@@ -25,8 +25,8 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     Calculate the step number, with the first time in a file have a step number
     of one. All calendars are handled.
 
-    :param iris.Cube.cube cube: A cube loaded from a data file from the
-        current period.
+    :param cube: A cube loaded from a data file from the current period.
+    :type cube: :py:obj:`iris.cube.Cube`
     :param int year: The current year.
     :param int month: The current month.
     :param int day: The current day of month.
@@ -61,9 +61,10 @@ def fill_trajectory_gaps(storm, step, lon, lat, grid_x, grid_y, cube, time_perio
         degrees.
     :param float lat: The latitude of the current point in the storm in
         degrees.
-    : param dict new_var: The other variables contained in the storm at the current point
-    :param iris.cube.Cube cube: A cube loaded from a data file from the
-        current period.
+    :param dict new_var: The other variables contained in the storm at the
+        current point.
+    :param cube: A cube loaded from a data file from the current period.
+    :type cube: :py:obj:`iris.cube.Cube`
     :param int time_period: The time period in hours between time points in the
         data.
     """
@@ -160,7 +161,8 @@ def storms_overlap_in_time(
     storms_Y
     ):
     """
-    Find the subset of list storms_Y that have some overlap in time with storm_x
+    Find the subset of list storms_Y that have some overlap in time with 
+      storm_x
 
     :param dict storm_x: Storm dictionary.
     :param list storm_Y: List of storm dictionaries
@@ -187,7 +189,8 @@ def storms_overlap_in_space(
     There is some overlap in time already determined
 
     :param dict storm_c: Storm dictionary.
-    :param list storm_Y: List of storm dictionaries which overlap storm_c in time
+    :param list storm_Y: List of storm dictionaries which overlap storm_c 
+       in time
     :param float distance_threshold: maximum distance (degrees) for storms to
        be apart but identified as overlapping in space
     :returns: Either None, or a storm that overlaps storm_c in space.
@@ -199,7 +202,8 @@ def storms_overlap_in_space(
         n_pts_overlap = 0
         set_p = _storm_dates(storm_p)
         overlap = sorted(list(set(set_c).intersection(set_p)))
-        print ('overlap time in space ',ist, overlap, overlap[0])
+        logger.debug(f"Overlap time in space {ist} {overlap} {overlap[0]}")
+
         time_c = set_c.index(overlap[0])
         time_p = set_p.index(overlap[0])
         lat_c = storm_c["lat"]
@@ -215,9 +219,11 @@ def storms_overlap_in_space(
             if dist_lat < distance_threshold and dist_lon < distance_threshold:
                 n_pts_overlap += 1
 
-            # now find out how much time-space overlap
-            # is it exactly the same storm - we can remove the duplicate from the earlier dataset
-            # is it an extension - we need to remove from the earlier dataset, and extend the storm in the current dataset
+        # now find out how much time-space overlap
+        # is it exactly the same storm - we can remove the duplicate
+        # from the earlier dataset
+        # is it an extension - we need to remove from the earlier dataset,
+        # and extend the storm in the current dataset
         if n_pts_overlap > 0:
             storms_overlap = {}
             storms_overlap["early"] = storm_p
@@ -225,7 +231,7 @@ def storms_overlap_in_space(
             storms_overlap["time_c"] = time_c
             storms_overlap["time_p"] = time_p
             storms_overlap["offset"] = time_p - time_c
-            print('time_c, time_p, len(lat_c), len(lat_p), len(overlap), offset ', time_c, time_p, len(lat_c), len(lat_p), len(overlap), storms_overlap['offset'])
+
             if len(lat_c) == len(lat_p) == len(overlap):
                 # exactly the same storm
                 storms_overlap["method"] = 'remove'
@@ -234,7 +240,8 @@ def storms_overlap_in_space(
                 if time_c == time_p:
                     # storm has same start time in both
                     if len(lat_c) >= len(lat_p):
-                        # the current storm is longer, so just remove the previous one
+                        # the current storm is longer, so just remove the 
+                        # previous one
                         storms_overlap["method"] = 'remove'
                     else:
                         # the previous storm is longer, so need to insert
@@ -262,8 +269,10 @@ def write_track_line(
     :param dict storm: Storm dictionary.
     :param int no_lines: Number of time values to read from the storm
     :param int new_length: The new length of the storm
-    :param dict column_names: The names of the storm keys (columns of output file)
-    :returns: string and list of strings: the first is the new header line for this storm
+    :param dict column_names: The names of the storm keys (columns of 
+       output file)
+    :returns: string and list of strings: the first is the new header 
+       line for this storm
        the second is a list of lines to be written to the track txt file
     :rtype: str, list
     """
@@ -281,7 +290,6 @@ def write_track_line(
     track_line_start = '        {}     {}     {}      {}   '
     track_line_end = '   {}    {}       {}      {} \n'
 
-    print('no_lines, len(storm[grid_x]), len(storm[year])' ,no_lines, len(storm["grid_x"]), len(storm["year"]), storm["year"], storm["month"], storm["day"], storm["hour"])
     for it in range(no_lines):
         grid_x = str(storm["grid_x"][it])
         grid_y = str(storm["grid_y"][it])
@@ -323,8 +331,11 @@ def rewrite_track_file(
     Rewrite the .txt track files, removing the matching storms from the
     previous timestep which have been found in the current timestep and
     adding them to this current timestep
-    :param str tracked_file_Tm1: The path to the track file from the previous timestep.
-    :param str tracked_file_T: The path to the track file from the current timestep.
+
+    :param str tracked_file_Tm1: The path to the track file from the 
+       previous timestep.
+    :param str tracked_file_T: The path to the track file from the 
+       current timestep.
     :param str tracked_file_Tm1_adjust: The path to the updated track file
         for the previous time for output.
     :param str tracked_file_T_adjust: The path to the updated track file
@@ -348,7 +359,8 @@ def rewrite_track_file(
                     matching_track = False
                     line_header = line
                     track_length = int(line_array[1])
-                    start_date = line_array[2]+line_array[3].zfill(2)+line_array[4].zfill(2)+line_array[5].zfill(2)
+                    start_date = line_array[2]+line_array[3].zfill(2)+
+                                 line_array[4].zfill(2)+line_array[5].zfill(2)
                 else:
                     if line_of_traj <= track_length:
                         lon = float(line_array[2])
@@ -404,7 +416,6 @@ def rewrite_track_file(
                                     line_extra = 'Need to insert the track start here \n'
                                     line_extra = ''
                                     new_length = track_length + match_offset
-                                    print('new_length ',new_length, track_length, match_offset, tracked_file_T, date, storm_old_match["year"], storm_old_match["month"], storm_old_match["day"], storm_old_match["hour"])
                                     new_date_line, new_track_lines = write_track_line(storm_old_match, match_offset, new_length, column_names)
                                     line_header = new_date_line
 
