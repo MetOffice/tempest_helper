@@ -289,7 +289,7 @@ def write_track_line(
     :rtype: str, list
     """
     track_line_date = 'start   {}      {}    {}       {}      {}'.\
-            format(str(new_length), str(storm["year"][0]),
+        format(str(new_length), str(storm["year"][0]),
             str(storm["month"][0]), str(storm["day"][0]),
             str(storm["hour"][0])) + '\n'
 
