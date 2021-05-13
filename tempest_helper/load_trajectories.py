@@ -20,7 +20,7 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
     :param nc_file: The path to a netCDF file that the tracking was run on.
     :param int time_period: The time period in hours between time points in the
         data.
-    :param column_names: the names of the column variables within the 
+    :param column_names: the names of the column variables within the
     :   tracked_file, to be used as storm[] keys
     :returns: The loaded trajectories.
     :rtype: list
@@ -85,7 +85,8 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
                     )
                     for var in coords_variable:
                         if line_array[coords_all[var]][0] == '"':
-                            results = line_array[coords_all[var]].strip('"[]"').split(',')
+                            results = \
+                                line_array[coords_all[var]].strip('"[]"').split(',')
                             results = [float(i) for i in results]
                             new_var[var] = results
                         else:
@@ -95,7 +96,15 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
                         if (step - storm["step"][-1]) > 1:
                             # add extra points before the next one
                             fill_trajectory_gaps(
-                                storm, step, lon, lat, grid_x, grid_y, cube, time_period, new_var
+                                storm,
+                                step,
+                                lon,
+                                lat,
+                                grid_x,
+                                grid_y,
+                                cube,
+                                time_period,
+                                new_var
                             )
                     for coord in coords_position:
                         storm[coord].append(eval(coord))

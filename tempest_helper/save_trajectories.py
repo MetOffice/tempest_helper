@@ -26,7 +26,7 @@ def define_netcdf_metadata(var_cmpt, variable_units):
         var_proc = var_cmpt.split('_')[1]
     if len(var_components) >= 3:
         var_level = var_cmpt.split('_')[2]
-    
+
     if 'slp' in var or 'psl' in var:
         standard_name = 'air_pressure_at_mean_sea_level'
         long_name = 'Sea Level Pressure'
@@ -85,9 +85,11 @@ def define_netcdf_metadata(var_cmpt, variable_units):
 
     return standard_name, long_name, description, units
 
+
 def guess_variable_units(output_vars):
     '''
-    in the case that variable_units are not passed into save_trajectories, we will guess them here
+    in the case that variable_units are not passed into save_trajectories,
+    we will guess them here
     :return:
     '''
     units = {}
@@ -114,6 +116,7 @@ def guess_variable_units(output_vars):
         variable_units[varname] = units[varname]
     return variable_units
 
+
 def save_trajectories_netcdf(
     directory,
     savefname,
@@ -131,20 +134,31 @@ def save_trajectories_netcdf(
     endperiod=None
     ):
     """
-    Create netcdf file for the tracks. 
-    May need metadata from a model nc file, so may need to create at a time when these are available
+    Create netcdf file for the tracks.
+    May need metadata from a model nc file, so may need to create at a time when
+    these are available
+
+    :param str directory: directory path
+    :param str savefname: filename to save netcdf file to
     :param list storms: The loaded trajectories.
-    :param str filename: The full path to save the plot as.
-    :param str title: An optional title to include on the plot.
+    :param str calendar: netcdf calendar type
+    :param str time_units: units string for the time coordinate
+    :param str variable_units:
+    :param str frequency:
+    :param str um_suiteid: UM suiteid for netcdf metadata
+    :param str resolution_code: String describing model resolution
+    :param str cmd_detect: the TempestExtremes detect command string
+    :param str cmd_stitch: the TempestExtremes stitch command string
+    :param list column_names: output variable names derived from the Tempest command
+    :param str startperiod: An optional time string for the start of this data
+    :param ste endperiod: AN optional time string for the end of this data period
     """
     logger.debug('making netCDF of outputs')
-        
-    savefname = savefname
+
     nc = Dataset(savefname, 'w', format='NETCDF4')
     nc.title = 'Tempest TC tracks'
     nc.directory = directory
     nc.tracked_data_frequency = frequency
-    #nc.TRACK_DURATION_MIN = np.float64(self.TRACK_DURATION_MIN)
 
     nc.mo_runid = um_suiteid
     nc.grid = resolution_code
@@ -156,14 +170,15 @@ def save_trajectories_netcdf(
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
 
-    record_length = 0; tracks = 0
+    record_length = 0
+    tracks = 0
     for storm in storms:
         tracks += 1
         storm_length = storm['length']
         record_length += storm_length
 
-    nc.createDimension('tracks', size = tracks) # unlimited
-    nc.createDimension('record', size = record_length)
+    nc.createDimension('tracks', size=tracks)
+    nc.createDimension('record', size=record_length)
 
     nc.createVariable('FIRST_PT', np.int32, ('tracks'))
     nc.createVariable('NUM_PTS', np.int32, ('tracks'))
@@ -182,7 +197,7 @@ def save_trajectories_netcdf(
         if 'list' in str(type(storm[var][0])):
             list_size = len(storm[var][0])
             if not list_dim_created:
-                nc.createDimension('record_profile', size = record_length*list_size)
+                nc.createDimension('record_profile', size=record_length*list_size)
                 list_dim_created = True
             nc.createVariable(var, 'f8', ('record_profile'))
         else:
@@ -190,7 +205,8 @@ def save_trajectories_netcdf(
 
     nc.variables['FIRST_PT'].units = 'ordinal'
     nc.variables['FIRST_PT'].long_name = 'first_pt'
-    nc.variables['FIRST_PT'].description = 'Index to first point of this track number'
+    nc.variables['FIRST_PT'].description = \
+                        'Index to first point of this track number'
 
     nc.variables['NUM_PTS'].units = 'ordinal'
     nc.variables['NUM_PTS'].long_name = 'num_pts'
@@ -202,28 +218,31 @@ def save_trajectories_netcdf(
 
     nc.variables['index'].units = 'ordinal'
     nc.variables['index'].long_name = 'track_id'
-    nc.variables['index'].description = 'Track sequence number (0 - length of track - 1)'
+    nc.variables['index'].description = \
+                        'Track sequence number (0 - length of track - 1)'
 
     nc.variables['lat'].units = 'degrees_north'
     nc.variables['lat'].standard_name = 'latitude'
     nc.variables['lat'].long_name = 'latitude'
-    nc.variables['lat'].description = 'Latitude (degrees north) associated with tracked variable'
+    nc.variables['lat'].description = \
+                        'Latitude (degrees north) associated with tracked variable'
 
     nc.variables['lon'].units = 'degrees_east'
     nc.variables['lon'].standard_name = 'longitude'
     nc.variables['lon'].long_name = 'longitude'
-    nc.variables['lon'].description = 'Longitude (degrees east) associated with tracked variable'
+    nc.variables['lon'].description = \
+                        'Longitude (degrees east) associated with tracked variable'
 
     nc.variables['time'].units = time_units
     nc.variables['time'].calendar = calendar
     nc.variables['time'].standard_name = 'time'
     nc.variables['time'].long_name = 'time'
 
-    #if variable_units == None:
     variable_units = guess_variable_units(output_vars_all)
 
     for var in output_vars_all:
-        standard_name, long_name, description, v_units = define_netcdf_metadata(var, variable_units)
+        standard_name, long_name, description, v_units = \
+                                    define_netcdf_metadata(var, variable_units)
         logger.debug(f"var, units {var} {v_units} ")
         nc.variables[var].standard_name = standard_name
         nc.variables[var].long_name = long_name
@@ -233,8 +252,13 @@ def save_trajectories_netcdf(
     # read the storms and write the values to the file
     # track: first_pt, num_pts, track_id
     # record: lat, lon, time, slp, index(0:tracklen-1)
-    first_pt = []; num_pts = []; track_id = []
-    lon = []; lat = []; time = []; index = []
+    first_pt = []
+    num_pts = []
+    track_id = []
+    lon = []
+    lat = []
+    time = []
+    index = []
 
     variables_to_write = {}
     for var in output_vars_all:
@@ -248,8 +272,9 @@ def save_trajectories_netcdf(
         first_pt_index += storm['length']
 
         for ipt in range(storm['length']):
-            tunit = utime(time_units, calendar = calendar)
-            t1 = tunit.date2num(datetime(storm['year'][ipt], storm['month'][ipt], storm['day'][ipt], storm['hour'][ipt]))
+            tunit = utime(time_units, calendar=calendar)
+            t1 = tunit.date2num(datetime(storm['year'][ipt], storm['month'][ipt],
+                                         storm['day'][ipt], storm['hour'][ipt]))
             time.append(t1)
             index.append(ipt)
             lon.append(storm['lon'][ipt])
@@ -264,8 +289,7 @@ def save_trajectories_netcdf(
     logger.debug(f"tracks, record_length {tracks} {record_length} ")
     logger.debug(f"len(first_pt) {len(first_pt)} ")
     logger.debug(f"len(lon) {len(lon)} ")
-    #logger.debug(f"len(variables_to_write(slp)) {len(variables_to_write['slp'])} ")
-    #logger.debug(f"variables_to_write[slp] {variables_to_write['slp']} ")
+
     # now write variables to netcdf
     nc.variables['FIRST_PT'][:] = first_pt
     nc.variables['NUM_PTS'][:] = num_pts
