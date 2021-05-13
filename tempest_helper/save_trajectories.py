@@ -130,7 +130,9 @@ def save_trajectories_netcdf(
     cmd_detect,
     cmd_stitch,
     column_names,
-    startperiod=None, endperiod=None):
+    startperiod=None,
+    endperiod=None
+):
 
     """
     Create netcdf file for the tracks.

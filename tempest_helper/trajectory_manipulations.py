@@ -164,7 +164,8 @@ def _storm_dates(storm):
 
 def storms_overlap_in_time(
     storm_x,
-    storms_Y):
+    storms_Y
+):
 
     """
     Find the subset of list storms_Y that have some overlap in time with storm_x
@@ -189,7 +190,8 @@ def storms_overlap_in_time(
 def storms_overlap_in_space(
     storm_c,
     storms_Y,
-    distance_threshold=0.5):
+    distance_threshold=0.5
+):
 
     """
     Find storms that have any overlap in space
@@ -264,7 +266,8 @@ def write_track_line(
     storm,
     no_lines,
     new_length,
-    column_names):
+    column_names
+):
 
     """
     Produce a line of Tempest txt file output matching the track file format
@@ -331,7 +334,8 @@ def rewrite_track_file(
     tracked_file_Tm1_adjust,
     tracked_file_T_adjust,
     storms_match,
-    column_names):
+    column_names
+):
 
     """
     Rewrite the .txt track files, removing the matching storms from the
@@ -396,7 +400,7 @@ def rewrite_track_file(
                     line_header = line
                     track_length = int(line_array[1])
                     start_date = line_array[2] + line_array[3].zfill(2) + \
-                                 line_array[4].zfill(2) + line_array[5].zfill(2)
+                        line_array[4].zfill(2) + line_array[5].zfill(2)
                 else:
                     if line_of_traj <= track_length:
                         lon = float(line_array[2])
