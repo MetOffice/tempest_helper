@@ -147,9 +147,7 @@ def _calculate_gap_time(cube, year, month, day, hour, time_period):
     return this_datetime_tuple
 
 
-def _storm_dates(
-    storm
-    ):
+def _storm_dates(storm):
     """
     Calculate the date string for each point in the storm.
 
@@ -166,8 +164,7 @@ def _storm_dates(
 
 def storms_overlap_in_time(
     storm_x,
-    storms_Y
-    ):
+    storms_Y):
     """
     Find the subset of list storms_Y that have some overlap in time with storm_x
 
@@ -191,8 +188,7 @@ def storms_overlap_in_time(
 def storms_overlap_in_space(
     storm_c,
     storms_Y,
-    distance_threshold=0.5
-    ):
+    distance_threshold=0.5):
     """
     Find storms that have any overlap in space
     There is some overlap in time already determined
@@ -266,8 +262,7 @@ def write_track_line(
     storm,
     no_lines,
     new_length,
-    column_names
-    ):
+    column_names):
     """
     Produce a line of Tempest txt file output matching the track file format
 
@@ -280,9 +275,9 @@ def write_track_line(
     :rtype: str, list
     """
     track_line_date = 'start   {}      {}    {}       {}      {}'.\
-                        format(str(new_length), str(storm["year"][0]),
-                        str(storm["month"][0]), str(storm["day"][0]),
-                        str(storm["hour"][0])) + '\n'
+                          format(str(new_length), str(storm["year"][0]),
+                                 str(storm["month"][0]), str(storm["day"][0]),
+                                 str(storm["hour"][0])) + '\n'
 
     # need to derive the ordered list of variables to write to correct columns
     # formatting is different for position values and variables
@@ -333,8 +328,7 @@ def rewrite_track_file(
     tracked_file_Tm1_adjust,
     tracked_file_T_adjust,
     storms_match,
-    column_names
-):
+    column_names):
     """
     Rewrite the .txt track files, removing the matching storms from the
     previous timestep which have been found in the current timestep and
@@ -422,7 +416,6 @@ def rewrite_track_file(
                                 file_output.write(line)
                             else:
                                 if match_type == 'extend':
-                                    #line_extra = 'Need to insert track start here \n'
                                     line_extra = ''
                                     new_length = track_length + match_offset
                                     new_date_line, new_track_lines = write_track_line(
