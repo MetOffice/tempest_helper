@@ -290,8 +290,8 @@ def write_track_line(
     """
     track_line_date = 'start   {}      {}    {}       {}      {}'.\
         format(str(new_length), str(storm["year"][0]),
-            str(storm["month"][0]), str(storm["day"][0]),
-            str(storm["hour"][0])) + '\n'
+                str(storm["month"][0]), str(storm["day"][0]),
+                str(storm["hour"][0])) + '\n'
 
     # need to derive the ordered list of variables to write to correct columns
     # formatting is different for position values and variables
