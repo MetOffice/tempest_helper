@@ -131,8 +131,7 @@ def save_trajectories_netcdf(
     cmd_stitch,
     column_names,
     startperiod=None,
-    endperiod=None
-    ):
+    endperiod=None):
     """
     Create netcdf file for the tracks.
     May need metadata from a model nc file, so may need to create at a time when
@@ -166,7 +165,8 @@ def save_trajectories_netcdf(
     nc.end_date = endperiod
     nc.institution_id = 'MOHC'
     nc.algorithm = 'TempestExtremes_v2'
-    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; Ullrich et al. 2020'
+    nc.algorithm_ref = 'Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; ' + \
+        'Ullrich et al. 2020'
     nc.detect_cmd = cmd_detect
     nc.stitch_cmd = cmd_stitch
 
@@ -206,7 +206,7 @@ def save_trajectories_netcdf(
     nc.variables['FIRST_PT'].units = 'ordinal'
     nc.variables['FIRST_PT'].long_name = 'first_pt'
     nc.variables['FIRST_PT'].description = \
-                        'Index to first point of this track number'
+        'Index to first point of this track number'
 
     nc.variables['NUM_PTS'].units = 'ordinal'
     nc.variables['NUM_PTS'].long_name = 'num_pts'
@@ -219,19 +219,19 @@ def save_trajectories_netcdf(
     nc.variables['index'].units = 'ordinal'
     nc.variables['index'].long_name = 'track_id'
     nc.variables['index'].description = \
-                        'Track sequence number (0 - length of track - 1)'
+        'Track sequence number (0 - length of track - 1)'
 
     nc.variables['lat'].units = 'degrees_north'
     nc.variables['lat'].standard_name = 'latitude'
     nc.variables['lat'].long_name = 'latitude'
     nc.variables['lat'].description = \
-                        'Latitude (degrees north) associated with tracked variable'
+        'Latitude (degrees north) associated with tracked variable'
 
     nc.variables['lon'].units = 'degrees_east'
     nc.variables['lon'].standard_name = 'longitude'
     nc.variables['lon'].long_name = 'longitude'
     nc.variables['lon'].description = \
-                        'Longitude (degrees east) associated with tracked variable'
+        'Longitude (degrees east) associated with tracked variable'
 
     nc.variables['time'].units = time_units
     nc.variables['time'].calendar = calendar
