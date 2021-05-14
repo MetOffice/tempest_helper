@@ -223,7 +223,7 @@ def make_column_names():
     Make an example column names dictionary for
     `tempest_helper.save_trajectories()`.
 
-    :returns: A dict of column names and indices
+    :returns: A dict of column names and related indices to columns in track text file
     :rtype: dict
     """
     column_initial = "grid_x,grid_y,"
