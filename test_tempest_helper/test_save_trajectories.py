@@ -6,7 +6,7 @@ import tempfile
 import numpy as np
 
 from tempest_helper import save_trajectories_netcdf
-from .utils import TempestHelperTestCase, make_loaded_trajectories
+from .utils import TempestHelperTestCase, make_loaded_trajectories, make_column_names
 
 
 class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
@@ -17,6 +17,7 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
         self.maxDiff = None
         # Make a track file
         storms = make_loaded_trajectories()
+        column_names = make_column_names()
         _fd, self.track_file = tempfile.mkstemp(suffix=".nc")
         save_trajectories_netcdf(
             os.path.dirname(self.track_file),
@@ -30,7 +31,7 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
             "N96",
             "wibble",
             "wobble",
-            ["slp"],
+            column_names,
         )
 
     def tearDown(self):

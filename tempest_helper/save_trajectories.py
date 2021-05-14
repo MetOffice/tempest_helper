@@ -150,7 +150,7 @@ def save_trajectories_netcdf(
     :param str resolution_code: String describing model resolution
     :param str cmd_detect: the TempestExtremes detect command string
     :param str cmd_stitch: the TempestExtremes stitch command string
-    :param list column_names: output variable names derived from the Tempest command
+    :param dict column_names: output variable names derived from the Tempest command
     :param str startperiod: An optional time string for the start of this data
     :param str endperiod: AN optional time string for the end of this data period
     """
@@ -190,9 +190,9 @@ def save_trajectories_netcdf(
     nc.createVariable('lon', 'f4', ('record'))
     nc.createVariable('lat', 'f4', ('record'))
 
-    output_vars_all = column_names.copy()
+    output_vars_all = list(column_names.keys()).copy()
     for pos in ["grid_x", "grid_y", "lon", "lat", "year", "month", "day", "hour"]:
-        output_vars_all.pop(pos, None)
+        output_vars_all.remove(pos)
 
     list_dim_created = False
     for var in output_vars_all:
