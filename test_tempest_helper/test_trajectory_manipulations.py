@@ -83,7 +83,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0,
+                   "orog_max": 0.0}
         fill_trajectory_gaps(storm, 6, 5.0, 5.0, 10, 10, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
@@ -92,8 +93,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "grid_y": [2, 0],
-            "grid_x": [2, 0],
+            "grid_y": [5, 4],
+            "grid_x": [6, 5],
             "lat": [1.0, 0.0],
             "lon": [1.0, 0.0],
             "year": [2000, 2000],
@@ -108,8 +109,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "grid_y": [2, 0, -2, -4, -6],
-            "grid_x": [2, 0, -2, -4, -6],
+            "grid_y": [5, 4, 3, 2, 1],
+            "grid_x": [6, 5, 4, 3, 2],
             "lat": [1.0, 0.0, -1.0, -2.0, -3.0],
             "lon": [1.0, 0.0, 359.0, 358.0, 357.0],
             "year": [2000, 2000, 2000, 2000, 2000],
@@ -122,8 +123,9 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
-        fill_trajectory_gaps(storm, 6, 356.0, -4.0, -8, -8, cube, 6, new_var)
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0,
+                   "orog_max": 0.0}
+        fill_trajectory_gaps(storm, 6, 356.0, -4.0, 1, 0, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
     def test_fill_traj_gap_different_directions(self):
@@ -131,8 +133,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "grid_y": [0, 2],
-            "grid_x": [2, 0],
+            "grid_y": [4, 5],
+            "grid_x": [6, 5],
             "lat": [0.0, 1.0],
             "lon": [1.0, 0.0],
             "year": [2000, 2000],
@@ -147,8 +149,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "grid_y": [0, 2, 4, 6, 8],
-            "grid_x": [2, 0, -2, -4, -6],
+            "grid_y": [4, 5, 6, 7, 8],
+            "grid_x": [6, 5, 4, 3, 2],
             "lat": [0.0, 1.0, 2.0, 3.0, 4.0],
             "lon": [1.0, 0.0, 359.0, 358.0, 357.0],
             "year": [2000, 2000, 2000, 2000, 2000],
@@ -161,8 +163,9 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
-        fill_trajectory_gaps(storm, 6, 356.0, 5.0, -8, 10, cube, 6, new_var)
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0,
+                   "orog_max": 0.0}
+        fill_trajectory_gaps(storm, 6, 356.0, 5.0, 1, 9, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
     def test_fill_traj_gap_non_integer(self):
@@ -173,8 +176,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         storm = {
             "length": 3,
             "step": [1, 2],
-            "grid_y": [0, 3],
-            "grid_x": [2, -1],
+            "grid_y": [4, 5],
+            "grid_x": [6, 4],
             "lat": [0.0, 1.5],
             "lon": [1.0, 359.5],
             "year": [2000, 2000],
@@ -189,8 +192,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "grid_y": [0, 3, 6, 9, 12],
-            "grid_x": [2, -1, -4, -7, -10],
+            "grid_y": [4, 5, 7, 8, 10],
+            "grid_x": [5, 3, 2, 0, 9],
             "lat": [0.0, 1.5, 3.0, 4.5, 6.0],
             "lon": [1.0, 359.5, 358.0, 356.5, 355.0],
             "year": [2000, 2000, 2000, 2000, 2000],
@@ -203,8 +206,9 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
-        fill_trajectory_gaps(storm, 6, 353.5, 7.5, -13, 15, cube, 6, new_var)
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0,
+                   "orog_max": 0.0}
+        fill_trajectory_gaps(storm, 6, 353.5, 7.5, 10, 12, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
 
