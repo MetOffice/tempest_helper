@@ -34,7 +34,7 @@ start   2  2014    12   21   0
             fh.writelines(
                 [line.strip() + "\n" for line in track_file_contents.split("\n")]
             )
-        column_names = make_column_names()
+        self.column_names = make_column_names()
         # Make an example data file
         _fd, self.netcdf_file = tempfile.mkstemp(suffix=".nc", dir=self.runtime_dir)
         cube = realistic_3d()
@@ -47,6 +47,6 @@ start   2  2014    12   21   0
     def test_get_trajectories(self):
         for expected, actual in zip(
             make_loaded_trajectories(),
-            get_trajectories(self.track_file, self.netcdf_file, 6, column_names),
+            get_trajectories(self.track_file, self.netcdf_file, 6, self.column_names),
         ):
             self.assertTempestDictEqual(expected, actual)
