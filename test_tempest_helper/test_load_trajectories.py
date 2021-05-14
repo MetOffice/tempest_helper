@@ -35,6 +35,15 @@ start   2  2014    12   21   0
                 [line.strip() + "\n" for line in track_file_contents.split("\n")]
             )
 
+        column_initial = "grid_x,grid_y,"
+        column_final = ",year,month,day,hour"
+        stitch_in_fmt = "lon,lat,slp_min,sfcWind_max,zg_avg_250,orog_max"
+        col_names = column_initial + stitch_in_fmt + column_final
+        names = col_names.split(',')
+        self.column_names = {}
+        for im, name in enumerate(names):
+            self.column_names[name] = im
+
         # Make an example data file
         _fd, self.netcdf_file = tempfile.mkstemp(suffix=".nc", dir=self.runtime_dir)
         cube = realistic_3d()
@@ -47,6 +56,6 @@ start   2  2014    12   21   0
     def test_get_trajectories(self):
         for expected, actual in zip(
             make_loaded_trajectories(),
-            get_trajectories(self.track_file, self.netcdf_file, 6),
+            get_trajectories(self.track_file, self.netcdf_file, 6, self.column_names),
         ):
             self.assertTempestDictEqual(expected, actual)

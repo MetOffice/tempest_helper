@@ -130,8 +130,8 @@ def save_trajectories_netcdf(
     cmd_detect,
     cmd_stitch,
     column_names,
-    startperiod=None,
-    endperiod=None
+    startperiod='',
+    endperiod=''
 ):
 
     """
@@ -152,7 +152,7 @@ def save_trajectories_netcdf(
     :param str cmd_stitch: the TempestExtremes stitch command string
     :param list column_names: output variable names derived from the Tempest command
     :param str startperiod: An optional time string for the start of this data
-    :param ste endperiod: AN optional time string for the end of this data period
+    :param str endperiod: AN optional time string for the end of this data period
     """
     logger.debug('making netCDF of outputs')
 
