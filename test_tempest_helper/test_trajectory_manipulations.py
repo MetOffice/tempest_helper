@@ -83,7 +83,7 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
         fill_trajectory_gaps(storm, 6, 5.0, 5.0, 10, 10, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
@@ -122,7 +122,7 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
         fill_trajectory_gaps(storm, 6, 356.0, -4.0, -8, -8, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
@@ -161,7 +161,7 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
         fill_trajectory_gaps(storm, 6, 356.0, 5.0, -8, 10, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
@@ -203,7 +203,7 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0, 4.0, 2.0],
         }
         cube = realistic_3d()
-        new_var = {"slp": 99995.0, "sfcWind": 6.5, "zg": 5095.0, "orog": 0.0}
+        new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0, "orog_max": 0.0}
         fill_trajectory_gaps(storm, 6, 353.5, 7.5, -13, 15, cube, 6, new_var)
         self.assertTempestDictEqual(expected, storm)
 
