@@ -20,7 +20,7 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
     :param nc_file: The path to a netCDF file that the tracking was run on.
     :param int time_period: The time period in hours between time points in the
         data.
-    :param column_names: the names of the column variables within the
+    :param dict column_names: the names of the column variables within the
     :   tracked_file, to be used as storm[] keys
     :returns: The loaded trajectories.
     :rtype: list
@@ -42,7 +42,7 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
     }
     # derive a dictionary with only the variables (needed later)
     coords_all = column_names
-    coords_variable = column_names.copy()
+    coords_variable = list(column_names.keys())
     for pos in coords_position:
         coords_variable.pop(pos, None)
 
