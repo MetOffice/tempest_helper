@@ -209,3 +209,22 @@ def make_loaded_trajectories():
     storm["orog_max"] = [0.000000e00, 0.000000e00, 0.000000e00]
     storms.append(storm)
     return storms
+
+
+def make_column_names():
+    """
+    Make an example column names dictionary for
+    `tempest_helper.save_trajectories()`.
+
+    :returns: A dict of column names and indices
+    :rtype: dict
+    """
+    column_initial = "grid_x,grid_y,"
+    column_final = ",year,month,day,hour"
+    stitch_in_fmt = "lon,lat,slp_min,sfcWind_max,zg_avg_250,orog_max"
+    col_names = column_initial + stitch_in_fmt + column_final
+    names = col_names.split(',')
+    column_names = {}
+    for im, name in enumerate(names):
+        column_names[name] = im
+    return column_names
