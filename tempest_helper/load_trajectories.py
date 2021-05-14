@@ -42,9 +42,9 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
     }
     # derive a dictionary with only the variables (needed later)
     coords_all = column_names
-    coords_variable = list(column_names.keys())
+    coords_variable = list(column_names.keys()).copy()
     for pos in coords_position:
-        coords_variable.pop(pos, None)
+        coords_variable.remove(pos)
 
     # Initialize storms and line counter
     storms = []
