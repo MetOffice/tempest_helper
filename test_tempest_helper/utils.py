@@ -150,7 +150,7 @@ class TempestHelperTestCase(TestCase):
 
 def make_loaded_trajectories():
     """
-    Make sn example structure of trajectories as returned by
+    Make an example structure of trajectories as returned by
     `tempest_helper.get_trajectories()`.
 
     :returns: A simulated list of trajectories.
@@ -160,6 +160,8 @@ def make_loaded_trajectories():
     # Northern hemisphere
     storm = {}
     storm["length"] = 2  # 2 time points
+    storm["grid_x"] = [2, 4],
+    storm["grid_y"] = [20, 22],
     storm["lon"] = [1.0, 2.0]
     storm["lat"] = [10.0, 11.0]
     storm["year"] = [2014, 2014]
@@ -167,10 +169,10 @@ def make_loaded_trajectories():
     storm["day"] = [21, 21]
     storm["hour"] = [0, 6]
     storm["step"] = [1, 2]
-    storm["slp"] = [9.997331e04, 9.978512e04]
-    storm["sfcWind"] = [1.206617e01, 1.079898e01]
-    storm["zg"] = [5.092293e03, 5.112520e03]
-    storm["orog"] = [0.000000e00, 0.000000e00]
+    storm["slp_min"] = [9.997331e04, 9.978512e04]
+    storm["sfcWind_max"] = [1.206617e01, 1.079898e01]
+    storm["zg_avg_250"] = [5.092293e03, 5.112520e03]
+    storm["orog_max"] = [0.000000e00, 0.000000e00]
     storms.append(storm)
     # Southern hemisphere
     storm = {}
