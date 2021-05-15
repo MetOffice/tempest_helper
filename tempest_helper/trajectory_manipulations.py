@@ -359,7 +359,7 @@ def rewrite_track_file(
         for the current timestep for output.
     :param list storms_match: The storms which have been found to match
         with a later time
-    :param list column_names: the keys for the storm columns in the output file
+    :param dict column_names: the keys for the storm columns in the output file
     """
     header_delim = 'start'
 
