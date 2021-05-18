@@ -115,12 +115,39 @@ float32 lat(record)
 unlimited dimensions: 
 current shape = (6,)
 filling on, default _FillValue of 9.969209968386869e+36 used
-), ('slp', <class 'netCDF4._netCDF4.Variable'>
-float64 slp(record)
+), ('slp_min', <class 'netCDF4._netCDF4.Variable'>
+float64 slp_min(record)
     standard_name: air_pressure_at_mean_sea_level
     long_name: Sea Level Pressure
     description: Sea level pressure for tracked variable
     units: Pa
+unlimited dimensions: 
+current shape = (6,)
+filling on, default _FillValue of 9.969209968386869e+36 used
+), ('sfcWind_max', <class 'netCDF4._netCDF4.Variable'>
+float64 sfcWind_max(record)
+    standard_name: wind_speed
+    long_name: Near-surface Wind Speed
+    description: near-surface (usually 10 metres) wind speed
+    units: m s-1
+unlimited dimensions: 
+current shape = (6,)
+filling on, default _FillValue of 9.969209968386869e+36 used
+), ('zg_avg_250', <class 'netCDF4._netCDF4.Variable'>
+float64 zg_avg_250(record)
+    standard_name: geopotential_height
+    long_name: Geopotential Height
+    description: Geopotential height difference
+    units: m
+unlimited dimensions: 
+current shape = (6,)
+filling on, default _FillValue of 9.969209968386869e+36 used
+), ('orog_max', <class 'netCDF4._netCDF4.Variable'>
+float64 orog_max(record)
+    standard_name: surface_altitude
+    long_name: Surface Altitude
+    description: Surface altitude (height above sea level)
+    units: m
 unlimited dimensions: 
 current shape = (6,)
 filling on, default _FillValue of 9.969209968386869e+36 used
@@ -141,6 +168,36 @@ filling on, default _FillValue of 9.969209968386869e+36 used
                     9.978512e04,
                     9.997331e04,
                     9.9879215e04,
+                ]
+            ),
+            np.array(
+                [
+                    1.206617e01,
+                    1.079898e01,
+                    1.206617e01,
+                    1.079898e01,
+                    1.206617e01,
+                    1.1432575e01
+                ]
+            ),
+            np.array(
+                [
+                    5.092293e03,
+                    5.112520e03,
+                    5.092293e03,
+                    5.112520e03,
+                    5.092293e03,
+                    5.1024065e3
+                ]
+            ),
+            np.array(
+                [
+                    0.000000e00,
+                    0.000000e00,
+                    0.000000e00,
+                    0.000000e00,
+                    0.000000e00,
+                    0.000000e00
                 ]
             ),
         ]

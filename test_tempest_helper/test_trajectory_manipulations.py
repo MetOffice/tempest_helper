@@ -177,7 +177,7 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "length": 3,
             "step": [1, 2],
             "grid_y": [4, 5],
-            "grid_x": [6, 4],
+            "grid_x": [5, 3],
             "lat": [0.0, 1.5],
             "lon": [1.0, 359.5],
             "year": [2000, 2000],
