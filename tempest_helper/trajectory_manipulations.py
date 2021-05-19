@@ -45,8 +45,9 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     return round(time_delta.total_seconds() / (time_period * seconds_in_hour)) + 1
 
 
-def fill_trajectory_gaps(storm, step, lon, lat, grid_x, grid_y, cube,
-                         time_period, new_var, miss_val=-99):
+def fill_trajectory_gaps(
+    storm, step, lon, lat, grid_x, grid_y, cube, time_period, new_var, miss_val=-99
+):
     """
     Fill the gap by linearly interpolating the last latitude, longitude,
     time and other values from the last of these values up to step. The
@@ -105,7 +106,7 @@ def fill_trajectory_gaps(storm, step, lon, lat, grid_x, grid_y, cube,
         storm["hour"].append(step_time_components[3])
 
     for var in new_var:
-        if 'list' in str(type(new_var[var])):
+        if "list" in str(type(new_var[var])):
             res = new_var[var][:]
             var1 = []
             for i in range(len(res)):
@@ -157,15 +158,16 @@ def _storm_dates(storm):
     """
     dates = []
     for it, year in enumerate(storm["year"]):
-        dates.append(str(storm["year"][it]) + str(storm["month"][it]).zfill(2) +
-                     str(storm["day"][it]).zfill(2) + str(storm["hour"][it]).zfill(2))
+        dates.append(
+            str(storm["year"][it])
+            + str(storm["month"][it]).zfill(2)
+            + str(storm["day"][it]).zfill(2)
+            + str(storm["hour"][it]).zfill(2)
+        )
     return dates
 
 
-def storms_overlap_in_time(
-    storm_x,
-    storms_Y
-):
+def storms_overlap_in_time(storm_x, storms_Y):
 
     """
     Find the subset of list storms_Y that have some overlap in time with
@@ -188,11 +190,7 @@ def storms_overlap_in_time(
     return storms_overlap
 
 
-def storms_overlap_in_space(
-    storm_c,
-    storms_Y,
-    distance_threshold=0.5
-):
+def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
 
     """
     Find storms that have any overlap in space
@@ -222,8 +220,8 @@ def storms_overlap_in_space(
         lon_p = storm_p["lon"]
         # just look at the point where the storms overlap in time
         for it in range(1):
-            timec = time_c+it
-            timep = time_p+it
+            timec = time_c + it
+            timep = time_p + it
             dist_lat = np.abs(lat_c[timec] - lat_p[timep])
             dist_lon = np.abs(lon_c[timec] - lon_p[timep])
             if dist_lat < distance_threshold and dist_lon < distance_threshold:
@@ -244,7 +242,7 @@ def storms_overlap_in_space(
 
             if len(lat_c) == len(lat_p) == len(overlap):
                 # exactly the same storm
-                storms_overlap["method"] = 'remove'
+                storms_overlap["method"] = "remove"
             else:
                 # figure out how they overlap
                 if time_c == time_p:
@@ -252,28 +250,23 @@ def storms_overlap_in_space(
                     if len(lat_c) >= len(lat_p):
                         # the current storm is longer, so just remove the
                         # previous one
-                        storms_overlap["method"] = 'remove'
+                        storms_overlap["method"] = "remove"
                     else:
                         # the previous storm is longer, so need to insert
-                        storms_overlap["method"] = 'extend_odd'
+                        storms_overlap["method"] = "extend_odd"
                 elif time_p > time_c:
                     # the earlier dataset has the start of the storm
                     # want to extend set_x backwards in time
-                    storms_overlap["method"] = 'extend'
+                    storms_overlap["method"] = "extend"
                 elif time_c > time_p:
                     # the later dataset has the start of the storm
-                    storms_overlap["method"] = 'remove'
+                    storms_overlap["method"] = "remove"
             return storms_overlap
 
     return storms_overlap
 
 
-def write_track_line(
-    storm,
-    no_lines,
-    new_length,
-    column_names
-):
+def write_track_line(storm, no_lines, new_length, column_names):
 
     """
     Produce a line of Tempest txt file output matching the track file format
@@ -288,10 +281,16 @@ def write_track_line(
        the second is a list of lines to be written to the track txt file
     :rtype: str, list
     """
-    track_line_date = 'start   {}      {}    {}       {}      {}'.\
-        format(str(new_length), str(storm["year"][0]),
-               str(storm["month"][0]), str(storm["day"][0]),
-               str(storm["hour"][0])) + '\n'
+    track_line_date = (
+        "start   {}      {}    {}       {}      {}".format(
+            str(new_length),
+            str(storm["year"][0]),
+            str(storm["month"][0]),
+            str(storm["day"][0]),
+            str(storm["hour"][0]),
+        )
+        + "\n"
+    )
 
     # need to derive the ordered list of variables to write to correct columns
     # formatting is different for position values and variables
@@ -302,8 +301,8 @@ def write_track_line(
         column_ordered.append(reversed_name_key[iv])
 
     track_lines = []
-    track_line_start = '        {}     {}     {}      {}   '
-    track_line_end = '   {}    {}       {}      {} \n'
+    track_line_start = "        {}     {}     {}      {}   "
+    track_line_end = "   {}    {}       {}      {} \n"
 
     for it in range(no_lines):
         grid_x = str(storm["grid_x"][it])
@@ -317,20 +316,20 @@ def write_track_line(
 
         line_start = track_line_start.format(grid_x, grid_y, lon, lat)
         line_end = track_line_end.format(year, month, day, hour)
-        line_vars = ''
+        line_vars = ""
         for var in column_ordered[4:-4]:
-            if 'list' in str(type(storm[var][it])):
-                print('storm[var][it] ', var, storm[var][it])
+            if "list" in str(type(storm[var][it])):
+                print("storm[var][it] ", var, storm[var][it])
                 line_list = []
                 for i in range(len(storm[var][it])):
                     val = "{:.6e}".format((float(storm[var][it][i])))
                     line_list.append(val)
-                line_list = '"['+','.join(line_list)+']"'
-                line_vars += '    '+line_list
-                print('line_list ', line_list)
+                line_list = '"[' + ",".join(line_list) + ']"'
+                line_vars += "    " + line_list
+                print("line_list ", line_list)
             else:
-                line_vars += '    '+"{:.6e}".format((float(storm[var][it])))
-        track_lines.append(line_start+line_vars+line_end)
+                line_vars += "    " + "{:.6e}".format((float(storm[var][it])))
+        track_lines.append(line_start + line_vars + line_end)
 
     return track_line_date, track_lines
 
@@ -341,7 +340,7 @@ def rewrite_track_file(
     tracked_file_Tm1_adjust,
     tracked_file_T_adjust,
     storms_match,
-    column_names
+    column_names,
 ):
 
     """
@@ -361,14 +360,14 @@ def rewrite_track_file(
         with a later time
     :param dict column_names: the keys for the storm columns in the output file
     """
-    header_delim = 'start'
+    header_delim = "start"
 
     if len(storms_match) == 0:
         copyfile(tracked_file_Tm1, tracked_file_Tm1_adjust)
         return
 
     with open(tracked_file_Tm1) as file_input:
-        with open(tracked_file_Tm1_adjust, 'w') as file_output:
+        with open(tracked_file_Tm1_adjust, "w") as file_output:
             for line in file_input:
                 line_array = line.split()
                 if header_delim in line:
@@ -376,8 +375,12 @@ def rewrite_track_file(
                     matching_track = False
                     line_header = line
                     track_length = int(line_array[1])
-                    start_date = line_array[2] + line_array[3].zfill(2) + \
-                        line_array[4].zfill(2) + line_array[5].zfill(2)
+                    start_date = (
+                        line_array[2]
+                        + line_array[3].zfill(2)
+                        + line_array[4].zfill(2)
+                        + line_array[5].zfill(2)
+                    )
                 else:
                     if line_of_traj <= track_length:
                         lon = float(line_array[2])
@@ -387,10 +390,14 @@ def rewrite_track_file(
                                 storm_old = storm["early"]
                                 storm_new = storm["late"]
                                 date = _storm_dates(storm_old)[0]
-                                if date == start_date and \
-                                        track_length == storm_old["length"]:
-                                    if lon == storm_old["lon"][0] and \
-                                            lat == storm_old["lat"][0]:
+                                if (
+                                    date == start_date
+                                    and track_length == storm_old["length"]
+                                ):
+                                    if (
+                                        lon == storm_old["lon"][0]
+                                        and lat == storm_old["lat"][0]
+                                    ):
                                         matching_track = True
                             if not matching_track:
                                 file_output.write(line_header)
@@ -401,7 +408,7 @@ def rewrite_track_file(
                         line_of_traj += 1
 
     with open(tracked_file_T) as file_input:
-        with open(tracked_file_T_adjust, 'w') as file_output:
+        with open(tracked_file_T_adjust, "w") as file_output:
             for line in file_input:
                 line_array = line.split()
                 if header_delim in line:
@@ -409,22 +416,30 @@ def rewrite_track_file(
                     matching_track = False
                     line_header = line
                     track_length = int(line_array[1])
-                    start_date = line_array[2] + line_array[3].zfill(2) + \
-                        line_array[4].zfill(2) + line_array[5].zfill(2)
+                    start_date = (
+                        line_array[2]
+                        + line_array[3].zfill(2)
+                        + line_array[4].zfill(2)
+                        + line_array[5].zfill(2)
+                    )
                 else:
                     if line_of_traj <= track_length:
                         lon = float(line_array[2])
                         lat = float(line_array[3])
                         if line_of_traj == 0:
-                            match_type = ''
+                            match_type = ""
                             for storm in storms_match:
                                 storm_old = storm["early"]
                                 storm_new = storm["late"]
                                 date = _storm_dates(storm_new)[0]
-                                if date == start_date and \
-                                        track_length == storm_new["length"]:
-                                    if lon == storm_new["lon"][0] and \
-                                            lat == storm_new["lat"][0]:
+                                if (
+                                    date == start_date
+                                    and track_length == storm_new["length"]
+                                ):
+                                    if (
+                                        lon == storm_new["lon"][0]
+                                        and lat == storm_new["lat"][0]
+                                    ):
                                         matching_track = True
                                         match_type = storm["method"]
                                         storm_old_match = storm_old
@@ -434,23 +449,26 @@ def rewrite_track_file(
                                 file_output.write(line_header)
                                 file_output.write(line)
                             else:
-                                if match_type == 'extend':
-                                    line_extra = ''
+                                if match_type == "extend":
+                                    line_extra = ""
                                     new_length = track_length + match_offset
-                                    new_date_line, new_track_lines = \
-                                        write_track_line(storm_old_match, match_offset,
-                                                         new_length, column_names)
+                                    new_date_line, new_track_lines = write_track_line(
+                                        storm_old_match,
+                                        match_offset,
+                                        new_length,
+                                        column_names,
+                                    )
                                     line_header = new_date_line
 
                                     for new_line in new_track_lines:
                                         line_extra += new_line
 
-                                elif match_type == 'remove':
-                                    line_extra = 'Same track start here '
-                                    line_extra = ''
+                                elif match_type == "remove":
+                                    line_extra = "Same track start here "
+                                    line_extra = ""
                                 else:
-                                    line_extra = 'Do not have a match type ', match_type
-                                    line_extra = ''
+                                    line_extra = "Do not have a match type ", match_type
+                                    line_extra = ""
                                 file_output.write(line_header)
                                 file_output.write(line_extra)
                                 file_output.write(line)

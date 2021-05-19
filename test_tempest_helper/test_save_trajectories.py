@@ -33,8 +33,8 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
             "wobble",
             column_names,
         )
-        print('written nc file ', self.track_file)
-        print('os_stat ', os.stat(self.track_file))
+        print("written nc file ", self.track_file)
+        print("os_stat ", os.stat(self.track_file))
 
     def tearDown(self):
         os.remove(self.track_file)
@@ -179,7 +179,7 @@ filling on, default _FillValue of 9.969209968386869e+36 used
                     1.206617e01,
                     1.079898e01,
                     1.206617e01,
-                    1.1432575e01
+                    1.1432575e01,
                 ]
             ),
             np.array(
@@ -189,7 +189,7 @@ filling on, default _FillValue of 9.969209968386869e+36 used
                     5.092293e03,
                     5.112520e03,
                     5.092293e03,
-                    5.1024065e3
+                    5.1024065e3,
                 ]
             ),
             np.array(
@@ -199,7 +199,7 @@ filling on, default _FillValue of 9.969209968386869e+36 used
                     0.000000e00,
                     0.000000e00,
                     0.000000e00,
-                    0.000000e00
+                    0.000000e00,
                 ]
             ),
         ]

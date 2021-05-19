@@ -31,14 +31,14 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
     header_delim = "start"
 
     coords_position = {
-            "grid_x": 0,
-            "grid_y": 1,
-            "lon": 2,
-            "lat": 3,
-            "year": -4,
-            "month": -3,
-            "day": -2,
-            "hour": -1,
+        "grid_x": 0,
+        "grid_y": 1,
+        "lon": 2,
+        "lat": 3,
+        "year": -4,
+        "month": -3,
+        "day": -2,
+        "hour": -1,
     }
     # derive a dictionary with only the variables (needed later)
     coords_all = column_names
@@ -85,8 +85,9 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
                     )
                     for var in coords_variable:
                         if line_array[coords_all[var]][0] == '"':
-                            results = \
-                                line_array[coords_all[var]].strip('"[]"').split(',')
+                            results = (
+                                line_array[coords_all[var]].strip('"[]"').split(",")
+                            )
                             results = [float(i) for i in results]
                             new_var[var] = results
                         else:
@@ -104,7 +105,7 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
                                 grid_y,
                                 cube,
                                 time_period,
-                                new_var
+                                new_var,
                             )
                     for coord in coords_position:
                         storm[coord].append(eval(coord))
