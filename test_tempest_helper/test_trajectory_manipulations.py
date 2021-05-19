@@ -192,8 +192,8 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         expected = {
             "length": 3,
             "step": [1, 2, 3, 4, 5],
-            "grid_y": [4, 5, 7, 8, 10],
-            "grid_x": [5, 3, 2, 0, 9],
+            "grid_y": [4, 5, 6, 7, 8],
+            "grid_x": [5, 3, 4, 5, 6],
             "lat": [0.0, 1.5, 3.0, 4.5, 6.0],
             "lon": [1.0, 359.5, 358.0, 356.5, 355.0],
             "year": [2000, 2000, 2000, 2000, 2000],
@@ -209,7 +209,7 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
         new_var = {"slp_min": 99995.0, "sfcWind_max": 6.5, "zg_avg_250": 5095.0,
                    "orog_max": 0.0}
         fill_trajectory_gaps(storm, 6, 353.5, 7.5, 10, 12, cube, 6, new_var)
-        print('fill traj, storm ',storm)
+        print('fill traj, storm ', storm)
         self.assertTempestDictEqual(expected, storm)
 
 
