@@ -201,8 +201,8 @@ def make_loaded_trajectories():
     # Northern hemisphere
     storm = {}
     storm["length"] = 2  # 2 time points in file
-    storm["grid_x"] = [67, 68, 69]
-    storm["grid_y"] = [85, 86, 87]
+    storm["grid_x"] = [67, 1, 68]
+    storm["grid_y"] = [85, 85, 86]
     storm["lon"] = [1.0, 1.5, 2.0]
     storm["lat"] = [0.0, 0.5, 1.0]
     storm["year"] = [2014, 2014, 2014]
