@@ -30,7 +30,7 @@ def define_netcdf_metadata(var_cmpt, variable_units):
     if "slp" in var or "psl" in var:
         standard_name = "air_pressure_at_mean_sea_level"
         long_name = "Sea Level Pressure"
-        description = "Sea level pressure for tracked variable "
+        description = "Sea level pressure for tracked variable"
         units = variable_units["slp"]
     elif "sfcWind" in var:
         standard_name = "wind_speed"
@@ -155,11 +155,12 @@ def save_trajectories_netcdf(
     :param str endperiod: AN optional time string for the end of this data period
     """
     logger.debug("making netCDF of outputs")
-
-    nc = Dataset(savefname, "w", format="NETCDF4")
+    print('open nc file ', os.path.join(directory, savefname))
+    nc = Dataset(os.path.join(directory, savefname), "w", format="NETCDF4")
     nc.title = "Tempest TC tracks"
     nc.directory = directory
     nc.tracked_data_frequency = frequency
+    print('nc.title ', nc.title)
 
     nc.mo_runid = um_suiteid
     nc.grid = resolution_code
@@ -222,7 +223,7 @@ def save_trajectories_netcdf(
     nc.variables["index"].long_name = "track_id"
     nc.variables[
         "index"
-    ].description = "Track sequence number (0 - length of track - 1)"
+    ].description = "Track sequence number (0 - length of track-1)"
 
     nc.variables["lat"].units = "degrees_north"
     nc.variables["lat"].standard_name = "latitude"
@@ -313,5 +314,6 @@ def save_trajectories_netcdf(
     for var in output_vars_all:
         logger.debug(f"var {var} ")
         nc.variables[var][:] = variables_to_write[var]
+    print('written nc file ', nc.variables)
 
     nc.close()

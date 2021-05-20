@@ -18,6 +18,7 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
         # Make a track file
         storms = make_loaded_trajectories()
         column_names = make_column_names()
+        print('column_names ', column_names)
         _fd, self.track_file = tempfile.mkstemp(suffix=".nc")
         save_trajectories_netcdf(
             os.path.dirname(self.track_file),
@@ -55,7 +56,7 @@ root group (NETCDF4 data model, file format HDF5):
     detect_cmd: wibble
     stitch_cmd: wobble
     dimensions(sizes): tracks(3), record(6)
-    variables(dimensions): int32 FIRST_PT(tracks), int32 NUM_PTS(tracks), int32 TRACK_ID(tracks), int32 index(record), float64 time(record), float32 lon(record), float32 lat(record), float64 slp(record)
+    variables(dimensions): int32 FIRST_PT(tracks), int32 NUM_PTS(tracks), int32 TRACK_ID(tracks), int32 index(record), float64 time(record), float32 lon(record), float32 lat(record), float64 slp_min(record), float64 sfcWind_max(record), float64 zg_avg_250(record), float64 orog_max(record)
     groups: 
 """  # noqa
         expected_var_metedata = """OrderedDict([('FIRST_PT', <class 'netCDF4._netCDF4.Variable'>
@@ -86,7 +87,7 @@ filling on, default _FillValue of -2147483647 used
 int32 index(record)
     units: ordinal
     long_name: track_id
-    description: Track sequence number (0-length of track-1)
+    description: Track sequence number (0 - length of track-1)
 unlimited dimensions: 
 current shape = (6,)
 filling on, default _FillValue of -2147483647 used
