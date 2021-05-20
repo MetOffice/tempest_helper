@@ -18,6 +18,7 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
         # Make a track file
         storms = make_loaded_trajectories()
         column_names = make_column_names()
+        print('column_names ', column_names)
         _fd, self.track_file = tempfile.mkstemp(suffix=".nc")
         save_trajectories_netcdf(
             os.path.dirname(self.track_file),
