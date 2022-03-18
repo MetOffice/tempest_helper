@@ -235,7 +235,7 @@ def save_trajectories_netcdf(
                     storm["hour"][ipt],
                 ),
                 time_units,
-                calendar=calendar
+                calendar=calendar,
             )
             time.append(t1)
             index.append(ipt)
