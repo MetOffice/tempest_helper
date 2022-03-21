@@ -1,11 +1,34 @@
 # (C) British Crown Copyright 2021, Met Office.
 # Please see LICENSE for license details.
 from math import isclose
+import re
+import subprocess
 from typing import Any, ClassVar, Dict, List, Optional
 from unittest import TestCase
 
-from netCDF4 import Dataset
-import numpy as np
+# Earlier versions of netCDF4 (prior to 1.5.6 didn't include the tocdl() method
+import netCDF4
+if not hasattr(netCDF4.Dataset, 'tocdl'):
+    class Dataset(netCDF4.Dataset):
+        def tocdl(self, coordvars=False, data=False, outfile=None):
+            self.sync()
+            if coordvars:
+                ncdumpargs = "-cs"
+            else:
+                ncdumpargs = "-s"
+            if not data: ncdumpargs += "h"
+            result = subprocess.run(["ncdump", ncdumpargs, self.filepath()],
+                                    check=True, stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE,
+                                    encoding='utf-8')
+            if outfile is None:
+                return result.stdout
+            else:
+                f = open(outfile, 'w')
+                f.write(result.stdout)
+                f.close()
+else:
+    from netCDF4 import Dataset  # noqa
 
 
 class TempestHelperTestCase(TestCase):
@@ -23,63 +46,38 @@ class TempestHelperTestCase(TestCase):
     def assertNetcdfEqual(
         self,
         actual_path: str,
-        expected_global: str,
-        expected_variables_metadata: str,
-        expected_variables_values: list,
-        globals_ignore: Optional[List[str]] = ["directory"],
+        expected_cdl: str,
+        globals_ignore: Optional[List[str]] = ["directory",
+                                               "_NCProperties",
+                                               "_SuperblockVersion",
+                                               r"netcdf.*{"],
     ) -> None:
         """
         Load the netCDF file specified by `actual_path` and compare it against the
-        attributes and values specified.
+        specified netCDF CDL representation of the file, metadata and contents.
 
-        The directory attribute in the netCDF file's global attributes is
-        ignored by default but this can be changed by setting the `globals_ignore`
-        attribute appropriately.
+        The initial name line, and the directory, _SuperblockVersion and _NCProperties
+        attributes are ignored by default but this can be changed by setting the
+        `globals_ignore` attribute appropriately.
 
         :param str actual_path: The path of the netCDF file to test.
-        :param str expected_global: The expected global attribute values as displayed
-            by ``str(netCDF4.Dataset)`` except for any attributes that are specified
-            in the `globals_ignore` parameter.
-        :param str expected_variables_metadata: The expected variable attribute
-            values as displayed by ``str(netCDF4.Dataset.variables)``.
-        :param list expected_variables_values: List of :py:obj:`numpy.array` objects
-            containing the data for each variable in the file.
-        :param list globals_ignore: Global attributes to ignore.
+        :param str expected_cdl: The expected netCDF cdl for the file as displayed
+            by the ncdump program.
+        :param list globals_ignore: lines including these regular expressions to ignore.
         """
-        # In netCDF4 prior to v1.5.2 variable names were underlined and the
-        # control characters to do this must be removed before comparison.
-        underline_code_1 = "\x1b[4m"
-        underline_code_2 = "\x1b[0m"
 
         with Dataset(actual_path) as rootgroup:
-            # Check globals
             for expected, actual in zip(
-                expected_global.splitlines(),
-                str(rootgroup)
-                .replace(underline_code_1, "")
-                .replace(underline_code_2, "")
-                .splitlines(),
+                expected_cdl.splitlines(),
+                rootgroup.tocdl(data=True).splitlines(),
             ):
                 ignore_line = False
                 for ignore in globals_ignore:
-                    if actual.lstrip().startswith(f"{ignore}:"):
+                    if re.search(ignore, expected):
                         ignore_line = True
                         continue
                 if not ignore_line:
-                    self.assertEqual(expected, actual, msg="Mismatch in globals")
-            # Check variable metadata
-            self.assertEqual(expected_variables_metadata, str(rootgroup.variables))
-            # Check variable values
-            var_values = [rootgroup[var_name][:] for var_name in rootgroup.variables]
-            if len(expected_variables_values) != len(var_values):
-                self.fail(
-                    "Length of expected_variables_values does not match "
-                    "actual length"
-                )
-            for expected, actual in zip(expected_variables_values, var_values):
-                np.testing.assert_allclose(
-                    expected, actual, rtol=self.rel_tol, atol=self.abs_tol
-                )
+                    self.assertEqual(expected, actual, msg="Mismatch in CDL")
 
     def assertTempestDictEqual(
         self, expected: Dict[Any, Any], actual: Dict[Any, Any]
