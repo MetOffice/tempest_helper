@@ -1,4 +1,4 @@
-# (C) British Crown Copyright 2021, Met Office.
+# (C) British Crown Copyright 2022, Met Office.
 # Please see LICENSE for license details.
 import os
 import logging
