@@ -17,17 +17,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Iris
       run: |
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-        bash miniconda.sh -b -p $HOME/miniconda
-        export PATH="$HOME/miniconda/bin:$PATH"
-        hash -r
-        conda config --set always_yes yes --set changeps1 no
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
-        conda update -q conda
-        conda create -q -n test_environment python=${{ matrix.python-version }} iris dask cftime netcdf4 pytest filelock requests
-        source activate test_environment
-        export PYTHONPATH=.
+        $CONDA/bin/conda install -c conda-forge python=${{ matrix.python-version }} iris dask cftime netcdf4 pytest filelock requests
     - name: Run tests
       run: |
-        pytest -vv
+        export PYTHONPATH=.
+        $CONDA/bin/pytest -vv
