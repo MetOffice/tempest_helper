@@ -107,12 +107,15 @@ def fill_trajectory_gaps(
 
     for var in new_var:
         if "list" in str(type(new_var[var])):
+            # if this is a profile (list) then just use missing data
             res = new_var[var][:]
-            var1 = []
-            for i in range(len(res)):
-                var1.append(miss_val)
-            storm[var].append(var1)
+            for gap_index in range(1, gap_length):
+                var1 = []
+                for i in range(len(res)):
+                    var1.append(miss_val)
+                storm[var].append(var1)
         else:
+            # interpolate the value
             dvar = (new_var[var] - storm[var][-1]) / gap_length
             for gap_index in range(1, gap_length):
                 var1 = storm[var][-1] + dvar
@@ -208,7 +211,8 @@ def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
         n_pts_overlap = 0
         set_p = _storm_dates(storm_p)
         overlap = sorted(list(set(set_c).intersection(set_p)))
-        print ('overlap time in space ',ist, overlap, overlap[0])
+        # logger.debug(f"Overlap time in space {ist} {overlap} {overlap[0]}")
+
         time_c = set_c.index(overlap[0])
         time_p = set_p.index(overlap[0])
         lat_c = storm_c["lat"]

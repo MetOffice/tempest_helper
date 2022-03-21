@@ -51,6 +51,9 @@ def define_netcdf_metadata(var_cmpt, variable_units):
     elif "rh" in var:
         standard_name = "relative_humidity"
         units = "%"
+    elif "ts" in var:
+        standard_name = "surface_temperature"
+        units = variable_units["ts"]
     elif "zg" in var:
         standard_name = "geopotential_height"
         long_name = "Geopotential Height"
@@ -102,6 +105,7 @@ def guess_variable_units(output_vars):
     units["rvT42"] = "s-1"
     units["rv"] = "s-1"
     units["rh"] = "%"
+    units["ts"] = "K"
     units["rsize"] = "degrees"
     units["radius"] = "degrees"
     units["ace"] = "1"
@@ -144,7 +148,7 @@ def save_trajectories_netcdf(
     :param list storms: The loaded trajectories.
     :param str calendar: netcdf calendar type
     :param str time_units: units string for the time coordinate
-    :param str variable_units:
+    :param str variable_units: units for the different variables
     :param str frequency:
     :param str um_suiteid: UM suiteid for netcdf metadata
     :param str resolution_code: String describing model resolution
@@ -242,7 +246,8 @@ def save_trajectories_netcdf(
     nc.variables["time"].standard_name = "time"
     nc.variables["time"].long_name = "time"
 
-    variable_units = guess_variable_units(output_vars_all)
+    if len(variable_units) == 0:
+        variable_units = guess_variable_units(output_vars_all)
 
     for var in output_vars_all:
         standard_name, long_name, description, v_units = define_netcdf_metadata(
