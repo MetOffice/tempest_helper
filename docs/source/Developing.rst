@@ -13,7 +13,7 @@ Tests run
 The following tests are configured (in the ``.github/workflows/*.yml`` files in the
 repository) to run on pull requests and branches in GitHub:
 
-* the unit tests in the ``test_tempest_helper`` directory. the tests use the
+* the unit tests in the ``test_tempest_helper`` directory. The tests use the
   unittest framework but pytest provides a convenient way to run them;
 * the `Black <https://black.readthedocs.io/en/stable/>`_ Python code formatter
   to ensure that code is written in a consistent style;
