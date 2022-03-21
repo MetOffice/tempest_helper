@@ -40,7 +40,7 @@ def convert_date_to_step(cube, year, month, day, hour, time_period):
     current_datetime = DATETIME_TYPES[calendar](year, month, day, hour)
     first_point = cube.coord("time").units.num2date(cube.coord("time").points[0])
     time_delta = current_datetime - first_point
-    seconds_in_hour = 60 ** 2
+    seconds_in_hour = 60**2
     return round(time_delta.total_seconds() / (time_period * seconds_in_hour)) + 1
 
 
