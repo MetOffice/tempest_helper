@@ -229,8 +229,10 @@ def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
                 n_pts_overlap += 1
 
             # now find out how much time-space overlap
-            # is it exactly the same storm - we can remove the duplicate from the earlier dataset
-            # is it an extension - we need to remove from the earlier dataset, and extend the storm in the current dataset
+            # is it exactly the same storm - we can remove the duplicate from the
+            #   earlier dataset
+            # is it an extension - we need to remove from the earlier dataset, and
+            #   extend the storm in the current dataset
         if n_pts_overlap > 0:
             storms_overlap = {}
             storms_overlap["early"] = storm_p
@@ -281,8 +283,8 @@ def write_track_line(storm, no_lines, new_length, column_names):
     :param int no_lines: Number of time values to read from the storm
     :param int new_length: The new length of the storm
     :param dict column_names: The names of the storm keys (columns of output file)
-    :returns: string and list of strings: the first is the new header line for this storm
-       the second is a list of lines to be written to the track txt file
+    :returns: string and list of strings: the first is the new header line for this
+        storm the second is a list of lines to be written to the track txt file
     :rtype: str, list
     """
     track_line_date = (
