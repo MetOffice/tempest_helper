@@ -67,7 +67,7 @@ variables:
 	int index(record) ;
 		index:units = "ordinal" ;
 		index:long_name = "track_id" ;
-		index:description = "Track sequence number (0-length of track-1)" ;
+		index:description = "Track sequence number (0 - length of track-1)" ;
 		index:_Storage = "contiguous" ;
 		index:_Endianness = "little" ;
 	double time(record) ;
@@ -91,17 +91,38 @@ variables:
 		lat:description = "Latitude (degrees north) associated with tracked variable" ;
 		lat:_Storage = "contiguous" ;
 		lat:_Endianness = "little" ;
-	double slp(record) ;
-		slp:standard_name = "air_pressure_at_mean_sea_level" ;
-		slp:long_name = "Sea Level Pressure" ;
-		slp:description = "Sea level pressure for tracked variable" ;
-		slp:units = "Pa" ;
-		slp:_Storage = "contiguous" ;
-		slp:_Endianness = "little" ;
+	double slp_min(record) ;
+		slp_min:standard_name = "air_pressure_at_mean_sea_level" ;
+		slp_min:long_name = "Sea Level Pressure" ;
+		slp_min:description = "Sea level pressure for tracked variable" ;
+		slp_min:units = "Pa" ;
+		slp_min:_Storage = "contiguous" ;
+		slp_min:_Endianness = "little" ;
+	double sfcWind_max(record) ;
+		sfcWind_max:standard_name = "wind_speed" ;
+		sfcWind_max:long_name = "Near-surface Wind Speed" ;
+		sfcWind_max:description = "near-surface (usually 10 metres) wind speed" ;
+		sfcWind_max:units = "m s-1" ;
+		sfcWind_max:_Storage = "contiguous" ;
+		sfcWind_max:_Endianness = "little" ;
+	double zg_avg_250(record) ;
+		zg_avg_250:standard_name = "geopotential_height" ;
+		zg_avg_250:long_name = "Geopotential Height" ;
+		zg_avg_250:description = "Geopotential height difference" ;
+		zg_avg_250:units = "m" ;
+		zg_avg_250:_Storage = "contiguous" ;
+		zg_avg_250:_Endianness = "little" ;
+	double orog_max(record) ;
+		orog_max:standard_name = "surface_altitude" ;
+		orog_max:long_name = "Surface Altitude" ;
+		orog_max:description = "Surface altitude (height above sea level)" ;
+		orog_max:units = "m" ;
+		orog_max:_Storage = "contiguous" ;
+		orog_max:_Endianness = "little" ;
 
 // global attributes:
 		:title = "Tempest TC tracks" ;
-		:directory = "/net/home/h04/jseddon/tenten/tempest_helper" ;
+		:directory = "/var/tmp" ;
 		:tracked_data_frequency = "6hr" ;
 		:mo_runid = "u-ax358" ;
 		:grid = "N96" ;
@@ -112,8 +133,8 @@ variables:
 		:algorithm_ref = "Ullrich and Zarzycki 2017; Zarzycki and Ullrich 2017; Ullrich et al. 2020" ;
 		:detect_cmd = "wibble" ;
 		:stitch_cmd = "wobble" ;
-		:_NCProperties = "version=1|netcdflibversion=4.6.1|hdf5libversion=1.10.2" ;
-		:_SuperblockVersion = 0 ;
+		:_NCProperties = "version=2,netcdf=4.8.1,hdf5=1.12.1" ;
+		:_SuperblockVersion = 2 ;
 		:_IsNetcdf4 = 1 ;
 		:_Format = "netCDF-4" ;
 data:
@@ -132,7 +153,13 @@ data:
 
  lat = 10, 11, -1, 0, 0, 0.5 ;
 
- slp = 99973.31, 99785.12, 99973.31, 99785.12, 99973.31, 99879.215 ;
+ slp_min = 99973.31, 99785.12, 99973.31, 99785.12, 99973.31, 99879.215 ;
+
+ sfcWind_max = 12.06617, 10.79898, 12.06617, 10.79898, 12.06617, 11.432575 ;
+
+ zg_avg_250 = 5092.293, 5112.52, 5092.293, 5112.52, 5092.293, 5102.4065 ;
+
+ orog_max = 0, 0, 0, 0, 0, 0 ;
 }
 """  # noqa
         self.assertNetcdfEqual(self.track_file, expected_cdl)
