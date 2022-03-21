@@ -20,16 +20,16 @@ jobs:
       # Pin all relevant versions to match common community installations
       run: |
         $CONDA/bin/conda install -c conda-forge python=3.6.6 iris=2.4 cf-units=2.1.3 cftime=1.2.1 netCDF4=1.4.2 libnetcdf=4.6.1 numpy=1.19.2 udunits2=2.2.27.6 requests mock pytest filelock dask=2021.3.0
-      if: matrix.python-version == "3.6"
+      if: matrix.python-version == '3.6'
     - name: Install Python 3.7 Iris 3.1.0
       # Pin all relevant versions to match common community installations
       run: |
         $CONDA/bin/conda install -c conda-forge python=3.7.12 iris=3.1.0 cf-units=3.0.1 cftime=1.5.1.1 netCDF4=1.5.8 libnetcdf=4.8.1 numpy=1.21.5 udunits=2.2.28 requests mock pytest filelock dask=2022.2.0
-      if: matrix.python-version == "3.7"
+      if: matrix.python-version == '3.7'
     - name: Install latest Iris for all other Python versions
       run: |
         $CONDA/bin/conda install -c conda-forge python=${{ matrix.python-version }} iris cftime netcdf4 pytest filelock requests
-      if: matrix.python-version == "3.8"
+      if: matrix.python-version == '3.8'
     - name: Run tests
       run: |
         export PYTHONPATH=.
