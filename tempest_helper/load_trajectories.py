@@ -21,7 +21,7 @@ def get_trajectories(tracked_file, nc_file, time_period, column_names):
     :param int time_period: The time period in hours between time points in the
         data.
     :param dict column_names: the names of the column variables within the
-    :   tracked_file, to be used as storm[] keys
+        tracked_file, to be used as storm[] keys
     :returns: The loaded trajectories.
     :rtype: list
     """

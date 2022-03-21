@@ -363,6 +363,7 @@ def rewrite_track_file(
     Rewrite the .txt track files, removing the matching storms from the
     previous timestep which have been found in the current timestep and
     adding them to this current timestep
+
     :param str tracked_file_Tm1: The path to the track file from the previous timestep.
     :param str tracked_file_T: The path to the track file from the current timestep.
     :param str tracked_file_Tm1_adjust: The path to the updated track file
