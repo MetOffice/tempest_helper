@@ -238,7 +238,15 @@ def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
             storms_overlap["time_c"] = time_c
             storms_overlap["time_p"] = time_p
             storms_overlap["offset"] = time_p - time_c
-            print('time_c, time_p, len(lat_c), len(lat_p), len(overlap), offset ', time_c, time_p, len(lat_c), len(lat_p), len(overlap), storms_overlap['offset'])
+            print(
+                "time_c, time_p, len(lat_c), len(lat_p), len(overlap), offset ",
+                time_c,
+                time_p,
+                len(lat_c),
+                len(lat_p),
+                len(overlap),
+                storms_overlap["offset"],
+            )
             if len(lat_c) == len(lat_p) == len(overlap):
                 # exactly the same storm
                 storms_overlap["method"] = "remove"
@@ -248,7 +256,7 @@ def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
                     # storm has same start time in both
                     if len(lat_c) >= len(lat_p):
                         # the current storm is longer, so just remove the previous one
-                        storms_overlap["method"] = 'remove'
+                        storms_overlap["method"] = "remove"
                     else:
                         # the previous storm is longer, so need to insert
                         storms_overlap["method"] = "extend_odd"
@@ -300,7 +308,16 @@ def write_track_line(storm, no_lines, new_length, column_names):
     track_line_start = "        {}     {}     {}      {}   "
     track_line_end = "   {}    {}       {}      {} \n"
 
-    print('no_lines, len(storm[grid_x]), len(storm[year])' ,no_lines, len(storm["grid_x"]), len(storm["year"]), storm["year"], storm["month"], storm["day"], storm["hour"])
+    print(
+        "no_lines, len(storm[grid_x]), len(storm[year])",
+        no_lines,
+        len(storm["grid_x"]),
+        len(storm["year"]),
+        storm["year"],
+        storm["month"],
+        storm["day"],
+        storm["hour"],
+    )
     for it in range(no_lines):
         grid_x = str(storm["grid_x"][it])
         grid_y = str(storm["grid_y"][it])
@@ -369,8 +386,12 @@ def rewrite_track_file(
                     matching_track = False
                     line_header = line
                     track_length = int(line_array[1])
-                    start_date = (line_array[2] + line_array[3].zfill(2) +
-                                  line_array[4].zfill(2) + line_array[5].zfill(2))
+                    start_date = (
+                        line_array[2]
+                        + line_array[3].zfill(2)
+                        + line_array[4].zfill(2)
+                        + line_array[5].zfill(2)
+                    )
                 else:
                     if line_of_traj <= track_length:
                         lon = float(line_array[2])
