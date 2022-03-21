@@ -21,4 +21,5 @@ jobs:
     - name: Run tests
       run: |
         export PYTHONPATH=.
+        export PATH=$CONDA/bin:$PATH
         $CONDA/bin/pytest -vv
