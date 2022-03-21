@@ -8,7 +8,9 @@ from unittest import TestCase
 
 # Earlier versions of netCDF4 (prior to 1.5.6 didn't include the tocdl() method
 import netCDF4
-if not hasattr(netCDF4.Dataset, 'tocdl'):
+
+if not hasattr(netCDF4.Dataset, "tocdl"):
+
     class Dataset(netCDF4.Dataset):
         def tocdl(self, coordvars=False, data=False, outfile=None):
             self.sync()
@@ -16,17 +18,22 @@ if not hasattr(netCDF4.Dataset, 'tocdl'):
                 ncdumpargs = "-cs"
             else:
                 ncdumpargs = "-s"
-            if not data: ncdumpargs += "h"
-            result = subprocess.run(["ncdump", ncdumpargs, self.filepath()],
-                                    check=True, stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE,
-                                    encoding='utf-8')
+            if not data:
+                ncdumpargs += "h"
+            result = subprocess.run(
+                ["ncdump", ncdumpargs, self.filepath()],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding="utf-8",
+            )
             if outfile is None:
                 return result.stdout
             else:
-                f = open(outfile, 'w')
+                f = open(outfile, "w")
                 f.write(result.stdout)
                 f.close()
+
 else:
     from netCDF4 import Dataset  # noqa
 
@@ -47,10 +54,12 @@ class TempestHelperTestCase(TestCase):
         self,
         actual_path: str,
         expected_cdl: str,
-        globals_ignore: Optional[List[str]] = ["directory",
-                                               "_NCProperties",
-                                               "_SuperblockVersion",
-                                               r"netcdf.*{"],
+        globals_ignore: Optional[List[str]] = [
+            "directory",
+            "_NCProperties",
+            "_SuperblockVersion",
+            r"netcdf.*{",
+        ],
     ) -> None:
         """
         Load the netCDF file specified by `actual_path` and compare it against the
