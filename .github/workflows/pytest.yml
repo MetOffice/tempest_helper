@@ -24,7 +24,7 @@ jobs:
     - name: Install latest Iris for all other Python versions
       run: |
         $CONDA/bin/conda install -c conda-forge python=${{ matrix.python-version }} iris cftime netcdf4 pytest filelock requests
-      if: matrix.python-version == '3.8' || matrix.python-version == '3.9'  | matrix.python-version == '3.10'
+      if: matrix.python-version == '3.8' || matrix.python-version == '3.9' || matrix.python-version == '3.10'
     - name: Run tests
       run: |
         export PYTHONPATH=.
