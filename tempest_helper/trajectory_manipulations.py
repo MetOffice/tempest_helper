@@ -1,10 +1,10 @@
 # (C) British Crown Copyright 2022, Met Office.
 # Please see LICENSE for license details.
 import datetime
+from shutil import copyfile
 
 import cftime
 import numpy as np
-from shutil import copyfile
 
 # cftime v1.0.0 doesn't allow a keyword to the datetime method to specify,
 # but this introduced in v1.2.0 and so will have to use the code below to
