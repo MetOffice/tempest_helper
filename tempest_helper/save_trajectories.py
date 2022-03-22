@@ -159,7 +159,7 @@ def save_trajectories_netcdf(
     :param str endperiod: AN optional time string for the end of this data period
     """
     logger.debug("making netCDF of outputs")
-    print("open nc file ", os.path.join(directory, savefname))
+    logger.debug(f"open nc file {os.path.join(directory, savefname)}")
     nc = Dataset(os.path.join(directory, savefname), "w", format="NETCDF4")
     nc.title = "Tempest TC tracks"
     nc.directory = directory
