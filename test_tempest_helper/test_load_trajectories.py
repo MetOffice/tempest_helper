@@ -49,6 +49,4 @@ start   2  2014    12   21   0
             make_loaded_trajectories(),
             get_trajectories(self.track_file, self.netcdf_file, 6, self.column_names),
         ):
-            print("expected ", expected)
-            print("actual ", actual)
             self.assertTempestDictEqual(expected, actual)
