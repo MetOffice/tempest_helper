@@ -106,7 +106,7 @@ def fill_trajectory_gaps(
         storm["hour"].append(step_time_components[3])
 
     for var in new_var:
-        if "list" in str(type(new_var[var])):
+        if isinstance(new_var[var], list):
             # if this is a profile (list) then just use missing data
             res = new_var[var][:]
             for gap_index in range(1, gap_length):
