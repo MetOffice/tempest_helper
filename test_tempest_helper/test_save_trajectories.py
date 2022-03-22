@@ -34,8 +34,6 @@ class TestSaveTrajectoriesNetcdf(TempestHelperTestCase):
             "wobble",
             column_names,
         )
-        print("written nc file ", self.track_file)
-        print("os_stat ", os.stat(self.track_file))
 
     def tearDown(self):
         os.remove(self.track_file)
