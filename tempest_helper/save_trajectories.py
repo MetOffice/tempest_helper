@@ -164,7 +164,7 @@ def save_trajectories_netcdf(
     nc.title = "Tempest TC tracks"
     nc.directory = directory
     nc.tracked_data_frequency = frequency
-    print("nc.title ", nc.title)
+    logger.debug(f"nc.title {nc.title}")
 
     nc.mo_runid = um_suiteid
     nc.grid = resolution_code
