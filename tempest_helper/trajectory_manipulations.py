@@ -170,10 +170,9 @@ def _storm_dates(storm):
     return dates
 
 
-def storms_overlap_in_time(storm_x, storms_Y):
-
+def storms_overlap_in_time(storm_x, storms_y):
     """
-    Find the subset of list storms_Y that have some overlap in time with storm_x
+    Find the subset of list storms_y that have some overlap in time with storm_x
 
     :param dict storm_x: Storm dictionary.
     :param list storm_Y: List of storm dictionaries
@@ -182,8 +181,7 @@ def storms_overlap_in_time(storm_x, storms_Y):
     """
     set_x = set(_storm_dates(storm_x))
     storms_overlap = []
-    storms_overlap_no = []
-    for storm in storms_Y:
+    for storm in storms_y:
         set_y = set(_storm_dates(storm))
         overlap = set_x.intersection(set_y)
         if len(overlap) >= 1:
@@ -192,8 +190,7 @@ def storms_overlap_in_time(storm_x, storms_Y):
     return storms_overlap
 
 
-def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
-
+def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
     """
     Find storms that have any overlap in space
     There is some overlap in time already determined
@@ -207,11 +204,10 @@ def storms_overlap_in_space(storm_c, storms_Y, distance_threshold=0.5):
     """
     storms_overlap = None
     set_c = _storm_dates(storm_c)
-    for ist, storm_p in enumerate(storms_Y):
+    for ist, storm_p in enumerate(storms_y):
         n_pts_overlap = 0
         set_p = _storm_dates(storm_p)
         overlap = sorted(list(set(set_c).intersection(set_p)))
-        # logger.debug(f"Overlap time in space {ist} {overlap} {overlap[0]}")
 
         time_c = set_c.index(overlap[0])
         time_p = set_p.index(overlap[0])
