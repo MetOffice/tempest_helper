@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tempest_helper &mdash; tempest_helper 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Developers’ Instructions" href="Developing.html" />
+    <link rel="prev" title="Data Format" href="data_format.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> tempest_helper
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Installing.html">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_format.html">Data format</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tempest_helper documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#loading-data">Loading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#saving-data">Saving data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-data">Plotting data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysing-data">Analysing data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unit-tests">Unit tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Developing.html">Developers’ Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tempest_helper</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>tempest_helper</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tempest_helper.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tempest-helper">
+<h1>tempest_helper<a class="headerlink" href="#tempest-helper" title="Permalink to this headline"></a></h1>
+<section id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.get_trajectories">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">get_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracked_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_period</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.get_trajectories" title="Permalink to this definition"></a></dt>
+<dd><p>Load the trajectories from the file output by TempestExtremes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tracked_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the file produced by TempestExtremes.</p></li>
+<li><p><strong>nc_file</strong> – The path to a netCDF file that the tracking was run on.</p></li>
+<li><p><strong>time_period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The time period in hours between time points in the
+data.</p></li>
+<li><p><strong>column_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – the names of the column variables within the
+tracked_file, to be used as storm[] keys</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The loaded trajectories.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="saving-data">
+<h2>Saving data<a class="headerlink" href="#saving-data" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.save_trajectories_netcdf">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">save_trajectories_netcdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_units</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">um_suiteid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_stitch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startperiod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endperiod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.save_trajectories_netcdf" title="Permalink to this definition"></a></dt>
+<dd><p>Create netcdf file for the tracks.
+May need metadata from a model nc file, so may need to create at a time when
+these are available</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – directory path</p></li>
+<li><p><strong>savefname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – filename to save netcdf file to</p></li>
+<li><p><strong>storms</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The loaded trajectories.</p></li>
+<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – netcdf calendar type</p></li>
+<li><p><strong>time_units</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – units string for the time coordinate</p></li>
+<li><p><strong>variable_units</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – units for the different variables</p></li>
+<li><p><strong>frequency</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – </p></li>
+<li><p><strong>um_suiteid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – UM suiteid for netcdf metadata</p></li>
+<li><p><strong>resolution_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – String describing model resolution</p></li>
+<li><p><strong>cmd_detect</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the TempestExtremes detect command string</p></li>
+<li><p><strong>cmd_stitch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the TempestExtremes stitch command string</p></li>
+<li><p><strong>column_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – output variable names derived from the Tempest command</p></li>
+<li><p><strong>startperiod</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – An optional time string for the start of this data</p></li>
+<li><p><strong>endperiod</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – AN optional time string for the end of this data period</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="plotting-data">
+<h2>Plotting data<a class="headerlink" href="#plotting-data" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.plot_trajectories_cartopy">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">plot_trajectories_cartopy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.plot_trajectories_cartopy" title="Permalink to this definition"></a></dt>
+<dd><p>Use Cartopy to plot the loaded trajectories and save them in the specified
+file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storms</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The loaded trajectories.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The full path to save the plot as.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – An optional title to include on the plot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="analysing-data">
+<h2>Analysing data<a class="headerlink" href="#analysing-data" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.count_hemispheric_trajectories">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">count_hemispheric_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.count_hemispheric_trajectories" title="Permalink to this definition"></a></dt>
+<dd><p>From a loaded trajectory count the number of storms whose first point is
+in the southern hemisphere (latitude &lt; 0.0) and those in the northern
+hemisphere (latitude &gt;= 0.0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>storms</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The storm trajectories loaded from TempestExtremes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Integer numbers of the trajectories in the southern and then
+northern hemispheres.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.count_trajectories">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">count_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.count_trajectories" title="Permalink to this definition"></a></dt>
+<dd><p>From a loaded trajectory count the number of storms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>storms</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The storm trajectories loaded from TempestExtremes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of trajectories.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline"></a></h2>
+<p>These functions are used by other functions, but have been exposed here in case
+they are useful to users.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.convert_date_to_step">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">convert_date_to_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cube</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">month</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hour</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_period</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.convert_date_to_step" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the step number, with the first time in a file have a step number
+of one. All calendars are handled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cube</strong> (<a class="reference external" href="https://scitools-iris.readthedocs.io/en/stable/generated/api/iris/cube.html#iris.cube.Cube" title="(in Iris v3.2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iris.cube.Cube</span></code></a>) – A cube loaded from a data file from the current period.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The current year.</p></li>
+<li><p><strong>month</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The current month.</p></li>
+<li><p><strong>day</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The current day of month.</p></li>
+<li><p><strong>hour</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The current hour.</p></li>
+<li><p><strong>time_period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The time period in hours between time points in the
+data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The time index at the specified time point.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.fill_trajectory_gaps">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">fill_trajectory_gaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cube</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_period</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miss_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">99</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.fill_trajectory_gaps" title="Permalink to this definition"></a></dt>
+<dd><p>Fill the gap by linearly interpolating the last latitude, longitude,
+time and other values from the last of these values up to step. The
+trajectory is passed in to the <cite>storm</cite> attribute and is a standard
+<cite>tempest_helper</cite> dictionary. Longitudes and their interpolation may wrap
+around the 0/360 degree numerical discontinuity. The longitudes output
+are between 0 and 359 degrees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Details of the current storm.</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The integer number of time points of the current
+point since the start of the file.</p></li>
+<li><p><strong>lon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The longitude of the current point in the storm in
+degrees.</p></li>
+<li><p><strong>lat</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The latitude of the current point in the storm in
+degrees.</p></li>
+<li><p><strong>grid_x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The i index of the current point in the storm</p></li>
+<li><p><strong>grid_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The j index of the current point in the storm</p></li>
+<li><p><strong>cube</strong> (<a class="reference external" href="https://scitools-iris.readthedocs.io/en/stable/generated/api/iris/cube.html#iris.cube.Cube" title="(in Iris v3.2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iris.cube.Cube</span></code></a>) – A cube loaded from a data file from the current period.</p></li>
+<li><p><strong>time_period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The time period in hours between time points in the
+data.</p></li>
+<li><p><strong>new_var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The other variables contained in the storm at the
+current point.</p></li>
+<li><p><strong>miss_val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – value used for missing data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.storms_overlap_in_time">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">storms_overlap_in_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_Y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.storms_overlap_in_time" title="Permalink to this definition"></a></dt>
+<dd><p>Find the subset of list storms_Y that have some overlap in time with storm_x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storm_x</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Storm dictionary.</p></li>
+<li><p><strong>storm_Y</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of storm dictionaries</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of storms that overlap in time with storm_x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.storms_overlap_in_space">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">storms_overlap_in_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.storms_overlap_in_space" title="Permalink to this definition"></a></dt>
+<dd><p>Find storms that have any overlap in space
+There is some overlap in time already determined</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storm_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Storm dictionary.</p></li>
+<li><p><strong>storm_Y</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of storm dictionaries which overlap storm_c in time</p></li>
+<li><p><strong>distance_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – maximum distance (degrees) for storms to
+be apart but identified as overlapping in space</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Either None, or a storm that overlaps storm_c in space.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.write_track_line">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">write_track_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.write_track_line" title="Permalink to this definition"></a></dt>
+<dd><p>Produce a line of Tempest txt file output matching the track file format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Storm dictionary.</p></li>
+<li><p><strong>no_lines</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of time values to read from the storm</p></li>
+<li><p><strong>new_length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The new length of the storm</p></li>
+<li><p><strong>column_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The names of the storm keys (columns of output file)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string and list of strings: the first is the new header line for this
+storm the second is a list of lines to be written to the track txt file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tempest_helper.rewrite_track_file">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">rewrite_track_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracked_file_Tm1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_Tm1_adjust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_T_adjust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.rewrite_track_file" title="Permalink to this definition"></a></dt>
+<dd><p>Rewrite the .txt track files, removing the matching storms from the
+previous timestep which have been found in the current timestep and
+adding them to this current timestep</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tracked_file_Tm1</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the track file from the previous timestep.</p></li>
+<li><p><strong>tracked_file_T</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the track file from the current timestep.</p></li>
+<li><p><strong>tracked_file_Tm1_adjust</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the updated track file
+for the previous time for output.</p></li>
+<li><p><strong>tracked_file_T_adjust</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the updated track file
+for the current timestep for output.</p></li>
+<li><p><strong>storms_match</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The storms which have been found to match
+with a later time</p></li>
+<li><p><strong>column_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – the keys for the storm columns in the output file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="unit-tests">
+<h2>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_tempest_helper.utils.TempestHelperTestCase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_tempest_helper.utils.</span></span><span class="sig-name descname"><span class="pre">TempestHelperTestCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test_tempest_helper.utils.TempestHelperTestCase" title="Permalink to this definition"></a></dt>
+<dd><p>A subclass of <a class="reference external" href="https://docs.python.org/3/library/unittest.html#unittest.TestCase" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unittest.TestCase</span></code></a> that contains additional assertion
+methods to test complex data types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rel_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – relative tolerance for comparisons (default 1e-9)</p></li>
+<li><p><strong>abs_tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – absolute tolerance for comparisons (default 0.0)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="test_tempest_helper.utils.TempestHelperTestCase.assertNetcdfEqual">
+<span class="sig-name descname"><span class="pre">assertNetcdfEqual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actual_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_cdl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">globals_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['directory',</span> <span class="pre">'_NCProperties',</span> <span class="pre">'_SuperblockVersion',</span> <span class="pre">'netcdf.*{']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test_tempest_helper.utils.TempestHelperTestCase.assertNetcdfEqual" title="Permalink to this definition"></a></dt>
+<dd><p>Load the netCDF file specified by <cite>actual_path</cite> and compare it against the
+specified netCDF CDL representation of the file, metadata and contents.</p>
+<p>The initial name line, and the directory, _SuperblockVersion and _NCProperties
+attributes are ignored by default but this can be changed by setting the
+<cite>globals_ignore</cite> attribute appropriately.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actual_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path of the netCDF file to test.</p></li>
+<li><p><strong>expected_cdl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The expected netCDF cdl for the file as displayed
+by the ncdump program.</p></li>
+<li><p><strong>globals_ignore</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – lines including these regular expressions to ignore.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_tempest_helper.utils.TempestHelperTestCase.assertTempestDictEqual">
+<span class="sig-name descname"><span class="pre">assertTempestDictEqual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#test_tempest_helper.utils.TempestHelperTestCase.assertTempestDictEqual" title="Permalink to this definition"></a></dt>
+<dd><p>Compare the dictionaries used in tempest_helper. Values can be ints,
+floats or lists of these two types; other types of value will fail.</p>
+<p>Class <cite>TempestHelperTestCase</cite> instance attributes
+<cite>self.rel_tol</cite> and <cite>self.abs_tol</cite> can be set in child
+instances to set the relative and absolute tolerance passed to
+<cite>math.isclose()</cite> to test all floats with.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expected</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The expected Tempest dictionary.</p></li>
+<li><p><strong>actual</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The actual Tempest dictionary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data_format.html" class="btn btn-neutral float-left" title="Data Format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Developing.html" class="btn btn-neutral float-right" title="Developers’ Instructions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Met Office.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
