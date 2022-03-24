@@ -225,7 +225,6 @@ class TestFillTrajectoryGaps(TempestHelperTestCase):
             "orog_max": 0.0,
         }
         fill_trajectory_gaps(storm, 6, 353.5, 7.5, 10, 12, cube, 6, new_var)
-        print("fill traj, storm ", storm)
         self.assertTempestDictEqual(expected, storm)
 
 

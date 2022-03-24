@@ -1,7 +1,5 @@
 # (C) British Crown Copyright 2022, Met Office.
 # Please see LICENSE for license details.
-import os
-
 import cartopy.crs as ccrs
 import matplotlib
 

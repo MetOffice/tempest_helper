@@ -1,10 +1,14 @@
 # (C) British Crown Copyright 2022, Met Office.
 # Please see LICENSE for license details.
 import datetime
+import logging
 from shutil import copyfile
 
 import cftime
 import numpy as np
+
+logger = logging.getLogger(__name__)
+
 
 # cftime v1.0.0 doesn't allow a keyword to the datetime method to specify,
 # but this introduced in v1.2.0 and so will have to use the code below to
@@ -175,7 +179,7 @@ def storms_overlap_in_time(storm_x, storms_y):
     Find the subset of list storms_y that have some overlap in time with storm_x
 
     :param dict storm_x: Storm dictionary.
-    :param list storm_Y: List of storm dictionaries
+    :param list storms_y: List of storm dictionaries
     :returns: The list of storms that overlap in time with storm_x.
     :rtype: list
     """
@@ -196,7 +200,7 @@ def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
     There is some overlap in time already determined
 
     :param dict storm_c: Storm dictionary.
-    :param list storm_Y: List of storm dictionaries which overlap storm_c in time
+    :param list storms_y: List of storm dictionaries which overlap storm_c in time
     :param float distance_threshold: maximum distance (degrees) for storms to
        be apart but identified as overlapping in space
     :returns: Either None, or a storm that overlaps storm_c in space.
@@ -236,14 +240,10 @@ def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
             storms_overlap["time_c"] = time_c
             storms_overlap["time_p"] = time_p
             storms_overlap["offset"] = time_p - time_c
-            print(
-                "time_c, time_p, len(lat_c), len(lat_p), len(overlap), offset ",
-                time_c,
-                time_p,
-                len(lat_c),
-                len(lat_p),
-                len(overlap),
-                storms_overlap["offset"],
+            logger.debug(
+                f"time_c, time_p, len(lat_c), len(lat_p), len(overlap), offset ",
+                f"{time_c} {time_p} {len(lat_c)} {len(lat_p)} {len(overlap)}",
+                f"{storms_overlap['offset']}",
             )
             if len(lat_c) == len(lat_p) == len(overlap):
                 # exactly the same storm
@@ -296,7 +296,6 @@ def write_track_line(storm, no_lines, new_length, column_names):
 
     # need to derive the ordered list of variables to write to correct columns
     # formatting is different for position values and variables
-    position_keys = ["grid_x", "grid_y", "lon", "lat", "year", "month", "day", "hour"]
     reversed_name_key = dict(map(reversed, column_names.items()))
     column_ordered = []
     for iv in range(len(column_names)):
@@ -306,15 +305,10 @@ def write_track_line(storm, no_lines, new_length, column_names):
     track_line_start = "        {}     {}     {}      {}   "
     track_line_end = "   {}    {}       {}      {} \n"
 
-    print(
-        "no_lines, len(storm[grid_x]), len(storm[year])",
-        no_lines,
-        len(storm["grid_x"]),
-        len(storm["year"]),
-        storm["year"],
-        storm["month"],
-        storm["day"],
-        storm["hour"],
+    logger.debug(
+        f"no_lines, len(storm[grid_x]), len(storm[year])",
+        f"{no_lines} {len(storm['grid_x'])} {len(storm['year'])} ",
+        f"{storm['year']} {storm['month']} {storm['day']} {storm['hour']}",
     )
     for it in range(no_lines):
         grid_x = str(storm["grid_x"][it])
@@ -331,14 +325,14 @@ def write_track_line(storm, no_lines, new_length, column_names):
         line_vars = ""
         for var in column_ordered[4:-4]:
             if "list" in str(type(storm[var][it])):
-                print("storm[var][it] ", var, storm[var][it])
+                logger.debug(f"storm[var][it] {var} {storm[var][it]}")
                 line_list = []
                 for i in range(len(storm[var][it])):
                     val = "{:.6e}".format((float(storm[var][it][i])))
                     line_list.append(val)
                 line_list = '"[' + ",".join(line_list) + ']"'
                 line_vars += "    " + line_list
-                print("line_list ", line_list)
+                logger.debug(f"line_list {line_list}")
             else:
                 line_vars += "    " + "{:.6e}".format((float(storm[var][it])))
         track_lines.append(line_start + line_vars + line_end)
@@ -398,7 +392,6 @@ def rewrite_track_file(
                         if line_of_traj == 0:
                             for storm in storms_match:
                                 storm_old = storm["early"]
-                                storm_new = storm["late"]
                                 date = _storm_dates(storm_old)[0]
                                 if (
                                     date == start_date
@@ -453,7 +446,6 @@ def rewrite_track_file(
                                         matching_track = True
                                         match_type = storm["method"]
                                         storm_old_match = storm_old
-                                        storm_new_match = storm_new
                                         match_offset = storm["offset"]
                             if not matching_track:
                                 file_output.write(line_header)
@@ -474,10 +466,8 @@ def rewrite_track_file(
                                         line_extra += new_line
 
                                 elif match_type == "remove":
-                                    line_extra = "Same track start here "
                                     line_extra = ""
                                 else:
-                                    line_extra = "Do not have a match type ", match_type
                                     line_extra = ""
                                 file_output.write(line_header)
                                 file_output.write(line_extra)

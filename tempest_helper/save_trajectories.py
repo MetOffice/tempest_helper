@@ -19,13 +19,7 @@ def define_netcdf_metadata(var_cmpt, variable_units):
     units = "1"
 
     var_components = var_cmpt.split("_")
-    var_proc = ""
-    var_level = ""
     var = var_components[0]
-    if len(var_components) >= 2:
-        var_proc = var_cmpt.split("_")[1]
-    if len(var_components) >= 3:
-        var_level = var_cmpt.split("_")[2]
 
     if "slp" in var or "psl" in var:
         standard_name = "air_pressure_at_mean_sea_level"
@@ -84,7 +78,6 @@ def define_netcdf_metadata(var_cmpt, variable_units):
         long_name = "storm radial profile"
         description = "radial profile of the storm"
         units = "degrees"
-    comment = "Processing: " + var_proc + "; level " + var_level
 
     return standard_name, long_name, description, units
 
@@ -318,6 +311,6 @@ def save_trajectories_netcdf(
     for var in output_vars_all:
         logger.debug(f"var {var} ")
         nc.variables[var][:] = variables_to_write[var]
-    print("written nc file ", nc.variables)
+    logger.debug(f"written nc file {nc.variables}")
 
     nc.close()
