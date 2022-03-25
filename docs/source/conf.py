@@ -20,7 +20,7 @@ import tempest_helper  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = "tempest_helper"
-copyright = "2021, Met Office"
+copyright = "2022, Met Office"
 author = "Met Office"
 
 # The short X.Y version
