@@ -1,14 +1,21 @@
 # (C) British Crown Copyright 2022, Met Office.
 # Please see LICENSE for license details.
+import os
+import tempfile
+
 import cf_units
 from iris.tests.stock import realistic_3d
 
 
-from .utils import TempestHelperTestCase
+from .utils import make_column_names, TempestHelperTestCase
 from tempest_helper.trajectory_manipulations import (
     _calculate_gap_time,
     convert_date_to_step,
     fill_trajectory_gaps,
+    storms_overlap_in_time,
+    storms_overlap_in_space,
+    write_track_line,
+    rewrite_track_file,
 )
 
 
@@ -256,3 +263,147 @@ class TestCalculateGapTime(TempestHelperTestCase):
         actual = _calculate_gap_time(cube, 1978, 2, 29, 21, 12)
         expected = (1978, 2, 30, 9)
         self.assertEqual(expected, actual)
+
+
+class TestStormsOverlapInTime(TempestHelperTestCase):
+    """Test tempest_helper.trajectory_manipulations.storms_overlap_in_time()"""
+
+    def test_simple(self):
+        """Basic test"""
+        storm = {
+            "length": 3,
+            "step": [1, 2],
+            "grid_y": [0, 2],
+            "grid_x": [0, 2],
+            "lat": [0.0, 1.0],
+            "lon": [0.0, 1.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
+            "slp_min": [100000.0, 99999.0],
+            "sfcWind_max": [5.5, 5.7],
+            "zg_avg_250": [5090.0, 5091.0],
+            "orog_max": [10.0, 8.0],
+        }
+        # TODO add some storms to this next list that do and don't overlap with the above storm
+        storms = []
+        # TODO add the storms to this next list that are expected in the final output (i.e. just the overlapping storms)
+        expected_storms = []
+        actual = storms_overlap_in_time(storm, storms)
+        for exp_storm, act_storm in zip(expected_storms, actual):
+            self.assertTempestDictEqual(exp_storm, act_storm)
+
+
+class TestStormsOverlapInSpace(TempestHelperTestCase):
+    """Test tempest_helper.trajectory_manipulations.storms_overlap_in_space()"""
+
+    def test_simple(self):
+        """Basic test"""
+        storm = {
+            "length": 3,
+            "step": [1, 2],
+            "grid_y": [0, 2],
+            "grid_x": [0, 2],
+            "lat": [0.0, 1.0],
+            "lon": [0.0, 1.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
+            "slp_min": [100000.0, 99999.0],
+            "sfcWind_max": [5.5, 5.7],
+            "zg_avg_250": [5090.0, 5091.0],
+            "orog_max": [10.0, 8.0],
+        }
+        # TODO add some storms to this next list that do and don't overlap with the above storm
+        storms = []
+        # TODO add the storms to this next list that are expected in the final output (i.e. just the overlapping storms)
+        expected_storms = []
+        actual = storms_overlap_in_space(storm, storms)
+        for exp_storm, act_storm in zip(expected_storms, actual):
+            self.assertTempestDictEqual(exp_storm, act_storm)
+
+
+class TestWriteTrackLine(TempestHelperTestCase):
+    """Test tempest_helper.trajectory_manipulations.write_track_line()"""
+
+    def test_simple(self):
+        """Basic test"""
+        storm = {
+            "length": 3,
+            "step": [1, 2],
+            "grid_y": [0, 2],
+            "grid_x": [0, 2],
+            "lat": [0.0, 1.0],
+            "lon": [0.0, 1.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
+            "slp_min": [100000.0, 99999.0],
+            "sfcWind_max": [5.5, 5.7],
+            "zg_avg_250": [5090.0, 5091.0],
+            "orog_max": [10.0, 8.0],
+        }
+        # TODO add the expected string and list output below
+        exp_str = """multiline text here"""
+        exp_list = []
+        act_str, act_list = write_track_line(storm, 1, 1, make_column_names())
+        self.assertEqual(exp_str, act_str)
+        self.assertEqual(exp_list, act_list)
+
+
+class TestRewriteTrackFile(TempestHelperTestCase):
+    """Test tempest_helper.trajectory_manipulations.rewrite_track_file()"""
+
+    def setUp(self):
+        # See an unlimited diff in case of error
+        self.maxDiff = None
+        # Create temporary files
+        _fd, self.tracked_file_Tm1 = tempfile.mkstemp(suffix=".txt")
+        _fd, self.tracked_file_T = tempfile.mkstemp(suffix=".txt")
+        _fd, self.tracked_file_Tm1_adjust = tempfile.mkstemp(suffix=".txt")
+        _fd, self.tracked_file_T_adjust = tempfile.mkstemp(suffix=".txt")
+
+    def tearDown(self):
+        # Remove the temporary files
+        os.remove(self.tracked_file_Tm1)
+        os.remove(self.tracked_file_T)
+        os.remove(self.tracked_file_Tm1_adjust)
+        os.remove(self.tracked_file_T_adjust)
+
+    def test_simple(self):
+        # TODO add text for input files here
+        tm1 = """multiline text here"""
+        t = """multiline text here"""
+        with open(self.tracked_file_Tm1, "w") as fh:
+            fh.write(tm1)
+        with open(self.tracked_file_T, "w") as fh:
+            fh.write(t)
+
+        # TODO add expected text for generated files here
+        exp_tm1 = """multiline text here"""
+        exp_t = """multiline text here"""
+
+        # TODO write the storms that are required in the adjusted files
+        storms_match = []
+
+        # Rewrite the files
+        rewrite_track_file(
+            self.tracked_file_Tm1,
+            self.tracked_file_T,
+            self.tracked_file_Tm1_adjust,
+            self.tracked_file_T_adjust,
+            storms_match,
+            make_column_names(),
+        )
+
+        # Read the adjusted file contents from the files
+        with open(self.tracked_file_Tm1_adjust) as fh:
+            act_tm1 = fh.read()
+        with open(self.tracked_file_T_adjust) as fh:
+            act_t = fh.read()
+
+        self.assertEqual(exp_tm1, act_tm1)
+        self.assertEqual(exp_t, act_t)
