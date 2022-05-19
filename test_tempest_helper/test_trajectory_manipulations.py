@@ -272,24 +272,59 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
         """Basic test"""
         storm = {
             "length": 3,
+            "step": [1, 2, 3],
+            "grid_y": [0, 2, 4],
+            "grid_x": [0, 2, 4],
+            "lat": [0.0, 1.0, 2.0],
+            "lon": [0.0, 1.0, 2.0],
+            "year": [2000, 2000, 2000],
+            "month": [1, 1, 1],
+            "day": [1, 1, 1],
+            "hour": [0, 6, 12],
+            "slp_min": [100000.0, 99999.0, 99998.0],
+            "sfcWind_max": [5.5, 5.7, 5.9],
+            "zg_avg_250": [5090.0, 5091.0, 5092.0],
+            "orog_max": [10.0, 8.0, 6.0],
+        }
+        # Some storms that do and don't overlap with the above storm in time
+        storm1 = {
+            "length": 2,
             "step": [1, 2],
-            "grid_y": [0, 2],
-            "grid_x": [0, 2],
-            "lat": [0.0, 1.0],
-            "lon": [0.0, 1.0],
+            "grid_y": [1, 3],
+            "grid_x": [1, 3],
+            "lat": [2.0, 3.0],
+            "lon": [2.0, 3.0],
             "year": [2000, 2000],
             "month": [1, 1],
             "day": [1, 1],
-            "hour": [0, 6],
+            "hour": [6, 12],
             "slp_min": [100000.0, 99999.0],
             "sfcWind_max": [5.5, 5.7],
             "zg_avg_250": [5090.0, 5091.0],
             "orog_max": [10.0, 8.0],
         }
-        # TODO add some storms to this next list that do and don't overlap with the above storm
-        storms = []
-        # TODO add the storms to this next list that are expected in the final output (i.e. just the overlapping storms)
-        expected_storms = []
+        storm2 = {
+            "length": 2,
+            "step": [1, 2],
+            "grid_y": [1, 3],
+            "grid_x": [1, 3],
+            "lat": [2.0, 3.0],
+            "lon": [2.0, 3.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 2],
+            "hour": [18, 0],
+            "slp_min": [100000.0, 99999.0],
+            "sfcWind_max": [5.5, 5.7],
+            "zg_avg_250": [5090.0, 5091.0],
+            "orog_max": [10.0, 8.0],
+        }
+        storms = [storm1, storm2]
+
+        # The storms that are expected in the final output (i.e. just the overlapping storms)
+        expected_storms = [storm1]
+
+        # Now test the overlap
         actual = storms_overlap_in_time(storm, storms)
         for exp_storm, act_storm in zip(expected_storms, actual):
             self.assertTempestDictEqual(exp_storm, act_storm)
@@ -302,11 +337,44 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
         """Basic test"""
         storm = {
             "length": 3,
+            "step": [1, 2, 3],
+            "grid_y": [0, 2, 4],
+            "grid_x": [0, 2, 4],
+            "lat": [0.0, 1.0, 2.0],
+            "lon": [0.0, 1.0, 2.0],
+            "year": [2000, 2000, 2000],
+            "month": [1, 1, 1],
+            "day": [1, 1, 1],
+            "hour": [6, 12, 18],
+            "slp_min": [100000.0, 99999.0, 99998.0],
+            "sfcWind_max": [5.5, 5.7, 5.9],
+            "zg_avg_250": [5090.0, 5091.0, 5092.0],
+            "orog_max": [10.0, 8.0, 6.0],
+        }
+        # Example storms that do and do not overlap in time/space
+        storm1 = {
+            "length": 2,
             "step": [1, 2],
             "grid_y": [0, 2],
             "grid_x": [0, 2],
             "lat": [0.0, 1.0],
             "lon": [0.0, 1.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [6, 12],
+            "slp_min": [100000.0, 99999.0],
+            "sfcWind_max": [5.5, 5.7],
+            "zg_avg_250": [5090.0, 5091.0],
+            "orog_max": [8.0, 6.0],
+        }
+        storm2 = {
+            "length": 2,
+            "step": [1, 2],
+            "grid_y": [1, 3],
+            "grid_x": [1, 3],
+            "lat": [2.0, 3.0],
+            "lon": [2.0, 3.0],
             "year": [2000, 2000],
             "month": [1, 1],
             "day": [1, 1],
@@ -316,13 +384,35 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
             "zg_avg_250": [5090.0, 5091.0],
             "orog_max": [10.0, 8.0],
         }
-        # TODO add some storms to this next list that do and don't overlap with the above storm
-        storms = []
-        # TODO add the storms to this next list that are expected in the final output (i.e. just the overlapping storms)
-        expected_storms = []
+        storm3 = {
+            "length": 2,
+            "step": [0, 1],
+            "grid_y": [1, 0],
+            "grid_x": [1, 0],
+            "lat": [-1.0, 0.0],
+            "lon": [-1.0, 0.0],
+            "year": [2000, 2000],
+            "month": [1, 1],
+            "day": [1, 1],
+            "hour": [0, 6],
+            "slp_min": [100000.0, 999990.0],
+            "sfcWind_max": [5.5, 5.7],
+            "zg_avg_250": [5090.0, 5091.0],
+            "orog_max": [10.0, 8.0],
+        }
+        # Test for one storm being subset of another
+        storms = [storm1, storm2]
+        expected_storms = {'early': storm1, 'late': storm, 'time_c': 0, 'time_p': 0, 'offset': 0, 'method': 'remove'}
         actual = storms_overlap_in_space(storm, storms)
-        for exp_storm, act_storm in zip(expected_storms, actual):
-            self.assertTempestDictEqual(exp_storm, act_storm)
+        print('actual ',actual)
+        self.assertTempestDictSubdictEqual(expected_storms, actual)
+
+        # Test for one storm extending another
+        storms = [storm2, storm3]
+        expected_storms = {'early': storm3, 'late': storm, 'time_c': 0, 'time_p': 1, 'offset': 1, 'method': 'extend'}
+        actual = storms_overlap_in_space(storm, storms)
+        print('actual ', actual)
+        self.assertTempestDictSubdictEqual(expected_storms, actual)
 
 
 class TestWriteTrackLine(TempestHelperTestCase):

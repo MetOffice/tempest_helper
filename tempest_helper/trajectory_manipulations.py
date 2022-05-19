@@ -211,6 +211,7 @@ def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
     for ist, storm_p in enumerate(storms_y):
         n_pts_overlap = 0
         set_p = _storm_dates(storm_p)
+        # overlapping times
         overlap = sorted(list(set(set_c).intersection(set_p)))
 
         time_c = set_c.index(overlap[0])
@@ -220,19 +221,21 @@ def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
         lat_p = storm_p["lat"]
         lon_p = storm_p["lon"]
         # just look at the point where the storms overlap in time
-        for it in range(1):
-            timec = time_c + it
-            timep = time_p + it
-            dist_lat = np.abs(lat_c[timec] - lat_p[timep])
-            dist_lon = np.abs(lon_c[timec] - lon_p[timep])
-            if dist_lat < distance_threshold and dist_lon < distance_threshold:
-                n_pts_overlap += 1
+        it = 0
+        timec = time_c + it
+        timep = time_p + it
+        print('lat_c ', lat_c, timec)
+        print('lat_p ', lat_p, timep)
+        dist_lat = np.abs(lat_c[timec] - lat_p[timep])
+        dist_lon = np.abs(lon_c[timec] - lon_p[timep])
+        if dist_lat < distance_threshold and dist_lon < distance_threshold:
+            n_pts_overlap += 1
 
-            # now find out how much time-space overlap
-            # is it exactly the same storm - we can remove the duplicate from the
-            #   earlier dataset
-            # is it an extension - we need to remove from the earlier dataset, and
-            #   extend the storm in the current dataset
+        # now find out how much time-space overlap
+        # is it exactly the same storm - we can remove the duplicate from the
+        #   earlier dataset
+        # is it an extension - we need to remove from the earlier dataset, and
+        #   extend the storm in the current dataset
         if n_pts_overlap > 0:
             storms_overlap = {}
             storms_overlap["early"] = storm_p

@@ -154,6 +154,79 @@ class TempestHelperTestCase(TestCase):
             else:
                 self.fail(f"{key} no test for type {type(expected[key]).__name__}")
 
+    def assertTempestDictSubdictEqual(
+        self, expected: Dict[Any, Any], actual: Dict[Any, Any]
+    ) -> None:
+        """
+        Compare the dictionaries used in tempest_helper. Values can be ints,
+        floats or lists of these two types; other types of value will fail.
+        In this case the dictionary can itself contain dictionaries.
+
+        Class `TempestHelperTestCase` instance attributes
+        `self.rel_tol` and `self.abs_tol` can be set in child
+        instances to set the relative and absolute tolerance passed to
+        `math.isclose()` to test all floats with.
+
+        :param dict expected: The expected Tempest dictionary.
+        :param dict actual: The actual Tempest dictionary.
+        """
+        expected_keys = sorted(list(expected.keys()))
+        actual_keys = sorted(list(actual.keys()))
+        if expected_keys != actual_keys:
+            self.fail(f"Keys differ {expected_keys} != {actual_keys}")
+        for key in expected_keys:
+            if not isinstance(expected[key], type(actual[key])):
+                self.fail(
+                    f"{key} type {type(expected[key]).__name__} != "
+                    f"{type(actual[key]).__name__}"
+                )
+            elif isinstance(expected[key], int):
+                if not expected[key] == actual[key]:
+                    self.fail(f"{key} {expected[key]} != {actual[key]}")
+            elif isinstance(expected[key], float):
+                if not isclose(
+                    expected[key],
+                    actual[key],
+                    rel_tol=self.rel_tol,
+                    abs_tol=self.abs_tol,
+                ):
+                    self.fail(
+                        f"{key} is not close {expected[key]}, {actual[key]} "
+                        f"with rel_tol={self.rel_tol} abs_tol={self.abs_tol}"
+                    )
+            elif isinstance(expected[key], list):
+                if len(expected[key]) != len(actual[key]):
+                    self.fail(
+                        f"{key} length {len(expected[key])} != " f"{len(actual[key])}"
+                    )
+                for a, b in zip(expected[key], actual[key]):
+                    if type(a) != type(b):
+                        self.fail(f"{key} value type {a} != {b}")
+                    elif isinstance(a, int):
+                        if not a == b:
+                            self.fail(f"{key} value {a} != {b}")
+                    elif isinstance(b, float):
+                        if not isclose(
+                            a, b, rel_tol=self.rel_tol, abs_tol=self.abs_tol
+                        ):
+                            self.fail(
+                                f"{key} value is not close {a} {b} "
+                                f"with rel_tol={self.rel_tol} "
+                                f"abs_tol={self.abs_tol}"
+                            )
+                    else:
+                        self.fail(
+                            f"{key} no test for value {a} type " f"{type(a).__name__}"
+                        )
+            elif isinstance(expected[key], dict):
+                self.assertTempestDictEqual(expected[key], actual[key])
+
+            elif isinstance(expected[key], str):
+                if expected[key] != actual[key]:
+                    self.fail(f"{key} {expected[key]} != {actual[key]}")
+            else:
+                self.fail(f"{key} no test for type {type(expected[key]).__name__}")
+
 
 def make_loaded_trajectories():
     """
