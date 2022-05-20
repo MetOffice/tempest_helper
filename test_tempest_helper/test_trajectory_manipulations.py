@@ -17,6 +17,9 @@ from tempest_helper.trajectory_manipulations import (
     write_track_line,
     rewrite_track_file,
 )
+from tempest_helper.save_trajectories import (
+    save_trajectories_netcdf
+)
 
 
 class TestConvertDateToStep(TempestHelperTestCase):
@@ -270,6 +273,8 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
 
     def test_simple(self):
         """Basic test"""
+        # Some storms that do and don't overlap with the above storm in time
+
         storm = {
             "length": 3,
             "step": [1, 2, 3],
@@ -286,7 +291,7 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
             "zg_avg_250": [5090.0, 5091.0, 5092.0],
             "orog_max": [10.0, 8.0, 6.0],
         }
-        # Some storms that do and don't overlap with the above storm in time
+
         storm1 = {
             "length": 2,
             "step": [1, 2],
@@ -332,10 +337,8 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
 
 class TestStormsOverlapInSpace(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations.storms_overlap_in_space()"""
-
-    def test_simple(self):
-        """Basic test"""
-        storm = {
+    def setUp(self):
+        self.storm = {
             "length": 3,
             "step": [1, 2, 3],
             "grid_y": [0, 2, 4],
@@ -352,7 +355,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
             "orog_max": [10.0, 8.0, 6.0],
         }
         # Example storms that do and do not overlap in time/space
-        storm1 = {
+        self.storm1 = {
             "length": 2,
             "step": [1, 2],
             "grid_y": [0, 2],
@@ -368,7 +371,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
             "zg_avg_250": [5090.0, 5091.0],
             "orog_max": [8.0, 6.0],
         }
-        storm2 = {
+        self.storm2 = {
             "length": 2,
             "step": [1, 2],
             "grid_y": [1, 3],
@@ -384,7 +387,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
             "zg_avg_250": [5090.0, 5091.0],
             "orog_max": [10.0, 8.0],
         }
-        storm3 = {
+        self.storm3 = {
             "length": 2,
             "step": [0, 1],
             "grid_y": [1, 0],
@@ -400,18 +403,53 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
             "zg_avg_250": [5090.0, 5091.0],
             "orog_max": [10.0, 8.0],
         }
-        # Test for one storm being subset of another
-        storms = [storm1, storm2]
-        expected_storms = {'early': storm1, 'late': storm, 'time_c': 0, 'time_p': 0, 'offset': 0, 'method': 'remove'}
-        actual = storms_overlap_in_space(storm, storms)
-        print('actual ',actual)
+        self.storm4 = {
+            "length": 4,
+            "step": [1, 2, 3, 4],
+            "grid_y": [0, 2, 4, 6],
+            "grid_x": [0, 2, 4, 6],
+            "lat": [0.0, 1.0, 2.0, 3.0],
+            "lon": [0.0, 1.0, 2.0, 3.0],
+            "year": [2000, 2000, 2000, 2000],
+            "month": [1, 1, 1, 1],
+            "day": [1, 1, 1, 2],
+            "hour": [6, 12, 18, 0],
+            "slp_min": [100000.0, 99999.0, 99998.0, 99997.0],
+            "sfcWind_max": [5.5, 5.7, 5.9, 5.11],
+            "zg_avg_250": [5090.0, 5091.0, 5092.0, 5093.0],
+            "orog_max": [10.0, 8.0, 6.0, 4.0],
+        }
+
+    def test_no_overlap(self):
+        """Test for one storm being subset of another"""
+        storms = [self.storm2]
+        expected_storms = None
+        actual = storms_overlap_in_space(self.storm, storms)
+        self.assertEqual(expected_storms, actual)
+
+    def test_complete_overlap(self):
+        """Test for one storm being subset of another"""
+        storms = [self.storm1, self.storm2]
+        expected_storms = {'early': self.storm1, 'late': self.storm, 'time_c': 0, 'time_p': 0, 'offset': 0,
+                           'method': 'remove'}
+        actual = storms_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
-        # Test for one storm extending another
-        storms = [storm2, storm3]
-        expected_storms = {'early': storm3, 'late': storm, 'time_c': 0, 'time_p': 1, 'offset': 1, 'method': 'extend'}
-        actual = storms_overlap_in_space(storm, storms)
-        print('actual ', actual)
+    def test_partial_overlap(self):
+        """Test for one storm being partial subset of another"""
+        storms = [self.storm2, self.storm3]
+        expected_storms = {'early': self.storm3, 'late': self.storm, 'time_c': 0, 'time_p': 1, 'offset': 1,
+                           'method': 'extend'}
+        actual = storms_overlap_in_space(self.storm, storms)
+        self.assertTempestDictSubdictEqual(expected_storms, actual)
+
+    def test_partial_overlap_earlier(self):
+        """Test for one storm being superset of another with same start time"""
+        storms = [self.storm2, self.storm4]
+        expected_storms = {'early': self.storm4, 'late': self.storm, 'time_c': 0, 'time_p': 0, 'offset': 0,
+                           'method': 'extend_odd'}
+        actual = storms_overlap_in_space(self.storm, storms)
+        print('actual ',actual)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
 
@@ -436,10 +474,14 @@ class TestWriteTrackLine(TempestHelperTestCase):
             "zg_avg_250": [5090.0, 5091.0],
             "orog_max": [10.0, 8.0],
         }
-        # TODO add the expected string and list output below
-        exp_str = """multiline text here"""
-        exp_list = []
+        # expected string and list output below
+        exp_str = "start   1      2000    1       1      0\n"
+        exp_list = [
+            "        0     0     0.000000      0.000000       1.000000e+05    5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1      0 \n"
+        ]
         act_str, act_list = write_track_line(storm, 1, 1, make_column_names())
+        print('act_str ',act_str)
+        print('act_list ',act_list)
         self.assertEqual(exp_str, act_str)
         self.assertEqual(exp_list, act_list)
 
@@ -451,49 +493,79 @@ class TestRewriteTrackFile(TempestHelperTestCase):
         # See an unlimited diff in case of error
         self.maxDiff = None
         # Create temporary files
-        _fd, self.tracked_file_Tm1 = tempfile.mkstemp(suffix=".txt")
-        _fd, self.tracked_file_T = tempfile.mkstemp(suffix=".txt")
-        _fd, self.tracked_file_Tm1_adjust = tempfile.mkstemp(suffix=".txt")
-        _fd, self.tracked_file_T_adjust = tempfile.mkstemp(suffix=".txt")
+        _fd, self.tracked_file_Tm1_adjust_test = tempfile.mkstemp(suffix=".txt")
+        _fd, self.tracked_file_T_adjust_test = tempfile.mkstemp(suffix=".txt")
+        # These are input files, and the adjusted files for comparison
+        self.tracked_file_Tm1 = "./test_tempest_helper/tracked_file_Tm1.txt"
+        self.tracked_file_T = "./test_tempest_helper/tracked_file_T.txt"
+        self.tracked_file_Tm1_adjust = "./test_tempest_helper/tracked_file_Tm1_adjust.txt"
+        self.tracked_file_T_adjust = "./test_tempest_helper/tracked_file_T_adjust.txt"
 
     def tearDown(self):
         # Remove the temporary files
-        os.remove(self.tracked_file_Tm1)
-        os.remove(self.tracked_file_T)
-        os.remove(self.tracked_file_Tm1_adjust)
-        os.remove(self.tracked_file_T_adjust)
+        os.remove(self.tracked_file_Tm1_adjust_test)
+        os.remove(self.tracked_file_T_adjust_test)
 
     def test_simple(self):
-        # TODO add text for input files here
-        tm1 = """multiline text here"""
-        t = """multiline text here"""
-        with open(self.tracked_file_Tm1, "w") as fh:
-            fh.write(tm1)
-        with open(self.tracked_file_T, "w") as fh:
-            fh.write(t)
+        storm_previous = {
+            "length": 3,
+            "step": [1, 2, 3],
+            "grid_y": [0, 2, 4],
+            "grid_x": [0, 2, 4],
+            "lat": [0.0, 1.0, 2.0],
+            "lon": [0.0, 1.0, 2.0],
+            "year": [2000, 2000, 2000],
+            "month": [1, 1, 1],
+            "day": [1, 1, 1],
+            "hour": [6, 12, 18],
+            "slp_min": [100000.0, 99999.0, 99998.0],
+            "sfcWind_max": [5.5, 5.7, 5.9],
+            "zg_avg_250": [5090.0, 5091.0, 5092.0],
+            "orog_max": [10.0, 8.0, 6.0],
+        }
+        storm_current = {
+            "length": 3,
+            "step": [2, 3, 4],
+            "grid_y": [2, 4, 6],
+            "grid_x": [2, 4, 6],
+            "lat": [1.0, 2.0, 3.0],
+            "lon": [1.0, 2.0, 3.0],
+            "year": [2000, 2000, 2000],
+            "month": [1, 1, 1],
+            "day": [1, 1, 2],
+            "hour": [12, 18, 0],
+            "slp_min": [99999.0, 99998.0, 99997.0],
+            "sfcWind_max": [5.7, 5.9, 5.11],
+            "zg_avg_250": [5091.0, 5092.0, 5093.0],
+            "orog_max": [8.0, 6.0, 4.0],
+        }
 
-        # TODO add expected text for generated files here
-        exp_tm1 = """multiline text here"""
-        exp_t = """multiline text here"""
+        column_names = {"grid_x": 0, "grid_y": 1, "lon": 2, "lat": 3, "slp_min": 4, "sfcWind_max": 5,
+                        "zg_avg_250": 6, "orog_max": 7, "year": 8, "month": 9, "day": 10, "hour": 11}
 
-        # TODO write the storms that are required in the adjusted files
-        storms_match = []
+        # This is the storm matching output for the above storms (which are also in the input files)
+        storms_match = [{'early': storm_previous, 'late': storm_current, 'time_c': 0, 'time_p': 1,
+                         'offset': 1, 'method': 'extend'}]
 
         # Rewrite the files
         rewrite_track_file(
             self.tracked_file_Tm1,
             self.tracked_file_T,
-            self.tracked_file_Tm1_adjust,
-            self.tracked_file_T_adjust,
+            self.tracked_file_Tm1_adjust_test,
+            self.tracked_file_T_adjust_test,
             storms_match,
-            make_column_names(),
+            column_names
         )
 
         # Read the adjusted file contents from the files
         with open(self.tracked_file_Tm1_adjust) as fh:
-            act_tm1 = fh.read()
+            with open(self.tracked_file_Tm1_adjust_test) as fh1:
+                act_tm1 = fh.read()
+                exp_tm1 = fh1.read()
         with open(self.tracked_file_T_adjust) as fh:
-            act_t = fh.read()
+            with open(self.tracked_file_T_adjust_test) as fh1:
+                act_t = fh.read()
+                exp_t = fh1.read()
 
         self.assertEqual(exp_tm1, act_tm1)
         self.assertEqual(exp_t, act_t)
