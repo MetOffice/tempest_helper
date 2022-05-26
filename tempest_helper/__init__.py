@@ -12,8 +12,8 @@ from tempest_helper.save_trajectories import save_trajectories_netcdf
 from tempest_helper.trajectory_manipulations import (
     convert_date_to_step,
     fill_trajectory_gaps,
-    rewrite_track_file,
-    storms_overlap_in_space,
+    remove_duplicates_from_track_files,
+    storm_overlap_in_space,
     storms_overlap_in_time,
     write_track_line,
 )

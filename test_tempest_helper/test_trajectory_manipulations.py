@@ -13,9 +13,9 @@ from tempest_helper.trajectory_manipulations import (
     convert_date_to_step,
     fill_trajectory_gaps,
     storms_overlap_in_time,
-    storms_overlap_in_space,
+    storm_overlap_in_space,
     write_track_line,
-    rewrite_track_file,
+    remove_duplicates_from_track_files,
 )
 from tempest_helper.save_trajectories import (
     save_trajectories_netcdf
@@ -424,7 +424,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
         """Test for one storm being subset of another"""
         storms = [self.storm2]
         expected_storms = None
-        actual = storms_overlap_in_space(self.storm, storms)
+        actual = storm_overlap_in_space(self.storm, storms)
         self.assertEqual(expected_storms, actual)
 
     def test_complete_overlap(self):
@@ -432,7 +432,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
         storms = [self.storm1, self.storm2]
         expected_storms = {'early': self.storm1, 'late': self.storm, 'time_c': 0, 'time_p': 0, 'offset': 0,
                            'method': 'remove'}
-        actual = storms_overlap_in_space(self.storm, storms)
+        actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
     def test_partial_overlap(self):
@@ -440,7 +440,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
         storms = [self.storm2, self.storm3]
         expected_storms = {'early': self.storm3, 'late': self.storm, 'time_c': 0, 'time_p': 1, 'offset': 1,
                            'method': 'extend'}
-        actual = storms_overlap_in_space(self.storm, storms)
+        actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
     def test_partial_overlap_earlier(self):
@@ -448,7 +448,7 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
         storms = [self.storm2, self.storm4]
         expected_storms = {'early': self.storm4, 'late': self.storm, 'time_c': 0, 'time_p': 0, 'offset': 0,
                            'method': 'extend_odd'}
-        actual = storms_overlap_in_space(self.storm, storms)
+        actual = storm_overlap_in_space(self.storm, storms)
         print('actual ',actual)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
@@ -577,7 +577,7 @@ class TestRewriteTrackFile(TempestHelperTestCase):
                          'offset': 1, 'method': 'extend'}]
 
         # Rewrite the files
-        rewrite_track_file(
+        remove_duplicates_from_track_files(
             self.tracked_file_Tm1,
             self.tracked_file_T,
             self.tracked_file_Tm1_adjust_test,

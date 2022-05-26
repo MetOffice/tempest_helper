@@ -194,19 +194,19 @@ def storms_overlap_in_time(storm_x, storms_y):
     return storms_overlap
 
 
-def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
+def storm_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
     """
-    Find storms that have any overlap in space
-    There is some overlap in time already determined
+    Find if any of the storms that have any overlap in space with storm_c. Expect at most one.
+    There is some overlap in time already determined.
 
     :param dict storm_c: Storm dictionary.
     :param list storms_y: List of storm dictionaries which overlap storm_c in time
     :param float distance_threshold: maximum distance (degrees) for storms to
        be apart but identified as overlapping in space
-    :returns: Either None, or a storm that overlaps storm_c in space.
+    :returns: Either None, or a dictionary including storm information about the overlap.
     :rtype: None or dict
     """
-    storms_overlap = None
+    storm_overlap = None
     set_c = _storm_dates(storm_c)
     for ist, storm_p in enumerate(storms_y):
         n_pts_overlap = 0
@@ -237,40 +237,40 @@ def storms_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
         # is it an extension - we need to remove from the earlier dataset, and
         #   extend the storm in the current dataset
         if n_pts_overlap > 0:
-            storms_overlap = {}
-            storms_overlap["early"] = storm_p
-            storms_overlap["late"] = storm_c
-            storms_overlap["time_c"] = time_c
-            storms_overlap["time_p"] = time_p
-            storms_overlap["offset"] = time_p - time_c
+            storm_overlap = {}
+            storm_overlap["early"] = storm_p
+            storm_overlap["late"] = storm_c
+            storm_overlap["time_c"] = time_c
+            storm_overlap["time_p"] = time_p
+            storm_overlap["offset"] = time_p - time_c
             logger.debug(
                 f"time_c, time_p, len(lat_c), len(lat_p), len(overlap), offset ",
                 f"{time_c} {time_p} {len(lat_c)} {len(lat_p)} {len(overlap)}",
-                f"{storms_overlap['offset']}",
+                f"{storm_overlap['offset']}",
             )
             if len(lat_c) == len(lat_p) == len(overlap):
                 # exactly the same storm
-                storms_overlap["method"] = "remove"
+                storm_overlap["method"] = "remove"
             else:
                 # figure out how they overlap
                 if time_c == time_p:
                     # storm has same start time in both
                     if len(lat_c) >= len(lat_p):
                         # the current storm is longer, so just remove the previous one
-                        storms_overlap["method"] = "remove"
+                        storm_overlap["method"] = "remove"
                     else:
                         # the previous storm is longer, so need to insert
-                        storms_overlap["method"] = "extend_odd"
+                        storm_overlap["method"] = "extend_odd"
                 elif time_p > time_c:
                     # the earlier dataset has the start of the storm
                     # want to extend set_x backwards in time
-                    storms_overlap["method"] = "extend"
+                    storm_overlap["method"] = "extend"
                 elif time_c > time_p:
                     # the later dataset has the start of the storm
-                    storms_overlap["method"] = "remove"
-            return storms_overlap
+                    storm_overlap["method"] = "remove"
+            return storm_overlap
 
-    return storms_overlap
+    return storm_overlap
 
 
 def write_track_line(storm, no_lines, new_length, column_names):
@@ -343,7 +343,7 @@ def write_track_line(storm, no_lines, new_length, column_names):
     return track_line_date, track_lines
 
 
-def rewrite_track_file(
+def remove_duplicates_from_track_files(
     tracked_file_Tm1,
     tracked_file_T,
     tracked_file_Tm1_adjust,
