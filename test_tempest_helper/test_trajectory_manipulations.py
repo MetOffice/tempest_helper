@@ -326,7 +326,8 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
         }
         storms = [storm1, storm2]
 
-        # The storms that are expected in the final output (i.e. just the overlapping storms)
+        # The storms that are expected in the final output (i.e. just the
+        # overlapping storms)
         expected_storms = [storm1]
 
         # Now test the overlap
@@ -335,7 +336,7 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
             self.assertTempestDictEqual(exp_storm, act_storm)
 
 
-class TestStormsOverlapInSpace(TempestHelperTestCase):
+class TestStormOverlapInSpace(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations.storms_overlap_in_space()"""
     def setUp(self):
         self.storm = {
@@ -430,26 +431,25 @@ class TestStormsOverlapInSpace(TempestHelperTestCase):
     def test_complete_overlap(self):
         """Test for one storm being subset of another"""
         storms = [self.storm1, self.storm2]
-        expected_storms = {'early': self.storm1, 'late': self.storm, 'time_c': 0, 'time_p': 0, 'offset': 0,
-                           'method': 'remove'}
+        expected_storms = {'early': self.storm1, 'late': self.storm, 'time_c': 0,
+                           'time_p': 0, 'offset': 0, 'method': 'remove'}
         actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
     def test_partial_overlap(self):
         """Test for one storm being partial subset of another"""
         storms = [self.storm2, self.storm3]
-        expected_storms = {'early': self.storm3, 'late': self.storm, 'time_c': 0, 'time_p': 1, 'offset': 1,
-                           'method': 'extend'}
+        expected_storms = {'early': self.storm3, 'late': self.storm, 'time_c': 0,
+                           'time_p': 1, 'offset': 1, 'method': 'extend'}
         actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
     def test_partial_overlap_earlier(self):
         """Test for one storm being superset of another with same start time"""
         storms = [self.storm2, self.storm4]
-        expected_storms = {'early': self.storm4, 'late': self.storm, 'time_c': 0, 'time_p': 0, 'offset': 0,
-                           'method': 'extend_odd'}
+        expected_storms = {'early': self.storm4, 'late': self.storm, 'time_c': 0,
+                           'time_p': 0, 'offset': 0, 'method': 'extend_odd'}
         actual = storm_overlap_in_space(self.storm, storms)
-        print('actual ',actual)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
 
@@ -477,17 +477,17 @@ class TestWriteTrackLine(TempestHelperTestCase):
         # expected string and list output below
         exp_str = "start   1      2000    1       1      0\n"
         exp_list = [
-            "        0     0     0.000000      0.000000       1.000000e+05    5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1      0 \n"
+            "        0     0     0.000000      0.000000       1.000000e+05    "+
+            "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1"+
+            "      0 \n"
         ]
         act_str, act_list = write_track_line(storm, 1, 1, make_column_names())
-        print('act_str ',act_str)
-        print('act_list ',act_list)
         self.assertEqual(exp_str, act_str)
         self.assertEqual(exp_list, act_list)
 
 
-class TestRewriteTrackFile(TempestHelperTestCase):
-    """Test tempest_helper.trajectory_manipulations.rewrite_track_file()"""
+class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
+    """Test tempest_helper.trajectory_manipulations.remove_duplicates_from_track_files()"""
 
     def setUp(self):
         # See an unlimited diff in case of error
@@ -495,45 +495,62 @@ class TestRewriteTrackFile(TempestHelperTestCase):
         # Create temporary files
         _fd, self.tracked_file_Tm1_adjust_test = tempfile.mkstemp(suffix=".txt")
         _fd, self.tracked_file_T_adjust_test = tempfile.mkstemp(suffix=".txt")
+        self.tracked_file_Tm1_adjust_test = '/scratch/hadom/track_Tm1_adjust_test.txt'
+        self.tracked_file_T_adjust_test = '/scratch/hadom/track_T_adjust_test.txt'
         # These are input files, and the adjusted files for comparison
-        tracked_file_Tm1_txt = """start   3      2000    1       1      6
-                0     0     0.000000    0.000000     1.000000e+05    5.500000e+00    5.090000e+03    1.000000e+01    2000    1       1      6
-                2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1      12
-                4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1      18"""
+        tracked_file_Tm1_txt = "start   3      2000    1       1      6\n"+ \
+            "        0     0     0.000000    0.000000     1.000000e+05    5.500000e+00    "+ \
+            "5.090000e+03    1.000000e+01    2000    1       1      6\n"+ \
+            "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    "+ \
+            "5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
+            "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    "+ \
+            "5.092000e+03    6.000000e+00    2000    1       1      18"
         _fd, self.tracked_file_Tm1 = tempfile.mkstemp(suffix=".txt")
+        self.tracked_file_Tm1 = '/scratch/hadom/track_Tm1.txt'
         with open(self.tracked_file_Tm1, "w") as fh:
             fh.write(tracked_file_Tm1_txt)
 
-        tracked_file_T_txt = """start   3      2000    1       1      12
-        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1      12
-        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1      18
-        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00    5.093000e+03    4.000000e+00    2000    1       2      0"""
+        tracked_file_T_txt = "start   3      2000    1       1      12\n"+ \
+            "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    "+ \
+            "5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
+            "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    "+ \
+            "5.092000e+03    6.000000e+00    2000    1       1      18\n"+ \
+            "        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00    "+ \
+            "5.093000e+03    4.000000e+00    2000    1       2      0"
         _fd, self.tracked_file_T = tempfile.mkstemp(suffix=".txt")
+        self.tracked_file_T = '/scratch/hadom/track_T.txt'
         with open(self.tracked_file_T, "w") as fh:
             fh.write(tracked_file_T_txt)
 
         tracked_file_Tm1_adjust_txt = """"""
         _fd, self.tracked_file_Tm1_adjust = tempfile.mkstemp(suffix=".txt")
+        self.tracked_file_Tm1_adjust = '/scratch/hadom/track_Tm1_adjust.txt'
         with open(self.tracked_file_Tm1_adjust, "w") as fh:
             fh.write(tracked_file_Tm1_adjust_txt)
 
-        tracked_file_T_adjust_txt = """start   4      2000    1       1      6
-        0     0     0.000000      0.000000       1.000000e+05    5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1      6 
-        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1      12
-        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1      18
-        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00    5.093000e+03    4.000000e+00    2000    1       2      0"""
+        tracked_file_T_adjust_txt = "start   4      2000    1       1      6\n"+ \
+            "        0     0     0.000000      0.000000       1.000000e+05    5.500000e+00"+ \
+            "    5.090000e+03    1.000000e+01   2000    1       1      6 \n"+ \
+            "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    "+ \
+            "5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
+            "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    "+ \
+            "5.092000e+03    6.000000e+00    2000    1       1      18\n"+ \
+            "        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00    "+ \
+            "5.093000e+03    4.000000e+00    2000    1       2      0"
         _fd, self.tracked_file_T_adjust = tempfile.mkstemp(suffix=".txt")
+        self.tracked_file_T_adjust = '/scratch/hadom/track_T_adjust.txt'
         with open(self.tracked_file_T_adjust, "w") as fh:
             fh.write(tracked_file_T_adjust_txt)
 
     def tearDown(self):
         # Remove the temporary files
-        os.remove(self.tracked_file_Tm1_adjust_test)
-        os.remove(self.tracked_file_T_adjust_test)
-        os.remove(self.tracked_file_Tm1)
-        os.remove(self.tracked_file_T)
-        os.remove(self.tracked_file_Tm1_adjust)
-        os.remove(self.tracked_file_T_adjust)
+        pass
+        #os.remove(self.tracked_file_Tm1_adjust_test)
+        #os.remove(self.tracked_file_T_adjust_test)
+        #os.remove(self.tracked_file_Tm1)
+        #os.remove(self.tracked_file_T)
+        #os.remove(self.tracked_file_Tm1_adjust)
+        #os.remove(self.tracked_file_T_adjust)
 
     def test_simple(self):
         storm_previous = {
@@ -569,12 +586,14 @@ class TestRewriteTrackFile(TempestHelperTestCase):
             "orog_max": [8.0, 6.0, 4.0],
         }
 
-        column_names = {"grid_x": 0, "grid_y": 1, "lon": 2, "lat": 3, "slp_min": 4, "sfcWind_max": 5,
-                        "zg_avg_250": 6, "orog_max": 7, "year": 8, "month": 9, "day": 10, "hour": 11}
+        column_names = {"grid_x": 0, "grid_y": 1, "lon": 2, "lat": 3, "slp_min": 4,
+                        "sfcWind_max": 5, "zg_avg_250": 6, "orog_max": 7, "year": 8,
+                        "month": 9, "day": 10, "hour": 11}
 
-        # This is the storm matching output for the above storms (which are also in the input files)
-        storms_match = [{'early': storm_previous, 'late': storm_current, 'time_c': 0, 'time_p': 1,
-                         'offset': 1, 'method': 'extend'}]
+        # This is the storm matching output for the above storms
+        # (which are also in the input files)
+        storms_match = [{'early': storm_previous, 'late': storm_current, 'time_c': 0,
+                         'time_p': 1, 'offset': 1, 'method': 'extend'}]
 
         # Rewrite the files
         remove_duplicates_from_track_files(
