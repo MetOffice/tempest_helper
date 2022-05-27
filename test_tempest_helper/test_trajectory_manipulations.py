@@ -477,8 +477,8 @@ class TestWriteTrackLine(TempestHelperTestCase):
         # expected string and list output below
         exp_str = "start   1      2000    1       1      0\n"
         exp_list = [
-            "        0     0     0.000000      0.000000       1.000000e+05    "+
-            "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1"+
+            "        0     0     0.000000      0.000000       1.000000e+05    " +
+            "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1" +
             "      0 \n"
         ]
         act_str, act_list = write_track_line(storm, 1, 1, make_column_names())
@@ -495,62 +495,55 @@ class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
         # Create temporary files
         _fd, self.tracked_file_Tm1_adjust_test = tempfile.mkstemp(suffix=".txt")
         _fd, self.tracked_file_T_adjust_test = tempfile.mkstemp(suffix=".txt")
-        self.tracked_file_Tm1_adjust_test = '/scratch/hadom/track_Tm1_adjust_test.txt'
-        self.tracked_file_T_adjust_test = '/scratch/hadom/track_T_adjust_test.txt'
         # These are input files, and the adjusted files for comparison
         tracked_file_Tm1_txt = "start   3      2000    1       1      6\n"+ \
-            "        0     0     0.000000    0.000000     1.000000e+05    5.500000e+00    "+ \
-            "5.090000e+03    1.000000e+01    2000    1       1      6\n"+ \
-            "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    "+ \
-            "5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
-            "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    "+ \
-            "5.092000e+03    6.000000e+00    2000    1       1      18"
+        "        0     0     0.000000    0.000000     1.000000e+05    5.500000e+00" + \
+        "    5.090000e+03    1.000000e+01    2000    1       1      6\n"+ \
+        "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00" + \
+        "    5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
+        "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00" + \
+        "    5.092000e+03    6.000000e+00    2000    1       1      18"
         _fd, self.tracked_file_Tm1 = tempfile.mkstemp(suffix=".txt")
-        self.tracked_file_Tm1 = '/scratch/hadom/track_Tm1.txt'
         with open(self.tracked_file_Tm1, "w") as fh:
             fh.write(tracked_file_Tm1_txt)
 
         tracked_file_T_txt = "start   3      2000    1       1      12\n"+ \
-            "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    "+ \
-            "5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
-            "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    "+ \
-            "5.092000e+03    6.000000e+00    2000    1       1      18\n"+ \
-            "        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00    "+ \
-            "5.093000e+03    4.000000e+00    2000    1       2      0"
+        "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00" + \
+        "    5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
+        "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00" + \
+        "    5.092000e+03    6.000000e+00    2000    1       1      18\n"+ \
+        "        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00" + \
+        "    5.093000e+03    4.000000e+00    2000    1       2      0"
         _fd, self.tracked_file_T = tempfile.mkstemp(suffix=".txt")
-        self.tracked_file_T = '/scratch/hadom/track_T.txt'
         with open(self.tracked_file_T, "w") as fh:
             fh.write(tracked_file_T_txt)
 
         tracked_file_Tm1_adjust_txt = """"""
         _fd, self.tracked_file_Tm1_adjust = tempfile.mkstemp(suffix=".txt")
-        self.tracked_file_Tm1_adjust = '/scratch/hadom/track_Tm1_adjust.txt'
         with open(self.tracked_file_Tm1_adjust, "w") as fh:
             fh.write(tracked_file_Tm1_adjust_txt)
 
         tracked_file_T_adjust_txt = "start   4      2000    1       1      6\n"+ \
-            "        0     0     0.000000      0.000000       1.000000e+05    5.500000e+00"+ \
-            "    5.090000e+03    1.000000e+01   2000    1       1      6 \n"+ \
-            "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00    "+ \
-            "5.091000e+03    8.000000e+00    2000    1       1      12\n"+ \
-            "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00    "+ \
-            "5.092000e+03    6.000000e+00    2000    1       1      18\n"+ \
-            "        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00    "+ \
-            "5.093000e+03    4.000000e+00    2000    1       2      0"
+        "        0     0     0.000000      0.000000       1.000000e+05    " + \
+        "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1      6 \n" +\
+        "        2     2     1.000000    1.000000     9.999900e+04    5.700000e+00" + \
+        "    5.091000e+03    8.000000e+00    2000    1       1      12\n" + \
+        "        4     4     2.000000    2.000000     9.999800e+04    5.900000e+00" + \
+        "    5.092000e+03    6.000000e+00    2000    1       1      18\n" + \
+        "        6     6     3.000000    3.000000     9.999700e+04    5.110000e+00" + \
+        "    5.093000e+03    4.000000e+00    2000    1       2      0"
         _fd, self.tracked_file_T_adjust = tempfile.mkstemp(suffix=".txt")
-        self.tracked_file_T_adjust = '/scratch/hadom/track_T_adjust.txt'
         with open(self.tracked_file_T_adjust, "w") as fh:
             fh.write(tracked_file_T_adjust_txt)
 
     def tearDown(self):
         # Remove the temporary files
-        pass
-        #os.remove(self.tracked_file_Tm1_adjust_test)
-        #os.remove(self.tracked_file_T_adjust_test)
-        #os.remove(self.tracked_file_Tm1)
-        #os.remove(self.tracked_file_T)
-        #os.remove(self.tracked_file_Tm1_adjust)
-        #os.remove(self.tracked_file_T_adjust)
+        os.remove(self.tracked_file_Tm1_adjust_test)
+        os.remove(self.tracked_file_T_adjust_test)
+        os.remove(self.tracked_file_Tm1)
+        os.remove(self.tracked_file_T)
+        os.remove(self.tracked_file_Tm1_adjust)
+        os.remove(self.tracked_file_T_adjust)
 
     def test_simple(self):
         storm_previous = {

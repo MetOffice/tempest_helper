@@ -196,14 +196,16 @@ def storms_overlap_in_time(storm_x, storms_y):
 
 def storm_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
     """
-    Find if any of the storms that have any overlap in space with storm_c. Expect at most one.
+    Find if any of the storms that have any overlap in space with storm_c. Expect at
+    most one.
     There is some overlap in time already determined.
 
     :param dict storm_c: Storm dictionary.
     :param list storms_y: List of storm dictionaries which overlap storm_c in time
     :param float distance_threshold: maximum distance (degrees) for storms to
        be apart but identified as overlapping in space
-    :returns: Either None, or a dictionary including storm information about the overlap.
+    :returns: Either None, or a dictionary including storm information about the
+       overlap.
     :rtype: None or dict
     """
     storm_overlap = None
