@@ -17,9 +17,7 @@ from tempest_helper.trajectory_manipulations import (
     write_track_line,
     remove_duplicates_from_track_files,
 )
-from tempest_helper.save_trajectories import (
-    save_trajectories_netcdf
-)
+from tempest_helper.save_trajectories import save_trajectories_netcdf
 
 
 class TestConvertDateToStep(TempestHelperTestCase):
@@ -338,6 +336,7 @@ class TestStormsOverlapInTime(TempestHelperTestCase):
 
 class TestStormOverlapInSpace(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations.storms_overlap_in_space()"""
+
     def setUp(self):
         self.storm = {
             "length": 3,
@@ -431,24 +430,42 @@ class TestStormOverlapInSpace(TempestHelperTestCase):
     def test_complete_overlap(self):
         """Test for one storm being subset of another"""
         storms = [self.storm1, self.storm2]
-        expected_storms = {'early': self.storm1, 'late': self.storm, 'time_c': 0,
-                           'time_p': 0, 'offset': 0, 'method': 'remove'}
+        expected_storms = {
+            "early": self.storm1,
+            "late": self.storm,
+            "time_c": 0,
+            "time_p": 0,
+            "offset": 0,
+            "method": "remove",
+        }
         actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
     def test_partial_overlap(self):
         """Test for one storm being partial subset of another"""
         storms = [self.storm2, self.storm3]
-        expected_storms = {'early': self.storm3, 'late': self.storm, 'time_c': 0,
-                           'time_p': 1, 'offset': 1, 'method': 'extend'}
+        expected_storms = {
+            "early": self.storm3,
+            "late": self.storm,
+            "time_c": 0,
+            "time_p": 1,
+            "offset": 1,
+            "method": "extend",
+        }
         actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
     def test_partial_overlap_earlier(self):
         """Test for one storm being superset of another with same start time"""
         storms = [self.storm2, self.storm4]
-        expected_storms = {'early': self.storm4, 'late': self.storm, 'time_c': 0,
-                           'time_p': 0, 'offset': 0, 'method': 'extend_odd'}
+        expected_storms = {
+            "early": self.storm4,
+            "late": self.storm,
+            "time_c": 0,
+            "time_p": 0,
+            "offset": 0,
+            "method": "extend_odd",
+        }
         actual = storm_overlap_in_space(self.storm, storms)
         self.assertTempestDictSubdictEqual(expected_storms, actual)
 
@@ -477,9 +494,9 @@ class TestWriteTrackLine(TempestHelperTestCase):
         # expected string and list output below
         exp_str = "start   1      2000    1       1      0\n"
         exp_list = [
-            "        0     0     0.000000      0.000000       1.000000e+05    " +
-            "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1" +
-            "      0 \n"
+            "        0     0     0.000000      0.000000       1.000000e+05    "
+            + "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1"
+            + "      0 \n"
         ]
         act_str, act_list = write_track_line(storm, 1, 1, make_column_names())
         self.assertEqual(exp_str, act_str)
@@ -488,7 +505,7 @@ class TestWriteTrackLine(TempestHelperTestCase):
 
 class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
     """Test tempest_helper.trajectory_manipulations.
-       remove_duplicates_from_track_files()"""
+    remove_duplicates_from_track_files()"""
 
     def setUp(self):
         # See an unlimited diff in case of error
@@ -497,30 +514,34 @@ class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
         _fd, self.tracked_file_Tm1_adjust_test = tempfile.mkstemp(suffix=".txt")
         _fd, self.tracked_file_T_adjust_test = tempfile.mkstemp(suffix=".txt")
         # These are input files, and the adjusted files for comparison
-        tracked_file_Tm1_txt = "start   3      2000    1       1      6\n" + \
-            "        0     0     0.000000    0.000000     1.000000e+05    " + \
-            "5.500000e+00    5.090000e+03    1.000000e+01    2000    1       1" + \
-            "      6\n" + \
-            "        2     2     1.000000    1.000000     9.999900e+04    " + \
-            "5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1" + \
-            "      12\n" + \
-            "        4     4     2.000000    2.000000     9.999800e+04    " + \
-            "5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1" + \
-            "      18"
+        tracked_file_Tm1_txt = (
+            "start   3      2000    1       1      6\n"
+            + "        0     0     0.000000    0.000000     1.000000e+05    "
+            + "5.500000e+00    5.090000e+03    1.000000e+01    2000    1       1"
+            + "      6\n"
+            + "        2     2     1.000000    1.000000     9.999900e+04    "
+            + "5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1"
+            + "      12\n"
+            + "        4     4     2.000000    2.000000     9.999800e+04    "
+            + "5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1"
+            + "      18"
+        )
         _fd, self.tracked_file_Tm1 = tempfile.mkstemp(suffix=".txt")
         with open(self.tracked_file_Tm1, "w") as fh:
             fh.write(tracked_file_Tm1_txt)
 
-        tracked_file_T_txt = "start   3      2000    1       1      12\n" + \
-            "        2     2     1.000000    1.000000     9.999900e+04    " + \
-            "5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1" + \
-            "      12\n" + \
-            "        4     4     2.000000    2.000000     9.999800e+04    " + \
-            "5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1" + \
-            "      18\n" + \
-            "        6     6     3.000000    3.000000     9.999700e+04    " + \
-            "5.110000e+00    5.093000e+03    4.000000e+00    2000    1       2" + \
-            "      0"
+        tracked_file_T_txt = (
+            "start   3      2000    1       1      12\n"
+            + "        2     2     1.000000    1.000000     9.999900e+04    "
+            + "5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1"
+            + "      12\n"
+            + "        4     4     2.000000    2.000000     9.999800e+04    "
+            + "5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1"
+            + "      18\n"
+            + "        6     6     3.000000    3.000000     9.999700e+04    "
+            + "5.110000e+00    5.093000e+03    4.000000e+00    2000    1       2"
+            + "      0"
+        )
         _fd, self.tracked_file_T = tempfile.mkstemp(suffix=".txt")
         with open(self.tracked_file_T, "w") as fh:
             fh.write(tracked_file_T_txt)
@@ -530,19 +551,21 @@ class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
         with open(self.tracked_file_Tm1_adjust, "w") as fh:
             fh.write(tracked_file_Tm1_adjust_txt)
 
-        tracked_file_T_adjust_txt = "start   4      2000    1       1      6\n" + \
-            "        0     0     0.000000      0.000000       1.000000e+05    " + \
-            "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1" + \
-            "      6 \n" +\
-            "        2     2     1.000000    1.000000     9.999900e+04    " + \
-            "5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1" + \
-            "      12\n" + \
-            "        4     4     2.000000    2.000000     9.999800e+04    " + \
-            "5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1" + \
-            "      18\n" + \
-            "        6     6     3.000000    3.000000     9.999700e+04    " + \
-            "5.110000e+00    5.093000e+03    4.000000e+00    2000    1       2" + \
-            "      0"
+        tracked_file_T_adjust_txt = (
+            "start   4      2000    1       1      6\n"
+            + "        0     0     0.000000      0.000000       1.000000e+05    "
+            + "5.500000e+00    5.090000e+03    1.000000e+01   2000    1       1"
+            + "      6 \n"
+            + "        2     2     1.000000    1.000000     9.999900e+04    "
+            + "5.700000e+00    5.091000e+03    8.000000e+00    2000    1       1"
+            + "      12\n"
+            + "        4     4     2.000000    2.000000     9.999800e+04    "
+            + "5.900000e+00    5.092000e+03    6.000000e+00    2000    1       1"
+            + "      18\n"
+            + "        6     6     3.000000    3.000000     9.999700e+04    "
+            + "5.110000e+00    5.093000e+03    4.000000e+00    2000    1       2"
+            + "      0"
+        )
         _fd, self.tracked_file_T_adjust = tempfile.mkstemp(suffix=".txt")
         with open(self.tracked_file_T_adjust, "w") as fh:
             fh.write(tracked_file_T_adjust_txt)
@@ -590,14 +613,33 @@ class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
             "orog_max": [8.0, 6.0, 4.0],
         }
 
-        column_names = {"grid_x": 0, "grid_y": 1, "lon": 2, "lat": 3, "slp_min": 4,
-                        "sfcWind_max": 5, "zg_avg_250": 6, "orog_max": 7, "year": 8,
-                        "month": 9, "day": 10, "hour": 11}
+        column_names = {
+            "grid_x": 0,
+            "grid_y": 1,
+            "lon": 2,
+            "lat": 3,
+            "slp_min": 4,
+            "sfcWind_max": 5,
+            "zg_avg_250": 6,
+            "orog_max": 7,
+            "year": 8,
+            "month": 9,
+            "day": 10,
+            "hour": 11,
+        }
 
         # This is the storm matching output for the above storms
         # (which are also in the input files)
-        storms_match = [{'early': storm_previous, 'late': storm_current, 'time_c': 0,
-                         'time_p': 1, 'offset': 1, 'method': 'extend'}]
+        storms_match = [
+            {
+                "early": storm_previous,
+                "late": storm_current,
+                "time_c": 0,
+                "time_p": 1,
+                "offset": 1,
+                "method": "extend",
+            }
+        ]
 
         # Rewrite the files
         remove_duplicates_from_track_files(
@@ -606,7 +648,7 @@ class TestRemoveDuplicatesFromTrackFiles(TempestHelperTestCase):
             self.tracked_file_Tm1_adjust_test,
             self.tracked_file_T_adjust_test,
             storms_match,
-            column_names
+            column_names,
         )
 
         # Read the adjusted file contents from the files

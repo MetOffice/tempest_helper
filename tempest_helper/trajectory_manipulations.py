@@ -226,8 +226,6 @@ def storm_overlap_in_space(storm_c, storms_y, distance_threshold=0.5):
         it = 0
         timec = time_c + it
         timep = time_p + it
-        print('lat_c ', lat_c, timec)
-        print('lat_p ', lat_p, timep)
         dist_lat = np.abs(lat_c[timec] - lat_p[timep])
         dist_lon = np.abs(lon_c[timec] - lon_p[timep])
         if dist_lat < distance_threshold and dist_lon < distance_threshold:
