@@ -32,6 +32,11 @@ they are useful to users.
 
 .. autofunction:: convert_date_to_step
 .. autofunction:: fill_trajectory_gaps
+.. autofunction:: storms_overlap_in_time
+.. autofunction:: storms_overlap_in_space
+.. autofunction:: write_track_line
+.. autofunction:: rewrite_track_file
+
 
 Unit tests
 **********
