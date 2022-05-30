@@ -265,13 +265,13 @@ current point.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="tempest_helper.storms_overlap_in_time">
-<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">storms_overlap_in_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_Y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.storms_overlap_in_time" title="Permalink to this definition"></a></dt>
-<dd><p>Find the subset of list storms_Y that have some overlap in time with storm_x</p>
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">storms_overlap_in_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.storms_overlap_in_time" title="Permalink to this definition"></a></dt>
+<dd><p>Find the subset of list storms_y that have some overlap in time with storm_x</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>storm_x</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Storm dictionary.</p></li>
-<li><p><strong>storm_Y</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of storm dictionaries</p></li>
+<li><p><strong>storms_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of storm dictionaries</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -284,21 +284,23 @@ current point.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="tempest_helper.storms_overlap_in_space">
-<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">storms_overlap_in_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.storms_overlap_in_space" title="Permalink to this definition"></a></dt>
-<dd><p>Find storms that have any overlap in space
-There is some overlap in time already determined</p>
+<dt class="sig sig-object py" id="tempest_helper.storm_overlap_in_space">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">storm_overlap_in_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.storm_overlap_in_space" title="Permalink to this definition"></a></dt>
+<dd><p>Find if any of the storms that have any overlap in space with storm_c. Expect at
+most one.
+There is some overlap in time already determined.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>storm_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Storm dictionary.</p></li>
-<li><p><strong>storm_Y</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of storm dictionaries which overlap storm_c in time</p></li>
+<li><p><strong>storms_y</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of storm dictionaries which overlap storm_c in time</p></li>
 <li><p><strong>distance_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – maximum distance (degrees) for storms to
 be apart but identified as overlapping in space</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Either None, or a storm that overlaps storm_c in space.</p>
+<dd class="field-even"><p>Either None, or a dictionary including storm information about the
+overlap.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>None or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
@@ -330,8 +332,8 @@ storm the second is a list of lines to be written to the track txt file</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="tempest_helper.rewrite_track_file">
-<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">rewrite_track_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracked_file_Tm1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_Tm1_adjust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_T_adjust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.rewrite_track_file" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="tempest_helper.remove_duplicates_from_track_files">
+<span class="sig-prename descclassname"><span class="pre">tempest_helper.</span></span><span class="sig-name descname"><span class="pre">remove_duplicates_from_track_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracked_file_Tm1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_Tm1_adjust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracked_file_T_adjust</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storms_match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tempest_helper.remove_duplicates_from_track_files" title="Permalink to this definition"></a></dt>
 <dd><p>Rewrite the .txt track files, removing the matching storms from the
 previous timestep which have been found in the current timestep and
 adding them to this current timestep</p>
