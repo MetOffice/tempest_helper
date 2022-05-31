@@ -281,6 +281,7 @@ def save_trajectories_netcdf(
                     storm["month"][ipt],
                     storm["day"][ipt],
                     storm["hour"][ipt],
+                    calendar=calendar,
                 ),
                 time_units,
                 calendar=calendar,
