@@ -78,6 +78,11 @@ def define_netcdf_metadata(var_cmpt, variable_units):
         long_name = "storm radial profile"
         description = "radial profile of the storm"
         units = "degrees"
+    else:
+        standard_name = var
+        long_name = var
+        description = "Unknown variable"
+        units = "1"
 
     return standard_name, long_name, description, units
 
@@ -110,7 +115,10 @@ def guess_variable_units(output_vars):
     variable_units = {}
     for var in output_vars:
         varname = var.split("_")[0]
-        variable_units[varname] = units[varname]
+        if varname in units.keys():
+            variable_units[varname] = units[varname]
+        else:
+            variable_units[varname] = "1"
     return variable_units
 
 
@@ -281,6 +289,7 @@ def save_trajectories_netcdf(
                     storm["month"][ipt],
                     storm["day"][ipt],
                     storm["hour"][ipt],
+                    calendar=calendar,
                 ),
                 time_units,
                 calendar=calendar,
