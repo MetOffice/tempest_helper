@@ -25,7 +25,7 @@ def define_netcdf_metadata(var_cmpt, variable_units):
         standard_name = "air_pressure_at_mean_sea_level"
         long_name = "Sea Level Pressure"
         description = "Sea level pressure for tracked variable"
-        units = variable_units["slp"]
+        units = variable_units["psl"]
     elif "sfcWind" in var:
         standard_name = "wind_speed"
         long_name = "Near-surface Wind Speed"
@@ -94,7 +94,7 @@ def guess_variable_units(output_vars):
     :return:
     """
     units = {}
-    units["slp"] = "Pa"
+    units["psl"] = "Pa"
     units["sfcWind"] = "m s-1"
     units["zg"] = "m"
     units["orog"] = "m"
@@ -262,7 +262,7 @@ def save_trajectories_netcdf(
 
     # read the storms and write the values to the file
     # track: first_pt, num_pts, track_id
-    # record: lat, lon, time, slp, index(0:tracklen-1)
+    # record: lat, lon, time, psl, index(0:tracklen-1)
     first_pt = []
     num_pts = []
     track_id = []

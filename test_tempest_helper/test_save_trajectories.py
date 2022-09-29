@@ -86,13 +86,13 @@ variables:
 		lat:description = "Latitude (degrees north) associated with tracked variable" ;
 		lat:_Storage = "contiguous" ;
 		lat:_Endianness = "little" ;
-	double slp_min(record) ;
-		slp_min:standard_name = "air_pressure_at_mean_sea_level" ;
-		slp_min:long_name = "Sea Level Pressure" ;
-		slp_min:description = "Sea level pressure for tracked variable" ;
-		slp_min:units = "Pa" ;
-		slp_min:_Storage = "contiguous" ;
-		slp_min:_Endianness = "little" ;
+	double psl_min(record) ;
+		psl_min:standard_name = "air_pressure_at_mean_sea_level" ;
+		psl_min:long_name = "Sea Level Pressure" ;
+		psl_min:description = "Sea level pressure for tracked variable" ;
+		psl_min:units = "Pa" ;
+		psl_min:_Storage = "contiguous" ;
+		psl_min:_Endianness = "little" ;
 	double sfcWind_max(record) ;
 		sfcWind_max:standard_name = "wind_speed" ;
 		sfcWind_max:long_name = "Near-surface Wind Speed" ;
@@ -148,7 +148,7 @@ data:
 
  lat = 10, 11, -1, 0, 0, 0.5 ;
 
- slp_min = 99973.31, 99785.12, 99973.31, 99785.12, 99973.31, 99879.215 ;
+ psl_min = 99973.31, 99785.12, 99973.31, 99785.12, 99973.31, 99879.215 ;
 
  sfcWind_max = 12.06617, 10.79898, 12.06617, 10.79898, 12.06617, 11.432575 ;
 
