@@ -41,7 +41,8 @@ setuptools.setup(
     version=extract_version(),
     license="BSD 3-Clause License",
     description=(
-        "tempest_helper is a Python module for the easier manipulation of TempestExtremes data."
+        "tempest_helper is a Python module for the easier manipulation of "
+        "TempestExtremes data."
     ),
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
