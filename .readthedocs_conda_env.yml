@@ -1,0 +1,12 @@
+name: tempest-helper
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.10
+  - iris
+  - matplotlib-base
+  - cartopy
+  - cftime
+  - numpy
